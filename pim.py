@@ -1,16 +1,45 @@
 import streamlit as st
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 # ============================================================
-# PIM DASHBOARD — DESIGN ONLY
-# No data analysis / Excel processing / calculations
+# PAGE CONFIG
 # ============================================================
 
 st.set_page_config(
     page_title="PIM Dashboard",
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
+
+# ============================================================
+# DESIGN TOKENS
+# ============================================================
+# Single source of truth for the palette so login + dashboard
+# stay visually consistent. Change these and the whole app updates.
+
+INK        = "#0B1220"   # near-black text / dark surface
+INK_SOFT   = "#475569"   # secondary text
+SURFACE    = "#F6F7FB"   # app background
+CARD       = "#FFFFFF"   # card background
+BORDER     = "#E6E8F0"   # hairline borders
+ACCENT     = "#4F46E5"   # indigo — primary actions
+ACCENT_2   = "#059669"   # emerald — positive / success
+ACCENT_3   = "#DC2626"   # red — gap / warning
+MUTED_BG   = "#EEF0FB"   # pale accent chip background
+
+mpl.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Segoe UI", "Helvetica", "Arial"],
+    "axes.edgecolor": BORDER,
+    "axes.labelcolor": INK_SOFT,
+    "xtick.color": INK_SOFT,
+    "ytick.color": INK_SOFT,
+    "text.color": INK,
+})
 
 # ============================================================
 # SESSION STATE
@@ -21,1112 +50,883 @@ if "logged_in" not in st.session_state:
 
 
 # ============================================================
-# GLOBAL DESIGN
+# LOGIN PAGE
 # ============================================================
 
-st.markdown(
-    """
+if not st.session_state.logged_in:
+
+    st.markdown(f"""
     <style>
 
-    /* ======================================================
-       GLOBAL
-       ====================================================== */
+    #MainMenu, header, footer {{ visibility: hidden; }}
 
-    * {
-        font-family: "Segoe UI", Arial, sans-serif;
-    }
+    .stApp {{
+        background:
+            radial-gradient(circle at 15% 15%, #1E293B 0%, {INK} 45%, #05070C 100%) !important;
+    }}
 
-    .stApp {
-        background: linear-gradient(
-            135deg,
-            #F8FAFC 0%,
-            #F1F5F9 50%,
-            #EEF2FF 100%
-        );
-    }
-
-    .main .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
-        max-width: 1500px;
-    }
-
-    /* Hide Streamlit default elements */
-
-    #MainMenu {
-        visibility: hidden;
-    }
-
-    footer {
-        visibility: hidden;
-    }
-
-    header {
-        background: transparent !important;
-    }
-
-    /* ======================================================
-       LOGIN PAGE
-       ====================================================== */
-
-    .login-page {
+    .main .block-container {{
         min-height: 100vh;
-        margin-top: -80px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 30px !important;
+        padding-bottom: 30px !important;
+        max-width: 480px;
+    }}
+
+    .pim-badge {{
         display: flex;
         justify-content: center;
-        align-items: center;
-        background:
-            radial-gradient(
-                circle at top right,
-                rgba(59, 130, 246, 0.20),
-                transparent 35%
-            ),
-            radial-gradient(
-                circle at bottom left,
-                rgba(30, 64, 175, 0.20),
-                transparent 40%
-            ),
-            linear-gradient(
-                135deg,
-                #0F172A 0%,
-                #172554 50%,
-                #1E3A8A 100%
-            );
-    }
+        margin-bottom: 18px;
+    }}
 
-    .login-container {
-        width: 430px;
-        max-width: 92%;
-        padding: 42px 40px;
-        border-radius: 24px;
-        background: rgba(255,255,255,0.97);
-        box-shadow:
-            0 25px 60px rgba(0,0,0,0.30),
-            0 8px 20px rgba(0,0,0,0.12);
-        text-align: center;
-    }
-
-    .login-logo {
-        width: 72px;
-        height: 72px;
-        margin: 0 auto 20px auto;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(
-            135deg,
-            #2563EB,
-            #1D4ED8
-        );
-        color: white;
-        font-size: 34px;
-        box-shadow: 0 10px 25px rgba(37,99,235,0.30);
-    }
-
-    .login-title {
-        font-size: 32px;
-        font-weight: 800;
-        color: #0F172A;
-        margin-bottom: 6px;
-    }
-
-    .login-subtitle {
-        font-size: 14px;
-        color: #64748B;
-        margin-bottom: 30px;
-        letter-spacing: 0.5px;
-    }
-
-    .login-welcome {
-        font-size: 21px;
-        font-weight: 700;
-        color: #1E293B;
-        margin-bottom: 8px;
-    }
-
-    .login-description {
-        color: #64748B;
-        font-size: 13px;
-        margin-bottom: 20px;
-    }
-
-    /* ======================================================
-       STREAMLIT INPUTS
-       ====================================================== */
-
-    .stTextInput > div > div > input {
-        border-radius: 12px !important;
-        border: 1px solid #CBD5E1 !important;
-        background: #F8FAFC !important;
-        color: #0F172A !important;
-        padding: 12px 14px !important;
-    }
-
-    .stTextInput > div > div > input:focus {
-        border-color: #2563EB !important;
-        box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
-    }
-
-    .stTextInput label {
-        font-weight: 600 !important;
-        color: #334155 !important;
-    }
-
-    /* Login button */
-
-    .stButton > button {
-        width: 100%;
-        min-height: 46px;
-        border-radius: 12px;
-        border: none;
-        background: linear-gradient(
-            135deg,
-            #2563EB,
-            #1D4ED8
-        );
-        color: white;
-        font-size: 15px;
-        font-weight: 700;
-        box-shadow: 0 8px 18px rgba(37,99,235,0.25);
-        transition: all 0.2s ease;
-    }
-
-    .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 25px rgba(37,99,235,0.35);
-    }
-
-    /* ======================================================
-       SIDEBAR
-       ====================================================== */
-
-    section[data-testid="stSidebar"] {
-        background:
-            linear-gradient(
-                180deg,
-                #0F172A 0%,
-                #172554 100%
-            );
-        border-right: 1px solid rgba(255,255,255,0.05);
-    }
-
-    section[data-testid="stSidebar"] > div {
-        padding-top: 1.5rem;
-    }
-
-    .sidebar-brand {
-        padding: 12px 10px 28px 10px;
-        text-align: center;
-    }
-
-    .sidebar-logo {
-        width: 55px;
-        height: 55px;
-        margin: 0 auto 12px auto;
+    .pim-badge span {{
+        width: 56px;
+        height: 56px;
         border-radius: 16px;
+        background: linear-gradient(135deg, {ACCENT}, #7C3AED);
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(
-            135deg,
-            #3B82F6,
-            #2563EB
-        );
-        color: white;
-        font-size: 25px;
-    }
+        font-size: 26px;
+        box-shadow: 0 8px 24px rgba(79,70,229,0.45);
+    }}
 
-    .sidebar-title {
+    .pim-title {{
+        text-align: center;
         color: white;
-        font-size: 21px;
-        font-weight: 800;
-    }
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-top: 0;
+        margin-bottom: 4px;
+    }}
 
-    .sidebar-subtitle {
+    .pim-subtitle {{
+        text-align: center;
         color: #94A3B8;
-        font-size: 11px;
-        margin-top: 4px;
-    }
+        font-size: 14px;
+        margin-bottom: 28px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }}
 
-    section[data-testid="stSidebar"] .stRadio label {
+    [data-testid="stForm"] {{
+        background: rgba(255,255,255,0.04);
+        backdrop-filter: blur(20px);
+        padding: 32px !important;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }}
+
+    [data-testid="stForm"] label {{
         color: #CBD5E1 !important;
         font-weight: 500;
-        padding: 8px 4px;
-    }
-
-    section[data-testid="stSidebar"] .stRadio label:hover {
-        color: white !important;
-    }
-
-    /* ======================================================
-       PAGE HEADER
-       ====================================================== */
-
-    .page-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
-        padding-bottom: 18px;
-        border-bottom: 1px solid #E2E8F0;
-    }
-
-    .page-title {
-        font-size: 30px;
-        font-weight: 800;
-        color: #0F172A;
-        margin: 0;
-    }
-
-    .page-description {
-        color: #64748B;
-        font-size: 14px;
-        margin-top: 5px;
-    }
-
-    .header-badge {
-        padding: 8px 15px;
-        border-radius: 20px;
-        background: #EFF6FF;
-        color: #1D4ED8;
-        font-size: 12px;
-        font-weight: 700;
-        border: 1px solid #DBEAFE;
-    }
-
-    /* ======================================================
-       KPI CARDS
-       ====================================================== */
-
-    .metric-card {
-        background: rgba(255,255,255,0.96);
-        border: 1px solid #E2E8F0;
-        border-radius: 18px;
-        padding: 22px;
-        min-height: 145px;
-        box-shadow: 0 6px 20px rgba(15,23,42,0.06);
-        transition: all 0.2s ease;
-    }
-
-    .metric-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(15,23,42,0.10);
-    }
-
-    .metric-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #EFF6FF;
-        color: #2563EB;
-        font-size: 20px;
-        margin-bottom: 14px;
-    }
-
-    .metric-label {
-        color: #64748B;
         font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }}
 
-    .metric-value {
-        color: #0F172A;
-        font-size: 29px;
-        font-weight: 800;
-        line-height: 1.1;
-    }
-
-    .metric-change {
-        color: #64748B;
-        font-size: 11px;
-        margin-top: 7px;
-    }
-
-    /* ======================================================
-       CONTENT CARDS
-       ====================================================== */
-
-    .content-card {
-        background: white;
-        border: 1px solid #E2E8F0;
-        border-radius: 18px;
-        padding: 22px;
-        margin-top: 20px;
-        box-shadow: 0 6px 20px rgba(15,23,42,0.05);
-    }
-
-    .content-card-title {
-        font-size: 18px;
-        font-weight: 750;
-        color: #0F172A;
-        margin-bottom: 5px;
-    }
-
-    .content-card-subtitle {
-        color: #64748B;
-        font-size: 12px;
-        margin-bottom: 18px;
-    }
-
-    /* ======================================================
-       SECTION TITLES
-       ====================================================== */
-
-    .section-title {
-        font-size: 19px;
-        font-weight: 750;
-        color: #0F172A;
-        margin-top: 28px;
-        margin-bottom: 14px;
-    }
-
-    /* ======================================================
-       DATA TABLE
-       ====================================================== */
-
-    .stDataFrame {
-        border-radius: 14px;
-        overflow: hidden;
-        border: 1px solid #E2E8F0;
-    }
-
-    /* ======================================================
-       SELECTBOX / MULTISELECT
-       ====================================================== */
-
-    .stSelectbox > div > div,
-    .stMultiSelect > div > div {
+    [data-testid="stForm"] input {{
+        background-color: rgba(255,255,255,0.06) !important;
+        color: white !important;
+        border: 1px solid rgba(255,255,255,0.14) !important;
         border-radius: 10px !important;
-        border-color: #CBD5E1 !important;
-    }
+        padding: 10px 14px !important;
+    }}
 
-    .stSelectbox label,
-    .stMultiSelect label {
-        font-weight: 600 !important;
-        color: #334155 !important;
-    }
+    [data-testid="stForm"] input:focus {{
+        border-color: {ACCENT} !important;
+        box-shadow: 0 0 0 3px rgba(79,70,229,0.25) !important;
+    }}
 
-    /* ======================================================
-       FILE UPLOADER
-       ====================================================== */
+    [data-testid="stForm"] input::placeholder {{
+        color: #64748B !important;
+    }}
 
-    [data-testid="stFileUploader"] {
-        background: white;
-        border: 1px dashed #94A3B8;
-        border-radius: 16px;
-        padding: 8px;
-    }
-
-    /* ======================================================
-       DOWNLOAD BUTTON
-       ====================================================== */
-
-    .stDownloadButton > button {
+    [data-testid="stFormSubmitButton"] button {{
+        width: 100%;
+        background: linear-gradient(135deg, {ACCENT}, #7C3AED);
+        color: white;
+        border: none;
         border-radius: 10px;
-        background: white;
-        color: #1D4ED8;
-        border: 1px solid #BFDBFE;
+        padding: 12px;
+        font-size: 15px;
         font-weight: 600;
-    }
+        margin-top: 6px;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }}
 
-    .stDownloadButton > button:hover {
-        background: #EFF6FF;
-        border-color: #93C5FD;
-    }
+    [data-testid="stFormSubmitButton"] button:hover {{
+        transform: translateY(-1px);
+        box-shadow: 0 10px 28px rgba(79,70,229,0.45);
+    }}
 
-    /* ======================================================
-       INFO / SUCCESS / ERROR
-       ====================================================== */
-
-    .stAlert {
-        border-radius: 12px;
-    }
-
-    /* ======================================================
-       FOOTER
-       ====================================================== */
-
-    .dashboard-footer {
-        text-align: center;
-        color: #94A3B8;
-        font-size: 11px;
-        margin-top: 40px;
-        padding: 20px;
-        border-top: 1px solid #E2E8F0;
-    }
-
-    /* ======================================================
-       RESPONSIVE
-       ====================================================== */
-
-    @media (max-width: 768px) {
-
-        .main .block-container {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-
-        .page-title {
-            font-size: 24px;
-        }
-
-        .metric-card {
-            margin-bottom: 10px;
-        }
-
-        .login-container {
-            padding: 30px 25px;
-        }
-    }
+    @media (max-width: 600px) {{
+        .main .block-container {{ padding-left: 20px !important; padding-right: 20px !important; }}
+        .pim-title {{ font-size: 26px; }}
+        [data-testid="stForm"] {{ padding: 22px !important; border-radius: 16px; }}
+    }}
 
     </style>
-    """,
-    unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="pim-badge"><span>📊</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="pim-title">PIM Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="pim-subtitle">Monitor · Analyze · Improve</div>', unsafe_allow_html=True)
+
+    with st.form("login_form"):
+
+        username = st.text_input("Username", placeholder="Enter your username")
+        password = st.text_input("Password", type="password", placeholder="Enter your password")
+        login_button = st.form_submit_button("Sign In")
+
+    if login_button:
+
+        if username == "admin" and password == "1234":
+            st.session_state.logged_in = True
+            st.rerun()
+        else:
+            st.error("Incorrect username or password.")
+
+    st.stop()
 
 
 # ============================================================
-# LOGIN DESIGN
+# DASHBOARD CSS
 # ============================================================
 
-def login_page():
+st.markdown(f"""
+<style>
 
-    st.markdown(
-        """
-        <div class="login-page">
-            <div class="login-container">
+#MainMenu, footer {{ visibility: hidden; }}
 
-                <div class="login-logo">
-                    📊
-                </div>
+/* GLOBAL */
+.stApp {{
+    background: {SURFACE} !important;
+}}
 
-                <div class="login-title">
-                    PIM Dashboard
-                </div>
+.main .block-container {{
+    max-width: 1400px !important;
+    padding-top: 1.5rem !important;
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+}}
 
-                <div class="login-subtitle">
-                    Monitor • Analyze • Improve
-                </div>
+html, body, [class*="css"] {{
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}}
 
-                <div class="login-welcome">
-                    Welcome Back!
-                </div>
+/* HEADER BLOCK */
+.dash-header {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}}
 
-                <div class="login-description">
-                    Sign in to access your dashboard
-                </div>
+.dashboard-title {{
+    color: {INK};
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+}}
 
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+.dashboard-subtitle {{
+    color: {INK_SOFT};
+    font-size: 14px;
+    margin-bottom: 22px;
+}}
 
-    # Login inputs are positioned over the designed card
-    col1, col2, col3 = st.columns([1, 2, 1])
+.section-divider {{
+    height: 1px;
+    background: {BORDER};
+    border: none;
+    margin: 22px 0;
+}}
 
-    with col2:
+/* METRIC CARDS */
+[data-testid="stMetric"] {{
+    background: {CARD};
+    padding: 18px 20px;
+    border-radius: 14px;
+    border: 1px solid {BORDER};
+    box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}}
 
-        username = st.text_input(
-            "Username",
-            placeholder="Enter username",
-            key="login_username"
-        )
+[data-testid="stMetric"]:hover {{
+    box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+    transform: translateY(-2px);
+}}
 
-        password = st.text_input(
-            "Password",
-            placeholder="Enter password",
-            type="password",
-            key="login_password"
-        )
+[data-testid="stMetricLabel"] {{
+    color: {INK_SOFT} !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}}
 
-        if st.button("Sign In", use_container_width=True):
+[data-testid="stMetricValue"] {{
+    color: {INK} !important;
+    font-size: 28px !important;
+    font-weight: 700 !important;
+}}
 
-            if username == "admin" and password == "1234":
-                st.session_state.logged_in = True
-                st.rerun()
-            else:
-                st.error("Invalid username or password.")
+/* SIDEBAR */
+[data-testid="stSidebar"] {{
+    background-color: {INK};
+    border-right: 1px solid rgba(255,255,255,0.06);
+}}
+
+[data-testid="stSidebar"] * {{
+    color: #E2E8F0 !important;
+}}
+
+.sidebar-brand {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0 18px 0;
+}}
+
+.sidebar-brand .icon {{
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, {ACCENT}, #7C3AED);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}}
+
+.sidebar-brand .txt {{
+    font-size: 16px;
+    font-weight: 700;
+    color: white !important;
+}}
+
+[data-testid="stSidebar"] [data-testid="stRadio"] label {{
+    padding: 4px 0;
+}}
+
+[data-testid="stSidebar"] hr {{
+    border-color: rgba(255,255,255,0.10);
+}}
+
+[data-testid="stSidebar"] button {{
+    border-radius: 8px;
+    background-color: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12) !important;
+}}
+
+[data-testid="stSidebar"] button:hover {{
+    background-color: rgba(239,68,68,0.18);
+    border-color: rgba(239,68,68,0.4) !important;
+}}
+
+/* DATAFRAME */
+[data-testid="stDataFrame"] {{
+    border-radius: 12px;
+    border: 1px solid {BORDER};
+    overflow: hidden;
+}}
+
+/* FILE UPLOADER */
+[data-testid="stFileUploader"] {{
+    background: {CARD};
+    border-radius: 14px;
+    padding: 14px;
+    border: 1.5px dashed {BORDER};
+}}
+
+/* SELECTBOX */
+[data-baseweb="select"] > div {{
+    border-radius: 10px !important;
+    border-color: {BORDER} !important;
+}}
+
+/* ALERTS */
+.stAlert {{
+    border-radius: 12px;
+}}
+
+/* BUTTONS */
+.stButton > button,
+.stDownloadButton > button {{
+    border-radius: 10px;
+    font-weight: 600;
+    border: 1px solid {BORDER};
+}}
+
+.stDownloadButton > button {{
+    background: {ACCENT};
+    color: white;
+    border: none;
+}}
+
+.stDownloadButton > button:hover {{
+    background: #4338CA;
+    color: white;
+}}
+
+/* EXPANDER */
+[data-testid="stExpander"] {{
+    border-radius: 12px;
+    border: 1px solid {BORDER};
+    background: {CARD};
+}}
+
+/* MOBILE */
+@media (max-width: 600px) {{
+    .main .block-container {{
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 1rem !important;
+    }}
+    .dashboard-title {{ font-size: 21px; }}
+    .dashboard-subtitle {{ font-size: 13px; }}
+    [data-testid="stMetricValue"] {{ font-size: 22px !important; }}
+}}
+
+</style>
+""", unsafe_allow_html=True)
 
 
-# ============================================================
-# DASHBOARD HEADER
-# ============================================================
-
-def page_header(title, description, badge=None):
-
-    badge_html = ""
-
-    if badge:
-        badge_html = f"""
-        <div class="header-badge">
-            {badge}
-        </div>
-        """
-
-    st.markdown(
-        f"""
-        <div class="page-header">
-
-            <div>
-                <div class="page-title">
-                    {title}
-                </div>
-
-                <div class="page-description">
-                    {description}
-                </div>
-            </div>
-
-            {badge_html}
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+def section_header(title, subtitle):
+    st.markdown(f'<div class="dashboard-title">{title}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="dashboard-subtitle">{subtitle}</div>', unsafe_allow_html=True)
 
 
-# ============================================================
-# KPI CARD
-# ============================================================
+def styled_line_chart(x, y, xlabel, ylabel, title):
+    fig, ax = plt.subplots(figsize=(10, 4))
+    fig.patch.set_facecolor(CARD)
+    ax.set_facecolor(CARD)
 
-def metric_card(icon, label, value, description=""):
+    ax.plot(x, y, marker="o", markersize=7, linewidth=2.5, color=ACCENT,
+            markerfacecolor="white", markeredgewidth=2, markeredgecolor=ACCENT, zorder=3)
+    ax.fill_between(range(len(x)), y, color=ACCENT, alpha=0.06)
 
-    st.markdown(
-        f"""
-        <div class="metric-card">
+    for i, value in enumerate(y):
+        ax.annotate(str(int(value)), (i, value), textcoords="offset points",
+                    xytext=(0, 10), ha="center", fontsize=9, color=INK_SOFT, fontweight="600")
 
-            <div class="metric-icon">
-                {icon}
-            </div>
+    ax.set_xlabel(xlabel, fontsize=10)
+    ax.set_ylabel(ylabel, fontsize=10)
+    ax.set_title(title, fontsize=13, fontweight="700", color=INK, loc="left", pad=14)
 
-            <div class="metric-label">
-                {label}
-            </div>
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.grid(axis="y", alpha=0.25, linewidth=0.8)
+    ax.tick_params(length=0)
 
-            <div class="metric-value">
-                {value}
-            </div>
-
-            <div class="metric-change">
-                {description}
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-# ============================================================
-# CONTENT CARD
-# ============================================================
-
-def content_card(title, subtitle=""):
-
-    st.markdown(
-        f"""
-        <div class="content-card">
-
-            <div class="content-card-title">
-                {title}
-            </div>
-
-            <div class="content-card-subtitle">
-                {subtitle}
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    return fig
 
 
 # ============================================================
 # SIDEBAR
 # ============================================================
 
-def sidebar():
-
-    with st.sidebar:
-
-        st.markdown(
-            """
-            <div class="sidebar-brand">
-
-                <div class="sidebar-logo">
-                    📊
-                </div>
-
-                <div class="sidebar-title">
-                    PIM Dashboard
-                </div>
-
-                <div class="sidebar-subtitle">
-                    Program Information Management
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.markdown("---")
-
-        page = st.radio(
-            "Navigation",
-            [
-                "🏠 Home",
-                "🏫 Schools",
-                "👨‍🏫 Teachers",
-                "📍 Visits",
-                "✓ Standards",
-                "📊 Reports"
-            ],
-            label_visibility="collapsed"
-        )
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        if st.button(
-            "🚪 Logout",
-            use_container_width=True
-        ):
-            st.session_state.logged_in = False
-            st.rerun()
-
-    return page
-
-
-# ============================================================
-# HOME DESIGN
-# ============================================================
-
-def home_page():
-
-    page_header(
-        "Dashboard Overview",
-        "Monitor your PIM program at a glance",
-        "LIVE DASHBOARD"
-    )
+with st.sidebar:
 
     st.markdown(
-        '<div class="section-title">Key Performance Indicators</div>',
+        '<div class="sidebar-brand"><div class="icon">📊</div>'
+        '<div class="txt">PIM Dashboard</div></div>',
         unsafe_allow_html=True
     )
 
-    c1, c2, c3, c4 = st.columns(4)
+    st.markdown("---")
 
-    with c1:
-        metric_card(
-            "🏫",
-            "Total Schools",
-            "0",
-            "Registered schools"
-        )
-
-    with c2:
-        metric_card(
-            "👨‍🏫",
-            "Total Teachers",
-            "0",
-            "Registered teachers"
-        )
-
-    with c3:
-        metric_card(
-            "📍",
-            "Total Visits",
-            "0",
-            "Completed visits"
-        )
-
-    with c4:
-        metric_card(
-            "✓",
-            "Standards Met",
-            "0%",
-            "Overall performance"
-        )
-
-    st.markdown(
-        """
-        <div class="content-card">
-
-            <div class="content-card-title">
-                Monthly Visit Overview
-            </div>
-
-            <div class="content-card-subtitle">
-                Monthly performance visualization
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+    page = st.radio(
+        "Navigation",
+        ["🏠 Home", "🏫 Schools", "🧑‍🏫 Teachers", "✅ Visits", "📐 Standards", "📄 Reports"],
+        label_visibility="collapsed"
     )
+    page = page.split(" ", 1)[1]  # strip emoji for logic below
 
-    st.info("Chart area — connect your analysis/data code here.")
+    st.markdown("---")
+
+    if st.button("🚪 Logout", use_container_width=True):
+        st.session_state.logged_in = False
+        st.rerun()
 
 
 # ============================================================
-# SCHOOLS DESIGN
+# DATA UPLOAD
 # ============================================================
 
-def schools_page():
+section_header("📂 Data Upload", "Upload your Excel file and select the worksheet to analyze.")
 
-    page_header(
-        "Schools",
-        "School-level program overview",
-        "SCHOOLS"
-    )
-
-    c1, c2, c3 = st.columns(3)
-
-    with c1:
-        metric_card(
-            "🏫",
-            "Total Schools",
-            "0",
-            "Unique schools"
-        )
-
-    with c2:
-        metric_card(
-            "👥",
-            "Active Staff",
-            "0",
-            "Assigned staff"
-        )
-
-    with c3:
-        metric_card(
-            "📊",
-            "Coverage",
-            "0%",
-            "School coverage"
-        )
-
-    st.markdown(
-        """
-        <div class="content-card">
-
-            <div class="content-card-title">
-                School Summary
-            </div>
-
-            <div class="content-card-subtitle">
-                School-wise overview and performance
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.info("School analysis table will appear here.")
+uploaded_file = st.file_uploader(
+    "Upload Excel File",
+    type=["xlsx", "xls"],
+    help="Upload your PIM Excel dataset."
+)
 
 
 # ============================================================
-# TEACHERS DESIGN
+# STOP IF NO FILE
 # ============================================================
 
-def teachers_page():
-
-    page_header(
-        "Teachers",
-        "Teacher-level program overview",
-        "TEACHERS"
-    )
-
-    c1, c2, c3 = st.columns(3)
-
-    with c1:
-        metric_card(
-            "👨‍🏫",
-            "Total Teachers",
-            "0",
-            "Unique teachers"
-        )
-
-    with c2:
-        metric_card(
-            "🏫",
-            "Schools",
-            "0",
-            "Teacher coverage"
-        )
-
-    with c3:
-        metric_card(
-            "📈",
-            "Performance",
-            "0%",
-            "Overall performance"
-        )
-
-    st.markdown(
-        """
-        <div class="content-card">
-
-            <div class="content-card-title">
-                Teacher Summary
-            </div>
-
-            <div class="content-card-subtitle">
-                Teacher-wise performance overview
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.info("Teacher analysis table will appear here.")
+if uploaded_file is None:
+    st.info("Please upload an Excel file to start the dashboard.")
+    st.stop()
 
 
 # ============================================================
-# VISITS DESIGN
+# READ EXCEL
 # ============================================================
 
-def visits_page():
-
-    page_header(
-        "Visits",
-        "Monitor visit targets and completion",
-        "VISITS"
-    )
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    with c1:
-        metric_card(
-            "🎯",
-            "Target Visits",
-            "0",
-            "Planned visits"
-        )
-
-    with c2:
-        metric_card(
-            "📍",
-            "Actual Visits",
-            "0",
-            "Completed visits"
-        )
-
-    with c3:
-        metric_card(
-            "📉",
-            "Visit Gap",
-            "0",
-            "Target minus actual"
-        )
-
-    with c4:
-        metric_card(
-            "📊",
-            "Achievement",
-            "0%",
-            "Target achievement"
-        )
-
-    st.markdown(
-        """
-        <div class="content-card">
-
-            <div class="content-card-title">
-                Visit Performance
-            </div>
-
-            <div class="content-card-subtitle">
-                Staff-wise visit performance
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.info("Visit analysis table will appear here.")
+try:
+    excel_file = pd.ExcelFile(uploaded_file)
+    sheet_names = excel_file.sheet_names
+except Exception as e:
+    st.error("Unable to read the Excel file.")
+    st.code(str(e))
+    st.stop()
 
 
 # ============================================================
-# STANDARDS DESIGN
+# SHEET SELECTION
 # ============================================================
 
-def standards_page():
-
-    page_header(
-        "Standards",
-        "Monitor minimum standards performance",
-        "STANDARDS"
-    )
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    with c1:
-        metric_card(
-            "1️⃣",
-            "Grade 1",
-            "0",
-            "Standards met"
-        )
-
-    with c2:
-        metric_card(
-            "2️⃣",
-            "Grade 2",
-            "0",
-            "Standards met"
-        )
-
-    with c3:
-        metric_card(
-            "✓",
-            "Total Standards",
-            "0",
-            "Standards met"
-        )
-
-    with c4:
-        metric_card(
-            "📈",
-            "Achievement",
-            "0%",
-            "Overall standards"
-        )
-
-    st.markdown(
-        """
-        <div class="content-card">
-
-            <div class="content-card-title">
-                Standards Performance
-            </div>
-
-            <div class="content-card-subtitle">
-                Grade-wise and staff-wise standards performance
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.info("Standards analysis table will appear here.")
+selected_sheet = st.selectbox("Select Worksheet", sheet_names)
 
 
 # ============================================================
-# REPORTS DESIGN
+# LOAD SHEET
 # ============================================================
 
-def reports_page():
-
-    page_header(
-        "Reports",
-        "Filter and export program information",
-        "REPORTS"
-    )
-
-    st.markdown(
-        '<div class="section-title">Report Filters</div>',
-        unsafe_allow_html=True
-    )
-
-    c1, c2, c3 = st.columns(3)
-
-    with c1:
-        st.selectbox(
-            "RtR Staff",
-            ["All Staff"]
-        )
-
-    with c2:
-        st.selectbox(
-            "Grade",
-            ["All Grades"]
-        )
-
-    with c3:
-        st.selectbox(
-            "Report Type",
-            [
-                "Overview",
-                "Schools",
-                "Teachers",
-                "Visits",
-                "Standards"
-            ]
-        )
-
-    st.markdown(
-        """
-        <div class="content-card">
-
-            <div class="content-card-title">
-                Report Preview
-            </div>
-
-            <div class="content-card-subtitle">
-                Filtered report data will appear here
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.info("Report table will appear here.")
-
-    st.download_button(
-        "⬇️ Download Report",
-        data="",
-        file_name="PIM_Report.csv",
-        mime="text/csv"
-    )
+try:
+    df = pd.read_excel(uploaded_file, sheet_name=selected_sheet, skiprows=17, header=None)
+except Exception as e:
+    st.error("Unable to load the selected worksheet.")
+    st.code(str(e))
+    st.stop()
 
 
 # ============================================================
-# MAIN APPLICATION
+# CHECK DATA
 # ============================================================
 
-if not st.session_state.logged_in:
+if len(df) < 2:
+    st.error("The selected worksheet does not contain enough rows to create the required headers.")
+    st.stop()
 
-    login_page()
 
+# ============================================================
+# CREATE COLUMN NAMES
+# ============================================================
+
+main_header = df.iloc[0].ffill()
+month_header = df.iloc[1]
+
+columns = []
+for main, month in zip(main_header, month_header):
+    if pd.notna(month):
+        columns.append(f"{main}_{month}")
+    else:
+        columns.append(str(main))
+
+df.columns = columns
+df = df.iloc[2:].reset_index(drop=True)
+
+
+# ============================================================
+# CHANGE DATE FORMAT
+# ============================================================
+
+def change_date_format(col):
+    if "_" in str(col):
+        prefix, date = str(col).rsplit("_", 1)
+        try:
+            date = pd.to_datetime(date)
+            return f"{prefix}_{date.strftime('%b')}"
+        except Exception:
+            return str(col)
+    return str(col)
+
+df.columns = [change_date_format(col) for col in df.columns]
+df.columns = [str(col).strip() for col in df.columns]
+
+
+# ============================================================
+# CLEAN DATA
+# ============================================================
+
+df = df.dropna(axis=1, how="all")
+
+if "School Name" in df.columns:
+    df = df.dropna(subset=["School Name"])
+
+if "S/N" in df.columns:
+    df = df.drop(columns=["S/N"])
+
+
+# ============================================================
+# REQUIRED COLUMNS
+# ============================================================
+
+required_columns = ["RtR Staff Name", "School Name", "Teacher Name", "Grade"]
+missing_columns = [col for col in required_columns if col not in df.columns]
+
+if missing_columns:
+    st.error("The following required columns are missing:")
+    for col in missing_columns:
+        st.write(f"- {col}")
+    st.stop()
+
+
+# ============================================================
+# IDENTIFY IMPORTANT COLUMNS
+# ============================================================
+
+minimum_standard_cols = [c for c in df.columns if c.startswith("Meeting Minimum Standards By Grade?")]
+
+priority_cols = [c for c in df.columns if c.startswith("Teacher's Priority Area")]
+priority_cols += [c for c in df.columns if c.startswith("Teacher’s Priority Area")]
+priority_cols = list(dict.fromkeys(priority_cols))
+
+total_visit_cols = [c for c in df.columns if c.startswith("Total Number of Visits Per Month")]
+
+
+# ============================================================
+# CONVERT MINIMUM STANDARD
+# ============================================================
+
+minimum_standard_mapping = {"No": 0, "Yes": 1}
+for col in minimum_standard_cols:
+    df[col] = df[col].astype("string").str.strip().map(minimum_standard_mapping)
+
+
+# ============================================================
+# CONVERT PRIORITY AREA
+# ============================================================
+
+priority_mapping = {
+    "0: No Priority Areas Achieved": 0,
+    "1: Mastered Instructional Routine": 1,
+    "2: Mastered Basic Skills": 2,
+    "3: Mastered Advanced Skills": 3
+}
+for col in priority_cols:
+    df[col] = df[col].astype("string").str.strip().map(priority_mapping)
+
+
+# ============================================================
+# CONVERT VISITS TO NUMERIC
+# ============================================================
+
+for col in total_visit_cols:
+    df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+
+
+# ============================================================
+# CONVERT GRADE
+# ============================================================
+
+df["Grade"] = pd.to_numeric(df["Grade"], errors="coerce")
+
+
+# ============================================================
+# DATA INFORMATION
+# ============================================================
+
+st.success(f"Loaded sheet: **{selected_sheet}**")
+
+with st.expander("📋 Data Preview"):
+    st.write(f"Rows: {len(df):,}")
+    st.write(f"Columns: {len(df.columns):,}")
+    st.dataframe(df.head(10), use_container_width=True, hide_index=True)
+
+
+# ============================================================
+# CALCULATIONS  (unchanged logic)
+# ============================================================
+
+table_1 = pd.pivot_table(
+    df, index="RtR Staff Name", values=["School Name", "Teacher Name"],
+    aggfunc={"School Name": "nunique", "Teacher Name": "count"},
+    margins=True, margins_name="Total"
+)
+school_teacher_summary = table_1.reset_index()
+
+target_base = (
+    df.groupby("RtR Staff Name").agg(School_Count=("School Name", "nunique")).reset_index()
+)
+target_base["Target_Visit"] = target_base["School_Count"] * 2 * 2 * len(total_visit_cols)
+Target_Visit = target_base[["RtR Staff Name", "Target_Visit"]].copy()
+
+if len(total_visit_cols) > 0:
+    visited = df.groupby("RtR Staff Name")[total_visit_cols].sum().sum(axis=1).reset_index()
+    visited.columns = ["RtR Staff Name", "Total_visited"]
 else:
+    visited = pd.DataFrame(columns=["RtR Staff Name", "Total_visited"])
 
-    selected_page = sidebar()
+if len(total_visit_cols) > 0:
+    g1_data = df[df["Grade"] == 1]
+    if len(g1_data) > 0:
+        g1 = g1_data.groupby("RtR Staff Name")[total_visit_cols].sum().sum(axis=1).reset_index()
+        g1.columns = ["RtR Staff Name", "Visit Grade_1"]
+    else:
+        g1 = pd.DataFrame(columns=["RtR Staff Name", "Visit Grade_1"])
+else:
+    g1 = pd.DataFrame(columns=["RtR Staff Name", "Visit Grade_1"])
 
-    if selected_page == "🏠 Home":
-        home_page()
+if len(total_visit_cols) > 0:
+    g2_data = df[df["Grade"] == 2]
+    if len(g2_data) > 0:
+        g2 = g2_data.groupby("RtR Staff Name")[total_visit_cols].sum().sum(axis=1).reset_index()
+        g2.columns = ["RtR Staff Name", "Visit Grade_2"]
+    else:
+        g2 = pd.DataFrame(columns=["RtR Staff Name", "Visit Grade_2"])
+else:
+    g2 = pd.DataFrame(columns=["RtR Staff Name", "Visit Grade_2"])
 
-    elif selected_page == "🏫 Schools":
-        schools_page()
+visit_grade = g1.merge(g2, on="RtR Staff Name", how="outer")
 
-    elif selected_page == "👨‍🏫 Teachers":
-        teachers_page()
+diff = Target_Visit.merge(visited, on="RtR Staff Name", how="left")
+diff["Total_visited"] = diff["Total_visited"].fillna(0)
+diff["Gap of Visit"] = diff["Target_Visit"] - diff["Total_visited"]
 
-    elif selected_page == "📍 Visits":
-        visits_page()
+Final_Total_Visited = diff.merge(visit_grade, on="RtR Staff Name", how="left").fillna(0)
 
-    elif selected_page == "✓ Standards":
-        standards_page()
+if len(total_visit_cols) > 0:
+    monthly_visit = df[total_visit_cols].sum().reset_index()
+    monthly_visit.columns = ["Month", "Total_Visit"]
+    monthly_visit["Month"] = monthly_visit["Month"].str.extract(r"_([A-Za-z]+)$")[0]
+else:
+    monthly_visit = pd.DataFrame(columns=["Month", "Total_Visit"])
 
-    elif selected_page == "📊 Reports":
-        reports_page()
+if len(minimum_standard_cols) > 0:
+    g1_std_data = df[df["Grade"] == 1]
+    if len(g1_std_data) > 0:
+        min_std_G1 = g1_std_data.groupby("RtR Staff Name")[minimum_standard_cols].sum().sum(axis=1).reset_index(name="Total Standard Meet_Grade-1")
+    else:
+        min_std_G1 = pd.DataFrame(columns=["RtR Staff Name", "Total Standard Meet_Grade-1"])
+else:
+    min_std_G1 = pd.DataFrame(columns=["RtR Staff Name", "Total Standard Meet_Grade-1"])
 
-    st.markdown(
-        """
-        <div class="dashboard-footer">
-            PIM Dashboard • Program Information Management
-        </div>
-        """,
-        unsafe_allow_html=True
+if len(minimum_standard_cols) > 0:
+    g2_std_data = df[df["Grade"] == 2]
+    if len(g2_std_data) > 0:
+        min_std_G2 = g2_std_data.groupby("RtR Staff Name")[minimum_standard_cols].sum().sum(axis=1).reset_index(name="Total Standard Meet_Grade-2")
+    else:
+        min_std_G2 = pd.DataFrame(columns=["RtR Staff Name", "Total Standard Meet_Grade-2"])
+else:
+    min_std_G2 = pd.DataFrame(columns=["RtR Staff Name", "Total Standard Meet_Grade-2"])
+
+min_std = min_std_G1.merge(min_std_G2, on="RtR Staff Name", how="outer").fillna(0)
+
+if "Total Standard Meet_Grade-1" not in min_std.columns:
+    min_std["Total Standard Meet_Grade-1"] = 0
+if "Total Standard Meet_Grade-2" not in min_std.columns:
+    min_std["Total Standard Meet_Grade-2"] = 0
+
+min_std["Total Standard Meet"] = (
+    min_std["Total Standard Meet_Grade-1"] + min_std["Total Standard Meet_Grade-2"]
+)
+
+
+# ============================================================
+# HOME PAGE
+# ============================================================
+
+if page == "Home":
+
+    section_header("Dashboard Overview", "Monitor classroom observation performance and visits.")
+
+    total_schools = df["School Name"].nunique()
+    total_teachers = df["Teacher Name"].nunique()
+
+    total_visits = int(df[total_visit_cols].sum().sum()) if len(total_visit_cols) > 0 else 0
+
+    if len(minimum_standard_cols) > 0:
+        total_standard = int(df[minimum_standard_cols].sum().sum())
+        total_possible_standard = int(df[minimum_standard_cols].notna().sum().sum())
+        standard_percentage = (total_standard / total_possible_standard * 100) if total_possible_standard > 0 else 0
+    else:
+        standard_percentage = 0
+
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Total Schools", f"{total_schools:,}")
+    with col2:
+        st.metric("Total Teachers", f"{total_teachers:,}")
+    with col3:
+        st.metric("Total Visits", f"{total_visits:,}")
+    with col4:
+        st.metric("Standards Met", f"{standard_percentage:.1f}%")
+
+    st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+    st.subheader("Monthly Total Visits")
+
+    if len(monthly_visit) > 0:
+        fig = styled_line_chart(
+            monthly_visit["Month"], monthly_visit["Total_Visit"],
+            "Month", "Number of Visits", "Monthly Total Visits"
+        )
+        st.pyplot(fig, use_container_width=True)
+        plt.close(fig)
+    else:
+        st.info("No monthly visit data available.")
+
+
+# ============================================================
+# SCHOOLS
+# ============================================================
+
+elif page == "Schools":
+
+    section_header("School Summary", "Summary of schools and teachers by RtR staff.")
+
+    school_table = (
+        df.groupby("RtR Staff Name")
+        .agg(Schools=("School Name", "nunique"), Teachers=("Teacher Name", "nunique"))
+        .reset_index()
+    )
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.metric("Total Schools", f"{df['School Name'].nunique():,}")
+    with c2:
+        st.metric("Total Teachers", f"{df['Teacher Name'].nunique():,}")
+
+    st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+
+    st.subheader("Staff-wise School Summary")
+    st.dataframe(school_table, use_container_width=True, hide_index=True)
+
+    st.subheader("School and Teacher Summary")
+    st.dataframe(school_teacher_summary, use_container_width=True, hide_index=True)
+
+
+# ============================================================
+# TEACHERS
+# ============================================================
+
+elif page == "Teachers":
+
+    section_header("Teacher Summary", "Teacher distribution by RtR staff and school.")
+
+    teacher_table = (
+        df.groupby(["RtR Staff Name", "School Name"])
+        .agg(Teachers=("Teacher Name", "nunique"))
+        .reset_index()
+    )
+
+    c1, c2 = st.columns(2)
+    with c1:
+        st.metric("Unique Teachers", f"{df['Teacher Name'].nunique():,}")
+    with c2:
+        st.metric("Schools", f"{df['School Name'].nunique():,}")
+
+    st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+    st.dataframe(teacher_table, use_container_width=True, hide_index=True)
+
+
+# ============================================================
+# VISITS
+# ============================================================
+
+elif page == "Visits":
+
+    section_header("Visit Monitoring", "Compare target visits with actual visits.")
+
+    total_target = int(Final_Total_Visited["Target_Visit"].sum())
+    total_actual = int(Final_Total_Visited["Total_visited"].sum())
+    total_gap = total_target - total_actual
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.metric("Target Visits", f"{total_target:,}")
+    with c2:
+        st.metric("Actual Visits", f"{total_actual:,}")
+    with c3:
+        st.metric("Visit Gap", f"{total_gap:,}", delta=None)
+
+    st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+    st.subheader("Staff-wise Visit Performance")
+
+    display_visit_table = Final_Total_Visited.copy()
+    for col in ["Target_Visit", "Total_visited", "Gap of Visit", "Visit Grade_1", "Visit Grade_2"]:
+        if col in display_visit_table.columns:
+            display_visit_table[col] = pd.to_numeric(display_visit_table[col], errors="coerce").fillna(0).astype(int)
+
+    st.dataframe(display_visit_table, use_container_width=True, hide_index=True)
+
+
+# ============================================================
+# STANDARDS
+# ============================================================
+
+elif page == "Standards":
+
+    section_header("Minimum Standards", "Monitor minimum standard achievement by grade.")
+
+    total_g1 = int(min_std["Total Standard Meet_Grade-1"].sum())
+    total_g2 = int(min_std["Total Standard Meet_Grade-2"].sum())
+    total_standard_met = total_g1 + total_g2
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.metric("Grade 1 Standards", f"{total_g1:,}")
+    with c2:
+        st.metric("Grade 2 Standards", f"{total_g2:,}")
+    with c3:
+        st.metric("Total Standards Met", f"{total_standard_met:,}")
+
+    st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+    st.subheader("Staff-wise Minimum Standards")
+
+    display_standard_table = min_std.copy()
+    for col in display_standard_table.columns:
+        if col != "RtR Staff Name":
+            display_standard_table[col] = display_standard_table[col].astype(int)
+
+    st.dataframe(display_standard_table, use_container_width=True, hide_index=True)
+
+
+# ============================================================
+# REPORTS
+# ============================================================
+
+elif page == "Reports":
+
+    section_header("Reports", "Filter and explore the classroom observation dataset.")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        staff_options = ["All"] + sorted(df["RtR Staff Name"].dropna().unique().tolist())
+        selected_staff = st.selectbox("RtR Staff", staff_options)
+    with col2:
+        grade_values = sorted(df["Grade"].dropna().unique().tolist())
+        grade_options = ["All"] + grade_values
+        selected_grade = st.selectbox("Grade", grade_options)
+
+    filtered_df = df.copy()
+    if selected_staff != "All":
+        filtered_df = filtered_df[filtered_df["RtR Staff Name"] == selected_staff]
+    if selected_grade != "All":
+        filtered_df = filtered_df[filtered_df["Grade"] == selected_grade]
+
+    st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+    st.write(f"Showing **{len(filtered_df):,}** records")
+    st.dataframe(filtered_df, use_container_width=True, hide_index=True)
+
+    csv_data = filtered_df.to_csv(index=False)
+    st.download_button(
+        label="⬇️  Download Filtered Report",
+        data=csv_data,
+        file_name="PIM_Filtered_Report.csv",
+        mime="text/csv",
+        use_container_width=False
     )
