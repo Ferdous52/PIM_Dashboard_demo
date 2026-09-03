@@ -33,119 +33,166 @@ if not st.session_state.logged_in:
     st.markdown("""
     <style>
 
-    /* ========================================================
+    /* --------------------------------------------------------
        LOGIN BACKGROUND
-       ======================================================== */
+    -------------------------------------------------------- */
 
     .stApp {
-        background: #F8F8F5 !important;
+        background:
+            linear-gradient(
+                135deg,
+                #0F172A 0%,
+                #172554 50%,
+                #0F172A 100%
+            ) !important;
     }
 
 
-    /* ========================================================
-       MAIN CONTAINER
-       ======================================================== */
+    /* --------------------------------------------------------
+       LOGIN MAIN AREA
+    -------------------------------------------------------- */
 
     .main .block-container {
         min-height: 100vh;
         box-sizing: border-box;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
         padding-top: 30px !important;
         padding-bottom: 30px !important;
     }
 
 
-    /* ========================================================
+    /* --------------------------------------------------------
        TITLE
-       ======================================================== */
+    -------------------------------------------------------- */
 
     .pim-title {
         text-align: center;
-        color: #0F172A;
+
+        color: white;
+
         font-size: 42px;
         font-weight: 700;
-        margin-top: 50px;
+
+        margin-top: 0;
         margin-bottom: 5px;
     }
 
 
-    /* ========================================================
+    /* --------------------------------------------------------
        SUBTITLE
-       ======================================================== */
+    -------------------------------------------------------- */
 
     .pim-subtitle {
         text-align: center;
-        color: #64748B;
+
+        color: #CBD5E1;
+
         font-size: 17px;
+
         margin-bottom: 30px;
     }
 
 
-    /* ========================================================
+    /* --------------------------------------------------------
        LOGIN FORM
-       ======================================================== */
+    -------------------------------------------------------- */
 
     [data-testid="stForm"] {
-        background: white;
-        padding: 35px;
+        background: rgba(15, 23, 42, 0.95);
+
+        padding: 30px !important;
+
         border-radius: 18px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0px 10px 40px rgba(15,23,42,0.12);
+
+        border: 1px solid rgba(255,255,255,0.18);
+
+        box-shadow:
+            0px 10px 40px rgba(0,0,0,0.45);
     }
 
 
-    /* ========================================================
-       FORM LABEL
-       ======================================================== */
+    /* --------------------------------------------------------
+       LOGIN LABELS
+    -------------------------------------------------------- */
 
     [data-testid="stForm"] label {
-        color: #334155 !important;
+        color: #E5E7EB !important;
+
         font-weight: 500;
     }
 
 
-    /* ========================================================
-       INPUT
-       ======================================================== */
+    /* --------------------------------------------------------
+       LOGIN INPUTS
+    -------------------------------------------------------- */
 
     [data-testid="stForm"] input {
-        background-color: #F8FAFC !important;
-        color: #0F172A !important;
-        border: 1px solid #CBD5E1 !important;
+        background-color:
+            rgba(255,255,255,0.08) !important;
+
+        color: white !important;
+
+        border:
+            1px solid rgba(255,255,255,0.20) !important;
+
         border-radius: 8px !important;
     }
 
 
-    /* ========================================================
+    [data-testid="stForm"] input::placeholder {
+        color: #94A3B8 !important;
+    }
+
+
+    /* --------------------------------------------------------
        LOGIN BUTTON
-       ======================================================== */
+    -------------------------------------------------------- */
 
     [data-testid="stFormSubmitButton"] button {
+
         width: 100%;
+
         background-color: #2563EB;
+
         color: white;
+
         border: none;
+
         border-radius: 8px;
+
         padding: 10px;
+
         font-size: 16px;
+
         font-weight: 600;
     }
 
 
     [data-testid="stFormSubmitButton"] button:hover {
+
         background-color: #1D4ED8;
+
         color: white;
     }
 
 
-    /* ========================================================
+    /* --------------------------------------------------------
        MOBILE
-       ======================================================== */
+    -------------------------------------------------------- */
 
     @media (max-width: 600px) {
 
+        .main .block-container {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+
         .pim-title {
-            font-size: 30px;
-            margin-top: 20px;
+            font-size: 32px;
         }
 
         .pim-subtitle {
@@ -154,24 +201,49 @@ if not st.session_state.logged_in:
         }
 
         [data-testid="stForm"] {
-            padding: 20px;
+            padding: 22px !important;
+            border-radius: 14px;
         }
     }
 
 
-    /* ========================================================
-       SHORT SCREEN
-       ======================================================== */
+    /* --------------------------------------------------------
+       SMALL SCREEN HEIGHT
+    -------------------------------------------------------- */
 
     @media (max-height: 700px) {
-
-        .pim-title {
-            margin-top: 10px;
-        }
 
         .main .block-container {
             padding-top: 15px !important;
             padding-bottom: 20px !important;
+        }
+
+        .pim-title {
+            font-size: 34px;
+        }
+
+        .pim-subtitle {
+            font-size: 15px;
+        }
+
+        [data-testid="stForm"] {
+            padding: 22px !important;
+        }
+    }
+
+
+    @media (max-height: 550px) {
+
+        .pim-title {
+            font-size: 28px;
+        }
+
+        .pim-subtitle {
+            margin-bottom: 12px;
+        }
+
+        [data-testid="stForm"] {
+            padding: 18px !important;
         }
     }
 
@@ -179,9 +251,9 @@ if not st.session_state.logged_in:
     """, unsafe_allow_html=True)
 
 
-    # ========================================================
+    # --------------------------------------------------------
     # LOGIN TITLE
-    # ========================================================
+    # --------------------------------------------------------
 
     st.markdown(
         '<div class="pim-title">📊 PIM Dashboard</div>',
@@ -189,16 +261,18 @@ if not st.session_state.logged_in:
     )
 
     st.markdown(
-        '<div class="pim-subtitle">'
-        'Monitor &nbsp;•&nbsp; Analyze &nbsp;•&nbsp; Improve'
-        '</div>',
+        """
+        <div class="pim-subtitle">
+            Monitor &nbsp;•&nbsp; Analyze &nbsp;•&nbsp; Improve
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
 
-    # ========================================================
-    # LOGIN FORM
-    # ========================================================
+    # --------------------------------------------------------
+    # CENTER LOGIN FORM
+    # --------------------------------------------------------
 
     left, center, right = st.columns([1, 1.1, 1])
 
@@ -208,10 +282,10 @@ if not st.session_state.logged_in:
             """
             <div style="
                 text-align:center;
-                color:#0F172A;
+                color:#FFFFFF;
                 font-size:24px;
                 font-weight:600;
-                margin-bottom:15px;
+                margin-bottom:8px;
             ">
                 Welcome Back!
             </div>
@@ -223,7 +297,7 @@ if not st.session_state.logged_in:
             """
             <div style="
                 text-align:center;
-                color:#64748B;
+                color:#CBD5E1;
                 font-size:14px;
                 margin-bottom:15px;
             ">
@@ -257,6 +331,7 @@ if not st.session_state.logged_in:
             if username == "admin" and password == "1234":
 
                 st.session_state.logged_in = True
+
                 st.rerun()
 
             else:
@@ -278,22 +353,23 @@ st.markdown("""
 
 /* ============================================================
    DASHBOARD BACKGROUND
-   ============================================================ */
+============================================================ */
 
 .stApp {
+
     background:
         linear-gradient(
             135deg,
             #F8FAFC 0%,
             #EEF2FF 50%,
             #F8FAFC 100%
-        );
+        ) !important;
 }
 
 
 /* ============================================================
    MAIN CONTAINER
-   ============================================================ */
+============================================================ */
 
 .main .block-container {
 
@@ -313,7 +389,7 @@ st.markdown("""
 
 /* ============================================================
    DASHBOARD TITLE
-   ============================================================ */
+============================================================ */
 
 .dashboard-title {
 
@@ -329,7 +405,7 @@ st.markdown("""
 
 /* ============================================================
    DASHBOARD SUBTITLE
-   ============================================================ */
+============================================================ */
 
 .dashboard-subtitle {
 
@@ -343,7 +419,7 @@ st.markdown("""
 
 /* ============================================================
    METRIC CARDS
-   ============================================================ */
+============================================================ */
 
 [data-testid="stMetric"] {
 
@@ -361,8 +437,28 @@ st.markdown("""
 
 
 /* ============================================================
+   METRIC LABEL
+============================================================ */
+
+[data-testid="stMetricLabel"] {
+
+    color: #64748B !important;
+}
+
+
+/* ============================================================
+   METRIC VALUE
+============================================================ */
+
+[data-testid="stMetricValue"] {
+
+    color: #0F172A !important;
+}
+
+
+/* ============================================================
    SIDEBAR
-   ============================================================ */
+============================================================ */
 
 [data-testid="stSidebar"] {
 
@@ -372,11 +468,104 @@ st.markdown("""
 
 /* ============================================================
    SIDEBAR TEXT
-   ============================================================ */
+============================================================ */
 
 [data-testid="stSidebar"] * {
 
     color: white !important;
+}
+
+
+/* ============================================================
+   SIDEBAR RADIO
+============================================================ */
+
+[data-testid="stSidebar"] label {
+
+    color: white !important;
+}
+
+
+/* ============================================================
+   SIDEBAR BUTTON
+============================================================ */
+
+[data-testid="stSidebar"] button {
+
+    border-radius: 8px;
+}
+
+
+/* ============================================================
+   DATAFRAME
+============================================================ */
+
+[data-testid="stDataFrame"] {
+
+    border-radius: 10px;
+}
+
+
+/* ============================================================
+   FILE UPLOADER
+============================================================ */
+
+[data-testid="stFileUploader"] {
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 10px;
+
+    border: 1px solid #E2E8F0;
+}
+
+
+/* ============================================================
+   SELECTBOX
+============================================================ */
+
+[data-baseweb="select"] {
+
+    border-radius: 8px;
+}
+
+
+/* ============================================================
+   INFO / SUCCESS BOX
+============================================================ */
+
+.stAlert {
+
+    border-radius: 10px;
+}
+
+
+/* ============================================================
+   MOBILE DASHBOARD
+============================================================ */
+
+@media (max-width: 600px) {
+
+    .main .block-container {
+
+        padding-left: 1rem !important;
+
+        padding-right: 1rem !important;
+
+        padding-top: 1rem !important;
+    }
+
+    .dashboard-title {
+
+        font-size: 26px;
+    }
+
+    .dashboard-subtitle {
+
+        font-size: 14px;
+    }
 }
 
 </style>
@@ -423,20 +612,24 @@ with st.sidebar:
 
 
 # ============================================================
-# FILE UPLOAD
+# DATA UPLOAD
 # ============================================================
 
 st.markdown(
-    '<div class="dashboard-title">'
-    '📂 Data Upload'
-    '</div>',
+    """
+    <div class="dashboard-title">
+        📂 Data Upload
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
 st.markdown(
-    '<div class="dashboard-subtitle">'
-    'Upload your Excel file and select the worksheet to analyze.'
-    '</div>',
+    """
+    <div class="dashboard-subtitle">
+        Upload your Excel file and select the worksheet to analyze.
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
@@ -522,10 +715,11 @@ except Exception as e:
 # CHECK DATA
 # ============================================================
 
-if df.empty:
+if len(df) < 2:
 
     st.error(
-        "The selected worksheet is empty."
+        "The selected worksheet does not contain enough rows "
+        "to create the required headers."
     )
 
     st.stop()
@@ -534,16 +728,6 @@ if df.empty:
 # ============================================================
 # CREATE COLUMN NAMES
 # ============================================================
-
-if len(df) < 2:
-
-    st.error(
-        "The selected worksheet does not contain the expected "
-        "two-row header structure."
-    )
-
-    st.stop()
-
 
 main_header = df.iloc[0].ffill()
 
@@ -572,9 +756,8 @@ for main, month in zip(
 
 df.columns = columns
 
-df = df.iloc[2:].reset_index(
-    drop=True
-)
+
+df = df.iloc[2:].reset_index(drop=True)
 
 
 # ============================================================
@@ -583,18 +766,13 @@ df = df.iloc[2:].reset_index(
 
 def change_date_format(col):
 
-    if "_" in col:
+    if "_" in str(col):
 
-        prefix, date = col.rsplit(
-            "_",
-            1
-        )
+        prefix, date = str(col).rsplit("_", 1)
 
         try:
 
-            date = pd.to_datetime(
-                date
-            )
+            date = pd.to_datetime(date)
 
             return (
                 f"{prefix}_{date.strftime('%b')}"
@@ -602,13 +780,23 @@ def change_date_format(col):
 
         except:
 
-            return col
+            return str(col)
 
-    return col
+    return str(col)
 
 
 df.columns = [
     change_date_format(col)
+    for col in df.columns
+]
+
+
+# ============================================================
+# CLEAN COLUMN NAMES
+# ============================================================
+
+df.columns = [
+    str(col).strip()
     for col in df.columns
 ]
 
@@ -638,7 +826,7 @@ if "S/N" in df.columns:
 
 
 # ============================================================
-# REQUIRED COLUMNS
+# CHECK REQUIRED COLUMNS
 # ============================================================
 
 required_columns = [
@@ -659,13 +847,11 @@ missing_columns = [
 if missing_columns:
 
     st.error(
-        "The selected worksheet is missing the following "
-        "required columns:"
+        "The following required columns are missing:"
     )
 
-    st.write(
-        missing_columns
-    )
+    for col in missing_columns:
+        st.write(f"- {col}")
 
     st.stop()
 
@@ -675,11 +861,8 @@ if missing_columns:
 # ============================================================
 
 minimum_standard_cols = [
-
     col
-
     for col in df.columns
-
     if col.startswith(
         "Meeting Minimum Standards By Grade?"
     )
@@ -687,11 +870,8 @@ minimum_standard_cols = [
 
 
 priority_cols = [
-
     col
-
     for col in df.columns
-
     if col.startswith(
         "Teacher's Priority Area"
     )
@@ -699,11 +879,8 @@ priority_cols = [
 
 
 total_visit_cols = [
-
     col
-
     for col in df.columns
-
     if col.startswith(
         "Total Number of Visits Per Month"
     )
@@ -711,23 +888,13 @@ total_visit_cols = [
 
 
 # ============================================================
-# CHECK IMPORTANT COLUMNS
+# CHECK VISIT COLUMNS
 # ============================================================
 
 if len(total_visit_cols) == 0:
 
-    st.error(
-        "No monthly visit columns were found "
-        "in the selected worksheet."
-    )
-
-    st.stop()
-
-
-if len(minimum_standard_cols) == 0:
-
     st.warning(
-        "No Minimum Standard columns were found."
+        "No monthly visit columns were found."
     )
 
 
@@ -735,7 +902,7 @@ if len(minimum_standard_cols) == 0:
 # CONVERT MINIMUM STANDARD
 # ============================================================
 
-minimum_mapping = {
+minimum_standard_mapping = {
     "No": 0,
     "Yes": 1
 }
@@ -743,8 +910,11 @@ minimum_mapping = {
 
 for col in minimum_standard_cols:
 
-    df[col] = df[col].map(
-        minimum_mapping
+    df[col] = (
+        df[col]
+        .astype("string")
+        .str.strip()
+        .map(minimum_standard_mapping)
     )
 
 
@@ -761,14 +931,16 @@ priority_mapping = {
     "2: Mastered Basic Skills": 2,
 
     "3: Mastered Advanced Skills": 3
-
 }
 
 
 for col in priority_cols:
 
-    df[col] = df[col].map(
-        priority_mapping
+    df[col] = (
+        df[col]
+        .astype("string")
+        .str.strip()
+        .map(priority_mapping)
     )
 
 
@@ -803,9 +975,7 @@ st.success(
 )
 
 
-with st.expander(
-    "📋 Data Preview"
-):
+with st.expander("📋 Data Preview"):
 
     st.write(
         f"Rows: {len(df):,}"
@@ -826,7 +996,6 @@ with st.expander(
 # CALCULATIONS
 # ============================================================
 
-
 # ============================================================
 # SCHOOL / TEACHER SUMMARY
 # ============================================================
@@ -843,97 +1012,137 @@ table_1 = pd.pivot_table(
     ],
 
     aggfunc={
+
         "School Name": "nunique",
+
         "Teacher Name": "count"
-    }
+    },
+
+    margins=True,
+
+    margins_name="Total"
 )
 
 
 school_teacher_summary = (
-    table_1.reset_index()
-)
-
-
-# ============================================================
-# TARGET VISITS
-# ============================================================
-
-Target_Visit = (
     table_1
     .reset_index()
-    .copy()
 )
 
 
-Target_Visit["Target_Visit"] = (
+# ============================================================
+# TARGET VISIT
+# ============================================================
 
-    Target_Visit["School Name"]
+target_base = (
+
+    df.groupby(
+        "RtR Staff Name"
+    )
+
+    .agg(
+        School_Count=(
+            "School Name",
+            "nunique"
+        )
+    )
+
+    .reset_index()
+)
+
+
+target_base["Target_Visit"] = (
+
+    target_base["School_Count"]
 
     * 2
 
     * 2
 
     * len(total_visit_cols)
-
 )
 
 
-Target_Visit = Target_Visit[
+Target_Visit = target_base[
     [
         "RtR Staff Name",
         "Target_Visit"
     ]
-]
+].copy()
 
 
 # ============================================================
 # TOTAL VISITED
 # ============================================================
 
-visited = (
+if len(total_visit_cols) > 0:
 
-    df
-    .groupby(
-        "RtR Staff Name"
-    )[total_visit_cols]
-    .sum()
-    .sum(axis=1)
-    .reset_index()
-)
+    visited = (
 
+        df.groupby(
+            "RtR Staff Name"
+        )[total_visit_cols]
 
-visited.columns = [
-    "RtR Staff Name",
-    "Total_visited"
-]
+        .sum()
+
+        .sum(axis=1)
+
+        .reset_index()
+    )
+
+    visited.columns = [
+        "RtR Staff Name",
+        "Total_visited"
+    ]
+
+else:
+
+    visited = pd.DataFrame(
+        columns=[
+            "RtR Staff Name",
+            "Total_visited"
+        ]
+    )
 
 
 # ============================================================
 # GRADE 1 VISITS
 # ============================================================
 
-g1_data = df[
-    df["Grade"] == 1
-]
+if len(total_visit_cols) > 0:
 
-
-if len(g1_data) > 0:
-
-    g1 = (
-
-        g1_data
-        .groupby(
-            "RtR Staff Name"
-        )[total_visit_cols]
-        .sum()
-        .sum(axis=1)
-        .reset_index()
-    )
-
-    g1.columns = [
-        "RtR Staff Name",
-        "Visit Grade_1"
+    g1_data = df[
+        df["Grade"] == 1
     ]
+
+    if len(g1_data) > 0:
+
+        g1 = (
+
+            g1_data.groupby(
+                "RtR Staff Name"
+            )[total_visit_cols]
+
+            .sum()
+
+            .sum(axis=1)
+
+            .reset_index()
+        )
+
+        g1.columns = [
+            "RtR Staff Name",
+            "Visit Grade_1"
+        ]
+
+    else:
+
+        g1 = pd.DataFrame(
+            columns=[
+                "RtR Staff Name",
+                "Visit Grade_1"
+            ]
+        )
 
 else:
 
@@ -949,28 +1158,40 @@ else:
 # GRADE 2 VISITS
 # ============================================================
 
-g2_data = df[
-    df["Grade"] == 2
-]
+if len(total_visit_cols) > 0:
 
-
-if len(g2_data) > 0:
-
-    g2 = (
-
-        g2_data
-        .groupby(
-            "RtR Staff Name"
-        )[total_visit_cols]
-        .sum()
-        .sum(axis=1)
-        .reset_index()
-    )
-
-    g2.columns = [
-        "RtR Staff Name",
-        "Visit Grade_2"
+    g2_data = df[
+        df["Grade"] == 2
     ]
+
+    if len(g2_data) > 0:
+
+        g2 = (
+
+            g2_data.groupby(
+                "RtR Staff Name"
+            )[total_visit_cols]
+
+            .sum()
+
+            .sum(axis=1)
+
+            .reset_index()
+        )
+
+        g2.columns = [
+            "RtR Staff Name",
+            "Visit Grade_2"
+        ]
+
+    else:
+
+        g2 = pd.DataFrame(
+            columns=[
+                "RtR Staff Name",
+                "Visit Grade_2"
+            ]
+        )
 
 else:
 
@@ -987,13 +1208,9 @@ else:
 # ============================================================
 
 visit_grade = g1.merge(
-
     g2,
-
     on="RtR Staff Name",
-
     how="outer"
-
 )
 
 
@@ -1008,7 +1225,6 @@ diff = Target_Visit.merge(
     on="RtR Staff Name",
 
     how="left"
-
 )
 
 
@@ -1023,7 +1239,6 @@ diff["Gap of Visit"] = (
     diff["Target_Visit"]
 
     - diff["Total_visited"]
-
 )
 
 
@@ -1038,61 +1253,53 @@ Final_Total_Visited = diff.merge(
     on="RtR Staff Name",
 
     how="left"
-
 )
 
 
-Final_Total_Visited[
-    [
-        "Target_Visit",
-        "Total_visited",
-        "Gap of Visit",
-        "Visit Grade_1",
-        "Visit Grade_2"
-    ]
-] = Final_Total_Visited[
-    [
-        "Target_Visit",
-        "Total_visited",
-        "Gap of Visit",
-        "Visit Grade_1",
-        "Visit Grade_2"
-    ]
-].fillna(0)
+Final_Total_Visited = (
+    Final_Total_Visited
+    .fillna(0)
+)
 
 
 # ============================================================
 # MONTHLY VISITS
 # ============================================================
 
-monthly_visit = (
+if len(total_visit_cols) > 0:
 
-    df[total_visit_cols]
+    monthly_visit = (
 
-    .sum()
+        df[total_visit_cols]
 
-    .reset_index()
-)
+        .sum()
 
+        .reset_index()
+    )
 
-monthly_visit.columns = [
-
-    "Month",
-
-    "Total_Visit"
-
-]
+    monthly_visit.columns = [
+        "Month",
+        "Total_Visit"
+    ]
 
 
-monthly_visit["Month"] = (
+    monthly_visit["Month"] = (
 
-    monthly_visit["Month"]
+        monthly_visit["Month"]
 
-    .str.extract(
-        r"_([A-Za-z]+)$"
-    )[0]
+        .str.extract(
+            r"_([A-Za-z]+)$"
+        )[0]
+    )
 
-)
+else:
+
+    monthly_visit = pd.DataFrame(
+        columns=[
+            "Month",
+            "Total_Visit"
+        ]
+    )
 
 
 # ============================================================
@@ -1101,22 +1308,37 @@ monthly_visit["Month"] = (
 
 if len(minimum_standard_cols) > 0:
 
-    min_std_G1 = (
+    g1_std_data = df[
+        df["Grade"] == 1
+    ]
 
-        df[df["Grade"] == 1]
+    if len(g1_std_data) > 0:
 
-        .groupby(
-            "RtR Staff Name"
-        )[minimum_standard_cols]
+        min_std_G1 = (
 
-        .sum()
+            g1_std_data
 
-        .sum(axis=1)
+            .groupby(
+                "RtR Staff Name"
+            )[minimum_standard_cols]
 
-        .reset_index(
-            name="Total Standard Meet_Grade-1"
+            .sum()
+
+            .sum(axis=1)
+
+            .reset_index(
+                name="Total Standard Meet_Grade-1"
+            )
         )
-    )
+
+    else:
+
+        min_std_G1 = pd.DataFrame(
+            columns=[
+                "RtR Staff Name",
+                "Total Standard Meet_Grade-1"
+            ]
+        )
 
 else:
 
@@ -1134,22 +1356,37 @@ else:
 
 if len(minimum_standard_cols) > 0:
 
-    min_std_G2 = (
+    g2_std_data = df[
+        df["Grade"] == 2
+    ]
 
-        df[df["Grade"] == 2]
+    if len(g2_std_data) > 0:
 
-        .groupby(
-            "RtR Staff Name"
-        )[minimum_standard_cols]
+        min_std_G2 = (
 
-        .sum()
+            g2_std_data
 
-        .sum(axis=1)
+            .groupby(
+                "RtR Staff Name"
+            )[minimum_standard_cols]
 
-        .reset_index(
-            name="Total Standard Meet_Grade-2"
+            .sum()
+
+            .sum(axis=1)
+
+            .reset_index(
+                name="Total Standard Meet_Grade-2"
+            )
         )
-    )
+
+    else:
+
+        min_std_G2 = pd.DataFrame(
+            columns=[
+                "RtR Staff Name",
+                "Total Standard Meet_Grade-2"
+            ]
+        )
 
 else:
 
@@ -1172,8 +1409,33 @@ min_std = min_std_G1.merge(
     on="RtR Staff Name",
 
     how="outer"
+)
 
-).fillna(0)
+
+min_std = (
+    min_std
+    .fillna(0)
+)
+
+
+if (
+    "Total Standard Meet_Grade-1"
+    not in min_std.columns
+):
+
+    min_std[
+        "Total Standard Meet_Grade-1"
+    ] = 0
+
+
+if (
+    "Total Standard Meet_Grade-2"
+    not in min_std.columns
+):
+
+    min_std[
+        "Total Standard Meet_Grade-2"
+    ] = 0
 
 
 min_std["Total Standard Meet"] = (
@@ -1187,7 +1449,6 @@ min_std["Total Standard Meet"] = (
     min_std[
         "Total Standard Meet_Grade-2"
     ]
-
 )
 
 
@@ -1198,23 +1459,27 @@ min_std["Total Standard Meet"] = (
 if page == "Home":
 
     st.markdown(
-        '<div class="dashboard-title">'
-        'Dashboard Overview'
-        '</div>',
+        """
+        <div class="dashboard-title">
+            Dashboard Overview
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
     st.markdown(
-        '<div class="dashboard-subtitle">'
-        'Monitor classroom observation performance and visits.'
-        '</div>',
+        """
+        <div class="dashboard-subtitle">
+            Monitor classroom observation performance and visits.
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
 
-    # ========================================================
-    # KPI
-    # ========================================================
+    # --------------------------------------------------------
+    # KPI CALCULATIONS
+    # --------------------------------------------------------
 
     total_schools = (
         df["School Name"]
@@ -1228,11 +1493,17 @@ if page == "Home":
     )
 
 
-    total_visits = int(
-        df[total_visit_cols]
-        .sum()
-        .sum()
-    )
+    if len(total_visit_cols) > 0:
+
+        total_visits = int(
+            df[total_visit_cols]
+            .sum()
+            .sum()
+        )
+
+    else:
+
+        total_visits = 0
 
 
     if len(minimum_standard_cols) > 0:
@@ -1251,29 +1522,30 @@ if page == "Home":
             .sum()
         )
 
-    else:
 
-        total_standard = 0
+        if total_possible_standard > 0:
 
-        total_possible_standard = 0
+            standard_percentage = (
 
+                total_standard
+                /
+                total_possible_standard
+                *
+                100
+            )
 
-    if total_possible_standard > 0:
+        else:
 
-        standard_percentage = (
-
-            total_standard
-            /
-            total_possible_standard
-            *
-            100
-
-        )
+            standard_percentage = 0
 
     else:
 
         standard_percentage = 0
 
+
+    # --------------------------------------------------------
+    # KPI CARDS
+    # --------------------------------------------------------
 
     col1, col2, col3, col4 = st.columns(4)
 
@@ -1313,70 +1585,80 @@ if page == "Home":
     st.markdown("---")
 
 
-    # ========================================================
+    # --------------------------------------------------------
     # MONTHLY VISITS
-    # ========================================================
+    # --------------------------------------------------------
 
     st.subheader(
         "Monthly Total Visits"
     )
 
 
-    fig, ax = plt.subplots(
-        figsize=(10, 4)
-    )
+    if len(monthly_visit) > 0:
 
-
-    ax.plot(
-
-        monthly_visit["Month"],
-
-        monthly_visit["Total_Visit"],
-
-        marker="o"
-
-    )
-
-
-    for i, value in enumerate(
-        monthly_visit["Total_Visit"]
-    ):
-
-        ax.text(
-
-            i,
-
-            value,
-
-            str(int(value)),
-
-            ha="center",
-
-            va="bottom"
-
+        fig, ax = plt.subplots(
+            figsize=(10, 4)
         )
 
 
-    ax.set_xlabel(
-        "Month"
-    )
+        ax.plot(
 
-    ax.set_ylabel(
-        "Number of Visits"
-    )
+            monthly_visit["Month"],
 
-    ax.set_title(
-        "Monthly Total Visits"
-    )
+            monthly_visit["Total_Visit"],
+
+            marker="o"
+        )
 
 
-    plt.tight_layout()
+        for i, value in enumerate(
+            monthly_visit["Total_Visit"]
+        ):
+
+            ax.text(
+
+                i,
+
+                value,
+
+                str(int(value)),
+
+                ha="center",
+
+                va="bottom"
+            )
 
 
-    st.pyplot(
-        fig,
-        use_container_width=True
-    )
+        ax.set_xlabel(
+            "Month"
+        )
+
+        ax.set_ylabel(
+            "Number of Visits"
+        )
+
+        ax.set_title(
+            "Monthly Total Visits"
+        )
+
+
+        ax.grid(
+            alpha=0.2
+        )
+
+
+        st.pyplot(
+            fig,
+            use_container_width=True
+        )
+
+        plt.close(fig)
+
+    else:
+
+        st.info(
+            "No monthly visit data available."
+        )
 
 
 # ============================================================
@@ -1386,9 +1668,20 @@ if page == "Home":
 elif page == "Schools":
 
     st.markdown(
-        '<div class="dashboard-title">'
-        'School Summary'
-        '</div>',
+        """
+        <div class="dashboard-title">
+            School Summary
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="dashboard-subtitle">
+            Summary of schools and teachers by RtR staff.
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
@@ -1410,10 +1703,40 @@ elif page == "Schools":
                 "Teacher Name",
                 "nunique"
             )
-
         )
 
         .reset_index()
+    )
+
+
+    # --------------------------------------------------------
+    # KPI
+    # --------------------------------------------------------
+
+    c1, c2 = st.columns(2)
+
+
+    with c1:
+
+        st.metric(
+            "Total Schools",
+            f"{df['School Name'].nunique():,}"
+        )
+
+
+    with c2:
+
+        st.metric(
+            "Total Teachers",
+            f"{df['Teacher Name'].nunique():,}"
+        )
+
+
+    st.markdown("---")
+
+
+    st.subheader(
+        "Staff-wise School Summary"
     )
 
 
@@ -1424,7 +1747,6 @@ elif page == "Schools":
         use_container_width=True,
 
         hide_index=True
-
     )
 
 
@@ -1440,7 +1762,6 @@ elif page == "Schools":
         use_container_width=True,
 
         hide_index=True
-
     )
 
 
@@ -1451,9 +1772,20 @@ elif page == "Schools":
 elif page == "Teachers":
 
     st.markdown(
-        '<div class="dashboard-title">'
-        'Teacher Summary'
-        '</div>',
+        """
+        <div class="dashboard-title">
+            Teacher Summary
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="dashboard-subtitle">
+            Teacher distribution by RtR staff and school.
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
@@ -1473,11 +1805,36 @@ elif page == "Teachers":
                 "Teacher Name",
                 "nunique"
             )
-
         )
 
         .reset_index()
     )
+
+
+    # --------------------------------------------------------
+    # KPI
+    # --------------------------------------------------------
+
+    c1, c2 = st.columns(2)
+
+
+    with c1:
+
+        st.metric(
+            "Unique Teachers",
+            f"{df['Teacher Name'].nunique():,}"
+        )
+
+
+    with c2:
+
+        st.metric(
+            "Schools",
+            f"{df['School Name'].nunique():,}"
+        )
+
+
+    st.markdown("---")
 
 
     st.dataframe(
@@ -1487,7 +1844,6 @@ elif page == "Teachers":
         use_container_width=True,
 
         hide_index=True
-
     )
 
 
@@ -1498,9 +1854,20 @@ elif page == "Teachers":
 elif page == "Visits":
 
     st.markdown(
-        '<div class="dashboard-title">'
-        'Visit Monitoring'
-        '</div>',
+        """
+        <div class="dashboard-title">
+            Visit Monitoring
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="dashboard-subtitle">
+            Compare target visits with actual visits.
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
@@ -1521,9 +1888,14 @@ elif page == "Visits":
 
     total_gap = (
         total_target
-        - total_actual
+        -
+        total_actual
     )
 
+
+    # --------------------------------------------------------
+    # KPI
+    # --------------------------------------------------------
 
     c1, c2, c3 = st.columns(3)
 
@@ -1555,19 +1927,82 @@ elif page == "Visits":
     st.markdown("---")
 
 
+    # --------------------------------------------------------
+    # STAFF TABLE
+    # --------------------------------------------------------
+
     st.subheader(
         "Staff-wise Visit Performance"
     )
 
 
+    display_visit_table = (
+        Final_Total_Visited
+        .copy()
+    )
+
+
+    display_visit_table[
+        "Target_Visit"
+    ] = (
+        display_visit_table[
+            "Target_Visit"
+        ]
+        .astype(int)
+    )
+
+
+    display_visit_table[
+        "Total_visited"
+    ] = (
+        display_visit_table[
+            "Total_visited"
+        ]
+        .astype(int)
+    )
+
+
+    display_visit_table[
+        "Gap of Visit"
+    ] = (
+        display_visit_table[
+            "Gap of Visit"
+        ]
+        .astype(int)
+    )
+
+
+    if "Visit Grade_1" in display_visit_table.columns:
+
+        display_visit_table[
+            "Visit Grade_1"
+        ] = (
+            display_visit_table[
+                "Visit Grade_1"
+            ]
+            .astype(int)
+        )
+
+
+    if "Visit Grade_2" in display_visit_table.columns:
+
+        display_visit_table[
+            "Visit Grade_2"
+        ] = (
+            display_visit_table[
+                "Visit Grade_2"
+            ]
+            .astype(int)
+        )
+
+
     st.dataframe(
 
-        Final_Total_Visited,
+        display_visit_table,
 
         use_container_width=True,
 
         hide_index=True
-
     )
 
 
@@ -1578,9 +2013,20 @@ elif page == "Visits":
 elif page == "Standards":
 
     st.markdown(
-        '<div class="dashboard-title">'
-        'Minimum Standards'
-        '</div>',
+        """
+        <div class="dashboard-title">
+            Minimum Standards
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        """
+        <div class="dashboard-subtitle">
+            Monitor minimum standard achievement by grade.
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
@@ -1601,9 +2047,14 @@ elif page == "Standards":
 
     total_standard_met = (
         total_g1
-        + total_g2
+        +
+        total_g2
     )
 
+
+    # --------------------------------------------------------
+    # KPI
+    # --------------------------------------------------------
 
     c1, c2, c3 = st.columns(3)
 
@@ -1635,19 +2086,38 @@ elif page == "Standards":
     st.markdown("---")
 
 
+    # --------------------------------------------------------
+    # STAFF-WISE TABLE
+    # --------------------------------------------------------
+
     st.subheader(
         "Staff-wise Minimum Standards"
     )
 
 
+    display_standard_table = (
+        min_std
+        .copy()
+    )
+
+
+    for col in display_standard_table.columns:
+
+        if col != "RtR Staff Name":
+
+            display_standard_table[col] = (
+                display_standard_table[col]
+                .astype(int)
+            )
+
+
     st.dataframe(
 
-        min_std,
+        display_standard_table,
 
         use_container_width=True,
 
         hide_index=True
-
     )
 
 
@@ -1658,12 +2128,27 @@ elif page == "Standards":
 elif page == "Reports":
 
     st.markdown(
-        '<div class="dashboard-title">'
-        'Reports'
-        '</div>',
+        """
+        <div class="dashboard-title">
+            Reports
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
+    st.markdown(
+        """
+        <div class="dashboard-subtitle">
+            Filter and explore the classroom observation dataset.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+    # --------------------------------------------------------
+    # FILTERS
+    # --------------------------------------------------------
 
     col1, col2 = st.columns(2)
 
@@ -1671,16 +2156,13 @@ elif page == "Reports":
     with col1:
 
         staff_options = [
-
             "All"
-
         ] + sorted(
 
             df["RtR Staff Name"]
             .dropna()
             .unique()
             .tolist()
-
         )
 
 
@@ -1689,24 +2171,27 @@ elif page == "Reports":
             "RtR Staff",
 
             staff_options
-
         )
 
 
     with col2:
 
-        grade_options = [
-
-            "All"
-
-        ] + sorted(
-
+        grade_values = (
             df["Grade"]
             .dropna()
             .unique()
             .tolist()
-
         )
+
+
+        grade_values = sorted(
+            grade_values
+        )
+
+
+        grade_options = [
+            "All"
+        ] + grade_values
 
 
         selected_grade = st.selectbox(
@@ -1714,9 +2199,12 @@ elif page == "Reports":
             "Grade",
 
             grade_options
-
         )
 
+
+    # --------------------------------------------------------
+    # FILTER DATA
+    # --------------------------------------------------------
 
     filtered_df = df.copy()
 
@@ -1724,33 +2212,40 @@ elif page == "Reports":
     if selected_staff != "All":
 
         filtered_df = filtered_df[
-
             filtered_df[
                 "RtR Staff Name"
             ]
-
-            == selected_staff
-
+            ==
+            selected_staff
         ]
 
 
     if selected_grade != "All":
 
         filtered_df = filtered_df[
-
             filtered_df[
                 "Grade"
             ]
-
-            == selected_grade
-
+            ==
+            selected_grade
         ]
 
 
+    # --------------------------------------------------------
+    # RESULT COUNT
+    # --------------------------------------------------------
+
+    st.markdown("---")
+
+
     st.write(
-        f"Showing {len(filtered_df):,} records"
+        f"Showing **{len(filtered_df):,}** records"
     )
 
+
+    # --------------------------------------------------------
+    # REPORT TABLE
+    # --------------------------------------------------------
 
     st.dataframe(
 
@@ -1759,5 +2254,27 @@ elif page == "Reports":
         use_container_width=True,
 
         hide_index=True
+    )
 
+
+    # --------------------------------------------------------
+    # DOWNLOAD
+    # --------------------------------------------------------
+
+    csv_data = filtered_df.to_csv(
+        index=False
+    )
+
+
+    st.download_button(
+
+        label="⬇️ Download Filtered Report",
+
+        data=csv_data,
+
+        file_name="PIM_Filtered_Report.csv",
+
+        mime="text/csv",
+
+        use_container_width=False
     )
