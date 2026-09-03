@@ -442,7 +442,7 @@ with st.sidebar:
 # ============================================================
 # DATA UPLOAD
 # ============================================================
-with st.sidebar
+with st.sidebar:
     st.markdown(
         """
         <div class="dashboard-title">
