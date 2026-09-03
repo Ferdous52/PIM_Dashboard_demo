@@ -438,34 +438,34 @@ with st.sidebar:
         st.session_state.logged_in = False
         st.rerun()
 
-
+    st.markdown("---")
 # ============================================================
 # DATA UPLOAD
 # ============================================================
-
-st.markdown(
-    """
-    <div class="dashboard-title">
-        📂 Data Upload
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    """
-    <div class="dashboard-subtitle">
-        Upload your Excel file and select the worksheet to analyze.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-uploaded_file = st.file_uploader(
-    "Upload Excel File",
-    type=["xlsx", "xls"],
-    help="Upload your PIM Excel dataset."
-)
+with st.sidebar
+    st.markdown(
+        """
+        <div class="dashboard-title">
+            📂 Data Upload
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    st.markdown(
+        """
+        <div class="dashboard-subtitle">
+            Upload your Excel file and select the worksheet to analyze.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    uploaded_file = st.file_uploader(
+        "Upload Excel File",
+        type=["xlsx", "xls"],
+        help="Upload your PIM Excel dataset."
+    )
 
 
 # ============================================================
