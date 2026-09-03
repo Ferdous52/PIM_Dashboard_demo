@@ -491,10 +491,15 @@ except Exception as e:
 # SHEET SELECTION
 # ============================================================
 
-selected_sheet = st.selectbox(
-    "Select Worksheet",
-    sheet_names
-)
+st.markdown("""
+<style>
+/* Select Worksheet label */
+div[data-testid="stSelectbox"] label {
+    color: black !important;
+    font-weight: 600 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # ============================================================
