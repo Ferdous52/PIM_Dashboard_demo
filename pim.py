@@ -414,11 +414,8 @@ st.markdown("""
 # ============================================================
 
 with st.sidebar:
-
-    st.markdown("# 📊 PIM Dashboard")
-
     st.markdown("---")
-
+    
     page = st.radio(
         "Navigation",
         [
@@ -430,23 +427,15 @@ with st.sidebar:
             "Reports"
         ]
     )
-
+    
+    st.markdown("---")
+    
     st.markdown("---")
 
-    if st.button("🚪 Logout", use_container_width=True):
-
-        st.session_state.logged_in = False
-        st.rerun()
-
-    st.markdown("---")
-# ============================================================
-# DATA UPLOAD
-# ============================================================
-with st.sidebar:
     st.markdown(
         """
         <div class="dashboard-title">
-            📂 Data Upload
+            Data Upload
         </div>
         """,
         unsafe_allow_html=True
@@ -466,16 +455,19 @@ with st.sidebar:
         type=["xlsx", "xls"],
         help="Upload your PIM Excel dataset."
     )
-
+    
+    st.markdown("---")
+    
+    if st.button("🚪 Logout", use_container_width=True):
+        st.session_state.logged_in = False
+        st.rerun()
 
 # ============================================================
 # STOP IF NO FILE
 # ============================================================
 
 if uploaded_file is None:
-
     st.info("Please upload an Excel file to start the dashboard.")
-
     st.stop()
 
 
