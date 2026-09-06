@@ -354,81 +354,6 @@ def upload_page():
 
 
 
-# ============================================================
-# Data Analysis code
-# ============================================================
-
-
-############# Data cleaning #######################
-
-main_header = df.iloc[0].ffill()
-month_header = df.iloc[1]
-
-columns = []
-
-for main, month in zip(main_header, month_header):
-
-    if pd.notna(month):
-        columns.append(f"{main}_{month}")
-    else:
-        columns.append(str(main))
-
-
-df.columns = columns
-df = df.iloc[2:].reset_index(drop=True)
-
-
-def change_date_format(col):
-    if "_" in col:
-        prefix, date = col.rsplit("_", 1)
-
-        try:
-            date = pd.to_datetime(date)
-            return f"{prefix}_{date.strftime('%b')}"
-        except:
-            return col
-
-    return col
-
-df.columns = [change_date_format(col) for col in df.columns]
-df = df.dropna(axis=1, how="all")
-df = df.dropna(subset=["School Name"])
-df = df.drop(columns=['S/N'])
-
-################# Data Scaling #################################################
-
-from numpy._core.defchararray import startswith
-
-minimum_standard_cols = [
-    col for col in df.columns
-    if col.startswith("Meeting Minimum Standards By Grade?")
-]
-
-priority_cols = [
-    col for col in df.columns
-    if col.startswith("Teacher's Priority Area (0, 1, 2, or 3)")
-]
-total_visit = [
-    col for col in df.columns
-    if col.startswith("Total Number of Visits Per Month")
-]
-
-for col in minimum_standard_cols:
-    df[col] = df[col].map({"No": 0,"Yes": 1})
-
-for col in priority_cols:
-    df[col] = df[col].map({"0: No Priority Areas Achieved":0,"1: Mastered Instructional Routine":1,"2: Mastered Basic Skills":2,"3: Mastered Advanced Skills":3})
-
-
-
-    st.subheader("Data Preview")
-
-    st.dataframe(df.head(),use_container_width=True)
-
-
-# ============================================================
-
-
 
 
 # ============================================================
@@ -533,6 +458,81 @@ def dashboard_page():
     df = st.session_state.df
 
 
+
+
+# ============================================================
+# Data Analysis code
+# ============================================================
+
+
+############# Data cleaning #######################
+
+main_header = df.iloc[0].ffill()
+month_header = df.iloc[1]
+
+columns = []
+
+for main, month in zip(main_header, month_header):
+
+    if pd.notna(month):
+        columns.append(f"{main}_{month}")
+    else:
+        columns.append(str(main))
+
+
+df.columns = columns
+df = df.iloc[2:].reset_index(drop=True)
+
+
+def change_date_format(col):
+    if "_" in col:
+        prefix, date = col.rsplit("_", 1)
+
+        try:
+            date = pd.to_datetime(date)
+            return f"{prefix}_{date.strftime('%b')}"
+        except:
+            return col
+
+    return col
+
+df.columns = [change_date_format(col) for col in df.columns]
+df = df.dropna(axis=1, how="all")
+df = df.dropna(subset=["School Name"])
+df = df.drop(columns=['S/N'])
+
+################# Data Scaling #################################################
+
+from numpy._core.defchararray import startswith
+
+minimum_standard_cols = [
+    col for col in df.columns
+    if col.startswith("Meeting Minimum Standards By Grade?")
+]
+
+priority_cols = [
+    col for col in df.columns
+    if col.startswith("Teacher's Priority Area (0, 1, 2, or 3)")
+]
+total_visit = [
+    col for col in df.columns
+    if col.startswith("Total Number of Visits Per Month")
+]
+
+for col in minimum_standard_cols:
+    df[col] = df[col].map({"No": 0,"Yes": 1})
+
+for col in priority_cols:
+    df[col] = df[col].map({"0: No Priority Areas Achieved":0,"1: Mastered Instructional Routine":1,"2: Mastered Basic Skills":2,"3: Mastered Advanced Skills":3})
+
+
+
+    st.subheader("Data Preview")
+
+    st.dataframe(df.head(),use_container_width=True)
+
+
+# ============================================================
     # ========================================================
     # SIDEBAR
     # ========================================================
