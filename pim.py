@@ -1,11 +1,11 @@
-import streamlit as st
-import numpy as np
-import pandas as pd
+import streamlit as st 
+import numpy as np 
+import pandas as pd 
 import matplotlib.pyplot as plt
 
 
 # ============================================================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # ============================================================
 
 st.set_page_config(
@@ -24,7 +24,7 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if "page" not in st.session_state:
-    st.session_state.page = "login"
+    st.session_state.page = "Login"
 
 if "df" not in st.session_state:
     st.session_state.df = None
@@ -42,179 +42,121 @@ def login_page():
     st.markdown("""
     <style>
 
-    .stApp {
+    /* Remove Streamlit default padding */
+    .block-container {
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+    }
+
+    /* Full page background */
+    .login-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+
         background:
             linear-gradient(
-                135deg,
-                #0F172A 0%,
-                #172554 50%,
-                #0F172A 100%
-            ) !important;
+                rgba(10, 25, 47, 0.90),
+                rgba(10, 25, 47, 0.90)
+            );
+
+        z-index: -1;
     }
 
-    .main .block-container {
-        min-height: 100vh;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding-top: 30px !important;
-        padding-bottom: 30px !important;
-    }
+    /* Login container */
+    .login-container {
+        width: 430px;
+        margin: 100px auto 0 auto;
+        padding: 45px 40px;
 
-    .pim-title {
+        background: rgba(255, 255, 255, 0.97);
+
+        border-radius: 20px;
+
+        box-shadow:
+            0px 15px 40px rgba(0,0,0,0.25);
+
         text-align: center;
-        color: white;
-        font-size: 42px;
+    }
+
+    .login-logo {
+        font-size: 50px;
+        margin-bottom: 10px;
+    }
+
+    .login-title {
+        font-size: 30px;
         font-weight: 700;
-        margin-top: 0;
+        color: #0A2540;
         margin-bottom: 5px;
     }
 
-    .pim-subtitle {
-        text-align: center;
-        color: #CBD5E1;
-        font-size: 17px;
+    .login-subtitle {
+        font-size: 14px;
+        color: #777;
         margin-bottom: 30px;
     }
 
-    [data-testid="stForm"] {
-        background: rgba(15, 23, 42, 0.95);
-        padding: 30px !important;
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.18);
-        box-shadow: 0px 10px 40px rgba(0,0,0,0.45);
-    }
-
-    [data-testid="stForm"] label {
-        color: #E5E7EB !important;
-        font-weight: 500;
-    }
-
-    [data-testid="stForm"] input {
-        background-color: rgba(255,255,255,0.08) !important;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.20) !important;
-        border-radius: 8px !important;
-    }
-
-    [data-testid="stForm"] input::placeholder {
-        color: #94A3B8 !important;
-    }
-
-    [data-testid="stFormSubmitButton"] button {
-        width: 100%;
-        background-color: #2563EB;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 16px;
-        font-weight: 600;
-    }
-
-    [data-testid="stFormSubmitButton"] button:hover {
-        background-color: #1D4ED8;
-        color: white;
-    }
-
     </style>
+
+    <div class="login-background"></div>
+
+    <div class="login-container">
+
+        <div class="login-logo">
+            📊
+        </div>
+
+        <div class="login-title">
+            PIM Dashboard
+        </div>
+
+        <div class="login-subtitle">
+            Program Information Management System
+        </div>
+
+    </div>
+
     """, unsafe_allow_html=True)
 
 
-    # --------------------------------------------------------
-    # TITLE
-    # --------------------------------------------------------
+    # Login form
+    with st.form("login_form"):
 
-    st.markdown(
-        '<div class="pim-title">📊 PIM Dashboard</div>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        """
-        <div class="pim-subtitle">
-            Monitor &nbsp;•&nbsp; Analyze &nbsp;•&nbsp; Improve
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-    # --------------------------------------------------------
-    # LOGIN BOX
-    # --------------------------------------------------------
-
-    left, center, right = st.columns([1, 1.1, 1])
-
-    with center:
-
-        st.markdown(
-            """
-            <div style="
-                text-align:center;
-                color:#FFFFFF;
-                font-size:24px;
-                font-weight:600;
-                margin-bottom:8px;
-            ">
-                Welcome Back!
-            </div>
-            """,
-            unsafe_allow_html=True
+        username = st.text_input(
+            "Username",
+            placeholder="Enter username"
         )
 
-        st.markdown(
-            """
-            <div style="
-                text-align:center;
-                color:#CBD5E1;
-                font-size:14px;
-                margin-bottom:15px;
-            ">
-                Sign in to access the PIM Dashboard
-            </div>
-            """,
-            unsafe_allow_html=True
+        password = st.text_input(
+            "Password",
+            type="password",
+            placeholder="Enter password"
         )
 
-
-        with st.form("login_form"):
-
-            username = st.text_input(
-                "Username",
-                placeholder="Enter your username"
-            )
-
-            password = st.text_input(
-                "Password",
-                type="password",
-                placeholder="Enter your password"
-            )
-
-            login_button = st.form_submit_button(
-                "🔐 Login"
-            )
-
+        login_button = st.form_submit_button(
+            "Login",
+            use_container_width=True
+        )
 
         if login_button:
 
             if username == "admin" and password == "1234":
 
                 st.session_state.logged_in = True
-                st.session_state.page = "upload"
+                st.session_state.page = "Upload"
 
                 st.rerun()
 
             else:
 
-                st.error(
-                    "Incorrect username or password."
-                )
+                st.error("Invalid username or password.")
 
 
 # ============================================================
-# DATA UPLOAD PAGE
+# UPLOAD PAGE
 # ============================================================
 
 def upload_page():
@@ -222,173 +164,112 @@ def upload_page():
     st.markdown("""
     <style>
 
-    .stApp {
-        background:
-            linear-gradient(
-                135deg,
-                #F8FAFC 0%,
-                #EEF2FF 50%,
-                #F8FAFC 100%
-            ) !important;
-    }
-
-    .main .block-container {
-        max-width: 900px !important;
-        margin: auto;
-        padding-top: 5rem !important;
-    }
-
     .upload-title {
-        text-align: center;
-        color: #0F172A;
         font-size: 36px;
         font-weight: 700;
+        color: #0A2540;
         margin-bottom: 5px;
     }
 
     .upload-subtitle {
-        text-align: center;
-        color: #64748B;
+        color: #777;
         font-size: 16px;
-        margin-bottom: 35px;
-    }
-
-    .upload-card {
-        background: white;
-        padding: 35px;
-        border-radius: 18px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0px 8px 30px rgba(15,23,42,0.08);
+        margin-bottom: 30px;
     }
 
     </style>
     """, unsafe_allow_html=True)
 
 
-    # --------------------------------------------------------
-    # TITLE
-    # --------------------------------------------------------
-
     st.markdown(
-        '<div class="upload-title">📂 Data Upload</div>',
+        '<div class="upload-title">📂 Upload Dataset</div>',
         unsafe_allow_html=True
     )
 
     st.markdown(
-        """
-        <div class="upload-subtitle">
-            Upload your PIM Excel file and select the worksheet
-            you want to analyze.
+        '<div class="upload-subtitle">Upload your PIM Excel dataset to continue.</div>',
+        unsafe_allow_html=True
+    )
+
+
+    uploaded_file = st.file_uploader(
+        "Choose an Excel file",
+        type=["xlsx", "xls"]
+    )
+
+
+    if uploaded_file is not None:
+
+        try:
+
+            # Read Excel workbook
+            excel_file = pd.ExcelFile(uploaded_file)
+
+            sheets = excel_file.sheet_names
+
+            selected_sheet = st.selectbox(
+                "Select Sheet",
+                sheets
+            )
+
+
+            if st.button(
+                "Load Dataset",
+                use_container_width=True
+            ):
+
+                uploaded_file.seek(0)
+
+                df = pd.read_excel(
+                    uploaded_file,
+                    sheet_name=selected_sheet,
+                    skiprows=17,
+                    header=None
+                )
+
+                st.session_state.df = df
+                st.session_state.selected_sheet = selected_sheet
+                st.session_state.page = "Dashboard"
+
+                st.success("Dataset loaded successfully!")
+
+                st.rerun()
+
+
+        except Exception as e:
+
+            st.error(
+                f"Unable to read the Excel file: {e}"
+            )
+
+
+# ============================================================
+# KPI CARD
+# ============================================================
+
+def kpi_card(title, value, icon, subtitle):
+
+    return f"""
+    <div class="kpi-card">
+
+        <div class="kpi-icon">
+            {icon}
         </div>
-        """,
-        unsafe_allow_html=True
-    )
 
+        <div class="kpi-title">
+            {title}
+        </div>
 
-    left, center, right = st.columns([1, 2, 1])
+        <div class="kpi-value">
+            {value}
+        </div>
 
-    with center:
+        <div class="kpi-subtitle">
+            {subtitle}
+        </div>
 
-        st.markdown(
-            '<div class="upload-card">',
-            unsafe_allow_html=True
-        )
-
-
-        uploaded_file = st.file_uploader(
-            "Upload Excel File",
-            type=["xlsx", "xls"],
-            help="Upload your PIM Excel dataset."
-        )
-
-
-        if uploaded_file is not None:
-
-            try:
-
-                excel_file = pd.ExcelFile(
-                    uploaded_file
-                )
-
-                sheet_names = excel_file.sheet_names
-
-
-                # Selectbox label
-                st.markdown("""
-                <style>
-
-                div[data-testid="stSelectbox"] label {
-                    color: #000000 !important;
-                }
-
-                </style>
-                """, unsafe_allow_html=True)
-
-
-                selected_sheet = st.selectbox(
-                    "Select Worksheet",
-                    sheet_names
-                )
-
-
-                if st.button(
-                    "Continue to Dashboard →",
-                    use_container_width=True
-                ):
-
-                    try:
-
-                        df = pd.read_excel(
-                            uploaded_file,
-                            sheet_name=selected_sheet,
-                            skiprows=17,
-                            header=None
-                        )
-
-
-                        if len(df) < 2:
-
-                            st.error(
-                                "The selected worksheet does not contain "
-                                "enough rows to create the required headers."
-                            )
-
-                        else:
-
-                            # Save original dataframe
-                            st.session_state.df = df
-
-                            # Save sheet name
-                            st.session_state.selected_sheet = selected_sheet
-
-                            # Move to dashboard
-                            st.session_state.page = "dashboard"
-
-                            st.rerun()
-
-
-                    except Exception as e:
-
-                        st.error(
-                            "Unable to load the selected worksheet."
-                        )
-
-                        st.code(str(e))
-
-
-            except Exception as e:
-
-                st.error(
-                    "Unable to read the Excel file."
-                )
-
-                st.code(str(e))
-
-
-        st.markdown(
-            '</div>',
-            unsafe_allow_html=True
-        )
+    </div>
+    """
 
 
 # ============================================================
@@ -397,221 +278,41 @@ def upload_page():
 
 def dashboard_page():
 
-    # ========================================================
-    # DASHBOARD CSS
-    # ========================================================
-
-    st.markdown("""
-    <style>
-
-    .stApp {
-        background:
-            linear-gradient(
-                135deg,
-                #F8FAFC 0%,
-                #EEF2FF 50%,
-                #F8FAFC 100%
-            ) !important;
-    }
-
-    .main .block-container {
-        max-width: none !important;
-        width: 100% !important;
-
-        padding-top: 2rem !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-        padding-bottom: 2rem !important;
-    }
-
-
-    /* =====================================================
-       DASHBOARD TITLE
-       ===================================================== */
-
-    .dashboard-title {
-        color: #0F172A;
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .dashboard-subtitle {
-        color: #64748B;
-        font-size: 16px;
-        margin-bottom: 25px;
-    }
-
-
-    /* =====================================================
-       KPI CARDS
-       ===================================================== */
-
-    .kpi-card {
-        background: white;
-
-        border: 1px solid #E2E8F0;
-        border-radius: 16px;
-
-        padding: 20px;
-
-        min-height: 145px;
-
-        box-shadow:
-            0px 4px 15px rgba(15, 23, 42, 0.08);
-
-        transition: all 0.2s ease;
-    }
-
-
-    .kpi-card:hover {
-
-        transform: translateY(-2px);
-
-        box-shadow:
-            0px 8px 20px rgba(15, 23, 42, 0.12);
-    }
-
-
-    .kpi-icon {
-
-        font-size: 25px;
-
-        margin-bottom: 10px;
-    }
-
-
-    .kpi-title {
-
-        color: #64748B;
-
-        font-size: 14px;
-
-        font-weight: 500;
-    }
-
-
-    .kpi-value {
-
-        color: #0F172A;
-
-        font-size: 30px;
-
-        font-weight: 700;
-
-        margin-top: 5px;
-    }
-
-
-    .kpi-subtitle {
-
-        color: #94A3B8;
-
-        font-size: 12px;
-
-        margin-top: 5px;
-    }
-
-
-    /* =====================================================
-       SIDEBAR
-       ===================================================== */
-
-    [data-testid="stSidebar"] {
-
-        background-color: #0F172A;
-    }
-
-
-    [data-testid="stSidebar"] * {
-
-        color: white !important;
-    }
-
-
-    [data-testid="stSidebar"] label {
-
-        color: white !important;
-    }
-
-
-    [data-testid="stSidebar"] button {
-
-        border-radius: 8px;
-    }
-
-
-    /* =====================================================
-       BUTTONS
-       ===================================================== */
-
-    .stButton > button,
-    .stDownloadButton > button {
-
-        border-radius: 8px;
-
-        font-weight: 600;
-    }
-
-
-    /* =====================================================
-       DATAFRAME
-       ===================================================== */
-
-    [data-testid="stDataFrame"] {
-
-        border-radius: 10px;
-    }
-
-
-    /* =====================================================
-       ALERT
-       ===================================================== */
-
-    .stAlert {
-
-        border-radius: 10px;
-    }
-
-    </style>
-    """, unsafe_allow_html=True)
-
-
-    # ========================================================
-    # CHECK DATA
-    # ========================================================
+    # --------------------------------------------------------
+    # Check dataset
+    # --------------------------------------------------------
 
     if st.session_state.df is None:
 
-        st.error(
-            "No data has been uploaded."
-        )
+        st.warning("No dataset has been uploaded.")
 
-        st.session_state.page = "upload"
+        if st.button("Go to Upload Page"):
 
-        st.rerun()
+            st.session_state.page = "Upload"
 
+            st.rerun()
+
+        return
+
+
+    # --------------------------------------------------------
+    # Copy original dataframe
+    # --------------------------------------------------------
 
     df = st.session_state.df.copy()
 
 
-    # ========================================================
-    # DATA CLEANING
-    # ========================================================
+    # --------------------------------------------------------
+    # CREATE COLUMN NAMES
+    # --------------------------------------------------------
 
     try:
-
-        # ----------------------------------------------------
-        # CREATE HEADER
-        # ----------------------------------------------------
 
         main_header = df.iloc[0].ffill()
 
         month_header = df.iloc[1]
 
-
         columns = []
-
 
         for main, month in zip(
             main_header,
@@ -631,169 +332,132 @@ def dashboard_page():
                 )
 
 
-        # ----------------------------------------------------
-        # ASSIGN COLUMNS
-        # ----------------------------------------------------
-
         df.columns = columns
 
-
-        # Remove header rows
+        # Remove first two header rows
         df = df.iloc[2:].reset_index(drop=True)
-
-
-        # ----------------------------------------------------
-        # CHANGE DATE FORMAT
-        # ----------------------------------------------------
-
-        def change_date_format(col):
-
-            if "_" in col:
-
-                prefix, date = col.rsplit(
-                    "_",
-                    1
-                )
-
-                try:
-
-                    date = pd.to_datetime(
-                        date
-                    )
-
-                    return (
-                        f"{prefix}_"
-                        f"{date.strftime('%b')}"
-                    )
-
-                except:
-
-                    return col
-
-            return col
-
-
-        df.columns = [
-            change_date_format(col)
-            for col in df.columns
-        ]
-
-
-        # ----------------------------------------------------
-        # REMOVE EMPTY COLUMNS
-        # ----------------------------------------------------
-
-        df = df.dropna(
-            axis=1,
-            how="all"
-        )
-
-
-        # ----------------------------------------------------
-        # REMOVE ROWS WITHOUT SCHOOL
-        # ----------------------------------------------------
-
-        if "School Name" in df.columns:
-
-            df = df.dropna(
-                subset=["School Name"]
-            )
-
-
-        # ----------------------------------------------------
-        # REMOVE S/N
-        # ----------------------------------------------------
-
-        if "S/N" in df.columns:
-
-            df = df.drop(
-                columns=["S/N"]
-            )
 
 
     except Exception as e:
 
         st.error(
-            "There was an error while cleaning the data."
+            f"Error creating column names: {e}"
         )
-
-        st.code(str(e))
 
         return
 
 
-    # ========================================================
-    # DATA SCALING / CONVERSION
-    # ========================================================
+    # --------------------------------------------------------
+    # CHANGE DATE FORMAT
+    # Example:
+    # Total Number of Visits Per Month_2026-01-01
+    # becomes:
+    # Total Number of Visits Per Month_Jan
+    # --------------------------------------------------------
+
+    def change_date_format(col):
+
+        if "_" in str(col):
+
+            prefix, date = str(col).rsplit("_", 1)
+
+            try:
+
+                date = pd.to_datetime(date)
+
+                return f"{prefix}_{date.strftime('%b')}"
+
+            except:
+
+                return col
+
+        return col
+
+
+    df.columns = [
+        change_date_format(col)
+        for col in df.columns
+    ]
+
 
     # --------------------------------------------------------
-    # Minimum Standard Columns
+    # REMOVE COMPLETELY EMPTY COLUMNS
+    # --------------------------------------------------------
+
+    df = df.dropna(
+        axis=1,
+        how="all"
+    )
+
+
+    # --------------------------------------------------------
+    # REMOVE ROWS WITHOUT SCHOOL NAME
+    # --------------------------------------------------------
+
+    if "School Name" in df.columns:
+
+        df = df[
+            df["School Name"].notna()
+        ].copy()
+
+
+    # --------------------------------------------------------
+    # REMOVE S/N IF EXISTS
+    # --------------------------------------------------------
+
+    if "S/N" in df.columns:
+
+        df = df.drop(
+            columns=["S/N"]
+        )
+
+
+    # --------------------------------------------------------
+    # IDENTIFY MONTHLY COLUMNS
     # --------------------------------------------------------
 
     minimum_standard_cols = [
-
         col
-
         for col in df.columns
-
-        if col.startswith(
+        if str(col).startswith(
             "Meeting Minimum Standards By Grade?"
         )
-
     ]
 
-
-    # --------------------------------------------------------
-    # Priority Columns
-    # --------------------------------------------------------
 
     priority_cols = [
-
         col
-
         for col in df.columns
-
-        if col.startswith(
+        if str(col).startswith(
             "Teacher's Priority Area"
         )
-
     ]
 
-
-    # --------------------------------------------------------
-    # Visit Columns
-    # --------------------------------------------------------
 
     total_visit_cols = [
-
         col
-
         for col in df.columns
-
-        if col.startswith(
+        if str(col).startswith(
             "Total Number of Visits Per Month"
         )
-
     ]
 
 
-    # ========================================================
-    # CONVERT YES / NO
-    # ========================================================
+    # --------------------------------------------------------
+    # CONVERT MINIMUM STANDARD TO 0 / 1
+    # --------------------------------------------------------
 
     for col in minimum_standard_cols:
 
-        df[col] = df[col].map(
-            {
-                "No": 0,
-                "Yes": 1
-            }
-        )
+        df[col] = df[col].map({
+            "No": 0,
+            "Yes": 1
+        })
 
 
-    # ========================================================
+    # --------------------------------------------------------
     # CONVERT PRIORITY AREA
-    # ========================================================
+    # --------------------------------------------------------
 
     priority_mapping = {
 
@@ -815,33 +479,33 @@ def dashboard_page():
         )
 
 
-    # ========================================================
-    # VISIT CALCULATION
-    # ========================================================
+    # --------------------------------------------------------
+    # CALCULATE TOTAL VISITS
+    # --------------------------------------------------------
 
-    if len(total_visit_cols) > 0:
+    if total_visit_cols:
 
-        monthly_visit = (
+        visit_data = (
             df[total_visit_cols]
-            .apply(pd.to_numeric, errors="coerce")
+            .apply(
+                pd.to_numeric,
+                errors="coerce"
+            )
             .fillna(0)
-            .sum()
         )
+
+        monthly_visit = visit_data.sum()
 
         total_Visit = monthly_visit.sum()
 
     else:
 
-        monthly_visit = pd.Series(
-            dtype=float
-        )
-
         total_Visit = 0
 
 
-    # ========================================================
+    # --------------------------------------------------------
     # KPI VALUES
-    # ========================================================
+    # --------------------------------------------------------
 
     if "RtR Staff Name" in df.columns:
 
@@ -882,66 +546,222 @@ def dashboard_page():
 
 
     # ========================================================
-    # DASHBOARD TITLE
+    # DASHBOARD CSS
+    # ========================================================
+
+    st.markdown("""
+    <style>
+
+    /* ------------------------------------------------------
+       GENERAL
+    ------------------------------------------------------ */
+
+    .stApp {
+
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc 0%,
+                #eef3f8 100%
+            );
+
+    }
+
+
+    /* ------------------------------------------------------
+       MAIN CONTAINER
+    ------------------------------------------------------ */
+
+    .block-container {
+
+        padding-top: 2rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+        padding-bottom: 2rem;
+
+    }
+
+
+    /* ------------------------------------------------------
+       DASHBOARD TITLE
+    ------------------------------------------------------ */
+
+    .dashboard-title {
+
+        font-size: 34px;
+        font-weight: 700;
+
+        color: #0A2540;
+
+        margin-bottom: 3px;
+
+    }
+
+
+    .dashboard-subtitle {
+
+        font-size: 15px;
+
+        color: #777;
+
+        margin-bottom: 25px;
+
+    }
+
+
+    /* ------------------------------------------------------
+       KPI CARD
+    ------------------------------------------------------ */
+
+    .kpi-card {
+
+        background: #ffffff;
+
+        padding: 24px 20px;
+
+        border-radius: 18px;
+
+        min-height: 175px;
+
+        text-align: center;
+
+        box-shadow:
+            0 5px 20px rgba(0, 0, 0, 0.08);
+
+        border: 1px solid #edf0f4;
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+
+    }
+
+
+    .kpi-card:hover {
+
+        transform: translateY(-4px);
+
+        box-shadow:
+            0 10px 28px rgba(0, 0, 0, 0.12);
+
+    }
+
+
+    /* ------------------------------------------------------
+       KPI ICON
+    ------------------------------------------------------ */
+
+    .kpi-icon {
+
+        font-size: 34px;
+
+        margin-bottom: 8px;
+
+    }
+
+
+    /* ------------------------------------------------------
+       KPI TITLE
+    ------------------------------------------------------ */
+
+    .kpi-title {
+
+        font-size: 15px;
+
+        font-weight: 600;
+
+        color: #666;
+
+        margin-bottom: 5px;
+
+    }
+
+
+    /* ------------------------------------------------------
+       KPI VALUE
+    ------------------------------------------------------ */
+
+    .kpi-value {
+
+        font-size: 34px;
+
+        font-weight: 750;
+
+        color: #0A2540;
+
+        line-height: 1.2;
+
+        margin: 5px 0;
+
+    }
+
+
+    /* ------------------------------------------------------
+       KPI SUBTITLE
+    ------------------------------------------------------ */
+
+    .kpi-subtitle {
+
+        font-size: 13px;
+
+        color: #999;
+
+        margin-top: 5px;
+
+    }
+
+
+    /* ------------------------------------------------------
+       DIVIDER
+    ------------------------------------------------------ */
+
+    .dashboard-divider {
+
+        height: 1px;
+
+        background: #e5e7eb;
+
+        margin-top: 25px;
+
+        margin-bottom: 25px;
+
+    }
+
+
+    /* ------------------------------------------------------
+       SIDEBAR
+    ------------------------------------------------------ */
+
+    [data-testid="stSidebar"] {
+
+        background: #ffffff;
+
+    }
+
+
+    </style>
+    """, unsafe_allow_html=True)
+
+
+    # ========================================================
+    # DASHBOARD HEADER
     # ========================================================
 
     st.markdown(
-        '<div class="dashboard-title">'
-        '📊 PIM Dashboard'
+        '<div class="dashboard-title">📊 PIM Dashboard</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="dashboard-subtitle">'
+        'Program Information Management Overview'
         '</div>',
         unsafe_allow_html=True
     )
 
 
-    st.markdown(
-        f"""
-        <div class="dashboard-subtitle">
-            Worksheet: {st.session_state.selected_sheet}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
     # ========================================================
-    # KPI CARD FUNCTION
-    # ========================================================
-
-    def kpi_card(
-        title,
-        value,
-        icon,
-        subtitle=""
-    ):
-
-        st.markdown(
-            f"""
-            <div class="kpi-card">
-
-                <div class="kpi-icon">
-                    {icon}
-                </div>
-
-                <div class="kpi-title">
-                    {title}
-                </div>
-
-                <div class="kpi-value">
-                    {value}
-                </div>
-
-                <div class="kpi-subtitle">
-                    {subtitle}
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-    # ========================================================
-    # DISPLAY KPI CARDS
+    # KPI CARDS
     # ========================================================
 
     col1, col2, col3, col4 = st.columns(
@@ -950,259 +770,288 @@ def dashboard_page():
     )
 
 
-    # --------------------------------------------------------
-    # CARD 1
-    # --------------------------------------------------------
-
     with col1:
 
-        kpi_card(
-            title="Total LF",
-            value=f"{total_LF:,}",
-            icon="👥",
-            subtitle="LFs in the program"
+        st.markdown(
+            kpi_card(
+                "Total LF",
+                total_LF,
+                "👥",
+                "LFs in the program"
+            ),
+            unsafe_allow_html=True
         )
 
-
-    # --------------------------------------------------------
-    # CARD 2
-    # --------------------------------------------------------
 
     with col2:
 
-        kpi_card(
-            title="Total Schools",
-            value=f"{total_schools:,}",
-            icon="🏫",
-            subtitle="Schools in the program"
+        st.markdown(
+            kpi_card(
+                "Total Schools",
+                total_schools,
+                "🏫",
+                "Schools in the program"
+            ),
+            unsafe_allow_html=True
         )
 
-
-    # --------------------------------------------------------
-    # CARD 3
-    # --------------------------------------------------------
 
     with col3:
 
-        kpi_card(
-            title="Total Teachers",
-            value=f"{total_teachers:,}",
-            icon="👨‍🏫",
-            subtitle="Teachers in the program"
+        st.markdown(
+            kpi_card(
+                "Total Teachers",
+                total_teachers,
+                "👨‍🏫",
+                "Teachers supported"
+            ),
+            unsafe_allow_html=True
         )
 
-
-    # --------------------------------------------------------
-    # CARD 4
-    # --------------------------------------------------------
 
     with col4:
 
-        kpi_card(
-            title="Total Visits",
-            value=f"{total_Visit:,}",
-            icon="📍",
-            subtitle="Total visits recorded"
+        st.markdown(
+            kpi_card(
+                "Total Visits",
+                total_Visit,
+                "📍",
+                "Classroom visits"
+            ),
+            unsafe_allow_html=True
         )
 
 
     # ========================================================
-    # SPACE AFTER KPI CARDS
+    # DIVIDER
     # ========================================================
 
     st.markdown(
-        "<br>",
+        '<div class="dashboard-divider"></div>',
         unsafe_allow_html=True
     )
 
 
     # ========================================================
-    # SIDEBAR
+    # SIDEBAR NAVIGATION
     # ========================================================
 
-    with st.sidebar:
+    st.sidebar.title("📊 PIM Dashboard")
 
-        st.markdown(
-            """
-            <div style="
-                font-size:24px;
-                font-weight:700;
-                margin-bottom:20px;
-            ">
-                📊 PIM Dashboard
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    st.sidebar.markdown(
+        "---"
+    )
 
 
-        st.markdown("---")
+    page = st.sidebar.radio(
+        "Navigation",
+        [
+            "Home",
+            "Schools",
+            "Teachers",
+            "Visits",
+            "Standards",
+            "Reports"
+        ]
+    )
 
 
-        page = st.radio(
-            "Navigation",
-            [
-                "Home",
-                "Schools",
-                "Teachers",
-                "Visits",
-                "Standards",
-                "Reports"
-            ]
-        )
+    st.sidebar.markdown(
+        "---"
+    )
 
 
-        st.markdown("---")
+    if st.sidebar.button(
+        "📂 Upload New Dataset",
+        use_container_width=True
+    ):
+
+        st.session_state.page = "Upload"
+
+        st.rerun()
 
 
-        st.caption(
-            f"Worksheet: "
-            f"{st.session_state.selected_sheet}"
-        )
+    if st.sidebar.button(
+        "🚪 Logout",
+        use_container_width=True
+    ):
 
+        st.session_state.logged_in = False
+        st.session_state.page = "Login"
+        st.session_state.df = None
 
-        st.markdown("---")
-
-
-        # ----------------------------------------------------
-        # CHANGE DATA
-        # ----------------------------------------------------
-
-        if st.button(
-            "📂 Change Data",
-            use_container_width=True
-        ):
-
-            st.session_state.page = "upload"
-
-            st.rerun()
-
-
-        # ----------------------------------------------------
-        # LOGOUT
-        # ----------------------------------------------------
-
-        if st.button(
-            "🚪 Logout",
-            use_container_width=True
-        ):
-
-            st.session_state.logged_in = False
-
-            st.session_state.page = "login"
-
-            st.session_state.df = None
-
-            st.session_state.selected_sheet = None
-
-            st.rerun()
+        st.rerun()
 
 
     # ========================================================
-    # DASHBOARD CONTENT
+    # PAGE CONTENT
     # ========================================================
 
     if page == "Home":
 
-        st.subheader("Home")
-
+        st.subheader("🏠 Home")
 
         st.info(
-            "Your Home dashboard calculations "
-            "and charts will go here."
+            "Welcome to the PIM Dashboard."
         )
 
-
-        st.dataframe(
-            df.head(),
-            use_container_width=True
-        )
-
-
-    # ========================================================
-    # SCHOOLS
-    # ========================================================
 
     elif page == "Schools":
 
-        st.subheader("Schools")
+        st.subheader("🏫 Schools")
 
+        if "School Name" in df.columns:
 
-        st.info(
-            "Your Schools analysis goes here."
-        )
+            school_count = df[
+                "School Name"
+            ].nunique()
 
+            st.metric(
+                "Unique Schools",
+                school_count
+            )
 
-    # ========================================================
-    # TEACHERS
-    # ========================================================
+            school_table = (
+                df[
+                    ["School Name"]
+                ]
+                .drop_duplicates()
+                .reset_index(drop=True)
+            )
+
+            st.dataframe(
+                school_table,
+                use_container_width=True
+            )
+
 
     elif page == "Teachers":
 
-        st.subheader("Teachers")
+        st.subheader("👨‍🏫 Teachers")
 
+        if "Teacher Name" in df.columns:
 
-        st.info(
-            "Your Teachers analysis goes here."
-        )
+            teacher_count = df[
+                "Teacher Name"
+            ].nunique()
 
+            st.metric(
+                "Unique Teachers",
+                teacher_count
+            )
 
-    # ========================================================
-    # VISITS
-    # ========================================================
+            teacher_table = (
+                df[
+                    ["Teacher Name"]
+                ]
+                .drop_duplicates()
+                .reset_index(drop=True)
+            )
+
+            st.dataframe(
+                teacher_table,
+                use_container_width=True
+            )
+
 
     elif page == "Visits":
 
-        st.subheader("Visits")
+        st.subheader("📍 Visits")
 
+        if total_visit_cols:
 
-        st.info(
-            "Your Visits analysis goes here."
-        )
+            monthly_visit_display = (
+                df[total_visit_cols]
+                .apply(
+                    pd.to_numeric,
+                    errors="coerce"
+                )
+                .fillna(0)
+                .sum()
+                .reset_index()
+            )
 
+            monthly_visit_display.columns = [
+                "Month",
+                "Total Visits"
+            ]
 
-    # ========================================================
-    # STANDARDS
-    # ========================================================
+            st.dataframe(
+                monthly_visit_display,
+                use_container_width=True
+            )
+
 
     elif page == "Standards":
 
-        st.subheader("Standards")
-
-
-        st.info(
-            "Your Standards analysis goes here."
+        st.subheader(
+            "📈 Meeting Minimum Standards"
         )
 
+        if minimum_standard_cols:
 
-    # ========================================================
-    # REPORTS
-    # ========================================================
+            standard_data = (
+                df[minimum_standard_cols]
+                .apply(
+                    pd.to_numeric,
+                    errors="coerce"
+                )
+            )
+
+            total_standard_meet = (
+                standard_data.sum().sum()
+            )
+
+            total_standard_records = (
+                standard_data.count().sum()
+            )
+
+
+            if total_standard_records > 0:
+
+                standard_percentage = (
+                    total_standard_meet /
+                    total_standard_records
+                ) * 100
+
+            else:
+
+                standard_percentage = 0
+
+
+            st.metric(
+                "Standards Met",
+                f"{standard_percentage:.1f}%"
+            )
+
 
     elif page == "Reports":
 
-        st.subheader("Reports")
+        st.subheader("📑 Reports")
 
-
-        st.info(
-            "Your Reports analysis goes here."
+        st.write(
+            "Report section is ready for additional analysis."
         )
 
 
 # ============================================================
-# PAGE ROUTING
+# MAIN APPLICATION ROUTING
 # ============================================================
 
-if st.session_state.page == "login":
+if not st.session_state.logged_in:
 
     login_page()
 
+else:
 
-elif st.session_state.page == "upload":
+    if st.session_state.page == "Upload":
 
-    upload_page()
+        upload_page()
 
+    elif st.session_state.page == "Dashboard":
 
-elif st.session_state.page == "dashboard":
+        dashboard_page()
 
-    dashboard_page()
+    else:
+
+        upload_page()
