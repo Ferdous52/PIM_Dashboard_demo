@@ -515,14 +515,100 @@ def dashboard_page():
     
     for col in priority_cols:
         df[col] = df[col].map({"0: No Priority Areas Achieved":0,"1: Mastered Instructional Routine":1,"2: Mastered Basic Skills":2,"3: Mastered Advanced Skills":3})
-    
-    
+  
     ################################## Dashboard Card VAlue ########################
     total_LF = df['RtR Staff Name'].nunique()
     total_schools = df["School Name"].nunique()
     total_teachers = df["Teacher Name"].nunique()
-
+    total_Visit = df[months].sum()
 ###################################################################################################################################################################################
+
+
+    ##### KPI for Dashboard
+    def kpi_card(title, value, icon, subtitle=""):
+    st.markdown(
+        f"""
+        <div class="kpi-card">
+            <div class="kpi-icon">{icon}</div>
+            <div class="kpi-title">{title}</div>
+            <div class="kpi-value">{value}</div>
+            <div class="kpi-subtitle">{subtitle}</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+        st.markdown("""
+    <style>
+    
+    .kpi-card {
+        background: white;
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 145px;
+        box-shadow: 0px 4px 15px rgba(15, 23, 42, 0.08);
+    }
+    
+    .kpi-icon {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+    
+    .kpi-title {
+        color: #64748B;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .kpi-value {
+        color: #0F172A;
+        font-size: 30px;
+        font-weight: 700;
+        margin-top: 5px;
+    }
+    
+    .kpi-subtitle {
+        color: #94A3B8;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    </style>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        kpi_card(
+            "Total LF",
+            f"{total_LF:,}",
+            "LF's in the program"
+        )
+    
+    with col2:
+        kpi_card(
+            "Total Teachers",
+            f"{total_schools:,}",
+            "🏫",
+            "Schools in the Program"
+        )
+    
+    with col3:
+        kpi_card(
+            "Total Teachers",
+            f"{int(total_teachers):,}",
+            "👨‍🏫",
+            "Total Teachers"
+        )
+    
+    with col4:
+        kpi_card(
+            "Standards Met",
+            f"{total_Visit:.1f}%",
+            "📍",
+            "Total Visit"
+        )
 
     # ========================================================
     # SIDEBAR
