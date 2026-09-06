@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -615,4 +614,3 @@ elif st.session_state.page == "upload":
 elif st.session_state.page == "dashboard":
 
     dashboard_page()
-```
