@@ -420,14 +420,10 @@ for col in priority_cols:
     df[col] = df[col].map({"0: No Priority Areas Achieved":0,"1: Mastered Instructional Routine":1,"2: Mastered Basic Skills":2,"3: Mastered Advanced Skills":3})
 
 
-   st.markdown("---")
 
     st.subheader("Data Preview")
 
-    st.dataframe(
-        df.head(),
-        use_container_width=True
-    )
+    st.dataframe(df.head(),use_container_width=True)
 
 
 # ============================================================
