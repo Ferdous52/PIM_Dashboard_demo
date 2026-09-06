@@ -515,12 +515,19 @@ def dashboard_page():
     
     for col in priority_cols:
         df[col] = df[col].map({"0: No Priority Areas Achieved":0,"1: Mastered Instructional Routine":1,"2: Mastered Basic Skills":2,"3: Mastered Advanced Skills":3})
-  
+        
+    months = [
+        col for col in df.columns
+        if col.startswith("Total Number of Visits Per Month")
+    ]
+    monthly_visit = df[months].sum()
+    
+
     ################################## Dashboard Card VAlue ########################
     total_LF = df['RtR Staff Name'].nunique()
     total_schools = df["School Name"].nunique()
     total_teachers = df["Teacher Name"].nunique()
-    total_Visit = df[months].sum()
+    total_Visit = monthly_visit.sum()
 ###################################################################################################################################################################################
 
 
