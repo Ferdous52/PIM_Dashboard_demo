@@ -538,7 +538,7 @@ def dashboard_page():
             unsafe_allow_html=True
         )
     
-            st.markdown("""
+        st.markdown("""
         <style>
         
         .kpi-card {
