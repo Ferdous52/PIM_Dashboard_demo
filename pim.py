@@ -279,6 +279,12 @@ def dashboard_page():
         st.markdown("""<style>div[data-testid="stMetric"] {background-color: #FFFFFF ;border: 1px solid #E2E8F0;padding: 20px;border-radius: 12px;box-shadow: 0 2px 8px rgba(0,0,0,0.08);}</style>""", unsafe_allow_html=True)
         
         with col1:
+            st.markdown("""<style>
+            .card {padding: 20px;border-radius: 15px;text-align: center;box-shadow: 0 4px 12px rgba(0,0,0,0.08);}
+            .card-blue {background-color: #DBEAFE;}
+            </style>""", unsafe_allow_html=True)
+
+            
             st.markdown("""<div class="card card-blue"><h4>Total Schools</h4><h2>120</h2></div>""", unsafe_allow_html=True)
             total_schools = df["School Name"].nunique()
             st.metric("Total Schools", total_schools)
