@@ -317,8 +317,18 @@ def dashboard_page():
             st.dataframe(monthly_visit)
 
         with col2:
-            min_std_G1 = (df[df['Grade'] == 1].groupby('RtR Staff Name')[minimum_standard_cols].sum().sum(axis=1).reset_index(name='Total Standard Meet_Grade-1'))
-            st.dataframe(min_std_G1)
+            df1 = df.copy()
+            table_1 = pd.pivot_table(
+                df1,
+                index="RtR Staff Name",
+                values=["School Name","Teacher Name"],
+                aggfunc={"School Name":"nunique", "Teacher Name": "count"},
+                margins=True,
+                margins_name="Total"
+            )
+            
+            Schl_Distn = table_1.reset_index()
+            st.dataframe(Schl_Distn)
         
 ############################################################################################################################################################################
     elif page == "Schools":
