@@ -276,12 +276,12 @@ def dashboard_page():
 
     if page == "Home":
         col1, col2= st.columns(2)
-        with col1
+        with col1:
             df1 = df.copy()
             table_1 = pd.pivot_table(df1,index="RtR Staff Name",values=["School Name","Teacher Name"],aggfunc={"School Name":"nunique", "Teacher Name": "count"},margins=True,margins_name="Total")
             Schl_Distn = table_1.reset_index()
             st.dataframe(Schl_Distn,width="content")
-        with col2 
+        with col2:
             ##### Target Visit #####################################
             df2=table_1.copy()
             Target_Visit = (df2["School Name"]*2*2*len(total_visit))
