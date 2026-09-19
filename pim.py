@@ -183,7 +183,7 @@ def data_clean(df):
 
     minimum_standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
     priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area (0, 1, 2, or 3)")]
-     total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
+    total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
 
     for col in minimum_standard_cols:
         df[col] = df[col].map({"No": 0,"Yes": 1})
