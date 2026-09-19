@@ -270,8 +270,8 @@ def dashboard_page():
     # DASHBOARD CONTENT
     # ========================================================
 
-    st.markdown('<div class="dashboard-title">📊 PIM Dashboard</div>',unsafe_allow_html=True)
-    st.markdown(f"""<div class="dashboard-subtitle">Worksheet: {st.session_state.selected_sheet}</div>""",unsafe_allow_html=True)
+    #st.markdown('<div class="dashboard-title">📊 PIM Dashboard</div>',unsafe_allow_html=True)
+    #st.markdown(f"""<div class="dashboard-subtitle">Worksheet: {st.session_state.selected_sheet}</div>""",unsafe_allow_html=True)
 
     # ========================================================
     # YOUR EXISTING ANALYSIS CODE GOES HERE
@@ -285,18 +285,18 @@ def dashboard_page():
             st.metric("Total Schools", total_schools)
     
         with col2:
-            visit_cols = [col for col in df.columnsif col.startswith("Total Number of Visits Per Month")]
+            visit_cols = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
             total_visits = df[visit_cols].sum().sum()
             st.metric("Total Visits", int(total_visits))
         
         with col3:
-            standard_cols = [col for col in df.columnsif col.startswith("Meeting Minimum Standards By Grade?")]
+            standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
             if standard_cols:
                 standard_rate = df[standard_cols].mean().mean() * 100
                 st.metric("Minimum Standard", f"{standard_rate:.1f}%")
         
         with col4:
-            priority_cols = [col for col in df.columnsif col.startswith("Teacher's Priority Area")]
+            priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area")]
         
             if priority_cols:
                 avg_priority = df[priority_cols].mean().mean()
