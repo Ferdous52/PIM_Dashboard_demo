@@ -282,55 +282,26 @@ def dashboard_page():
             Schl_Distn = table_1.reset_index()
             st.dataframe(Schl_Distn,width="content")
         with col2:
-            ##### Target Visit #####################################
             df2=table_1.copy()
             Target_Visit = (df2["School Name"]*2*2*len(total_visit))
             Target_Visit = pd.DataFrame(Target_Visit)
             Target_Visit = Target_Visit.rename(columns={'School Name':"Target_Visit"})
-            
-            ######## Total Visited #################################
-            visited = pd.pivot_table(
-                df,
-                index = "RtR Staff Name",
-                values=df[total_visit],
-                aggfunc='sum',
-                margins=True,
-                margins_name='Total'
-            ).sum(axis=1)
+           
+            visited = pd.pivot_table(df,index = "RtR Staff Name",values=df[total_visit],aggfunc='sum',margins=True,margins_name='Total').sum(axis=1)
             visited = pd.DataFrame(visited)
             visited = visited.rename(columns={0:'Total_visited'})
-            #################### Grade wise visit#######################
+           
             g1 = df[df['Grade']==1]
-            g1 = pd.pivot_table(
-                g1,
-                index = "RtR Staff Name" ,
-                values=df[total_visit],
-                aggfunc='sum',
-                margins=True,
-                margins_name='Total'
-            ).sum(axis=1).reset_index().rename(columns={0:'Visit Grade'})
-            
+            g1 = pd.pivot_table(g1,index = "RtR Staff Name" ,values=df[total_visit],aggfunc='sum',margins=True,margins_name='Total').sum(axis=1).reset_index().rename(columns={0:'Visit Grade'})
             Grade1 = g1.rename(columns={'Visit Grade': 'Visit Grade_1'})
-            
             g2 = df[df['Grade']==2]
-            g2 = pd.pivot_table(
-                g2,
-                index = "RtR Staff Name" ,
-                values=df[total_visit],
-                aggfunc='sum',
-                margins=True,
-                margins_name='Total'
-            ).sum(axis=1).reset_index().rename(columns={0:'Visit Grade'})
-            
+            g2 = pd.pivot_table(g2,index = "RtR Staff Name" ,values=df[total_visit],aggfunc='sum',margins=True,margins_name='Total').sum(axis=1).reset_index().rename(columns={0:'Visit Grade'})
             Grade2 = g2.rename(columns={'Visit Grade': 'Visit Grade_2'})
-            
             visit_grade = Grade1.merge(Grade2,on = 'RtR Staff Name',how="left")
             
-            ########## Gap of Visit ##########################################
             diff = Target_Visit.merge(visited,on = 'RtR Staff Name',how="left")
             diff['Gap of Visit'] = diff['Target_Visit']-diff['Total_visited']
             diff
-            
             Final_Total_Visited = diff.merge(visit_grade, on = 'RtR Staff Name', how = 'left' )
             st.dataframe(Final_Total_Visited,width="content")
 
