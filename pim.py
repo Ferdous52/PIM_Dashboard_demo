@@ -278,13 +278,40 @@ def dashboard_page():
     # ========================================================
 
     if page == "Home":
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
+        
         with col1:
-            st.metric("Total Schools", len(df))
+            total_schools = df["School Name"].nunique()
+            st.metric("Total Schools", total_schools)
+        
         with col2:
-            st.metric("Total Visits", df["Total Number of Visits Per Month"].sum())
+            visit_cols = [
+                col for col in df.columns
+                if col.startswith("Total Number of Visits Per Month")
+            ]
+        
+            total_visits = df[visit_cols].sum().sum()
+            st.metric("Total Visits", int(total_visits))
+        
         with col3:
-            st.metric("Missing Values", df.isna().sum().sum())
+            standard_cols = [
+                col for col in df.columns
+                if col.startswith("Meeting Minimum Standards By Grade?")
+            ]
+        
+            if standard_cols:
+                standard_rate = df[standard_cols].mean().mean() * 100
+                st.metric("Minimum Standard", f"{standard_rate:.1f}%")
+        
+        with col4:
+            priority_cols = [
+                col for col in df.columns
+                if col.startswith("Teacher's Priority Area")
+            ]
+        
+            if priority_cols:
+                avg_priority = df[priority_cols].mean().mean()
+                st.metric("Avg Priority Score", f"{avg_priority:.2f}")
 
     elif page == "Schools":
         st.subheader("Schools")
