@@ -282,28 +282,55 @@ def dashboard_page():
             Schl_Distn = table_1.reset_index()
             st.dataframe(Schl_Distn,width="content")
         with col2:
-            df2=table_1.copy()
-            Target_Visit = (df2["School Name"]*2*2*len(total_visit))
-            Target_Visit = pd.DataFrame(Target_Visit)
-            Target_Visit = Target_Visit.rename(columns={'School Name':"Target_Visit"})
-           
-            visited = pd.pivot_table(df,index = "RtR Staff Name",values=df[total_visit],aggfunc='sum',margins=True,margins_name='Total').sum(axis=1)
-            visited = pd.DataFrame(visited)
-            visited = visited.rename(columns={0:'Total_visited'})
-           
-            g1 = df[df['Grade']==1]
-            g1 = pd.pivot_table(g1,index = "RtR Staff Name" ,values=df[total_visit],aggfunc='sum',margins=True,margins_name='Total').sum(axis=1).reset_index().rename(columns={0:'Visit Grade'})
-            Grade1 = g1.rename(columns={'Visit Grade': 'Visit Grade_1'})
-            g2 = df[df['Grade']==2]
-            g2 = pd.pivot_table(g2,index = "RtR Staff Name" ,values=df[total_visit],aggfunc='sum',margins=True,margins_name='Total').sum(axis=1).reset_index().rename(columns={0:'Visit Grade'})
-            Grade2 = g2.rename(columns={'Visit Grade': 'Visit Grade_2'})
-            visit_grade = Grade1.merge(Grade2,on = 'RtR Staff Name',how="left")
-            
-            diff = Target_Visit.merge(visited,on = 'RtR Staff Name',how="left")
-            diff['Gap of Visit'] = diff['Target_Visit']-diff['Total_visited']
-            diff
-            Final_Total_Visited = diff.merge(visit_grade, on = 'RtR Staff Name', how = 'left' )
-            st.dataframe(Final_Total_Visited,width="content")
+        
+            # =====================================================
+            # TARGET VISITS
+            # =====================================================
+        
+            df2 = table_1.copy()
+        
+            Target_Visit = (df2["School Name"]* 2* 2* len(total_visit))
+            Target_Visit = (Target_Visit.reset_index().rename(columns={"School Name": "Target_Visit"}))
+        
+            # =====================================================
+            # TOTAL VISITS
+            # =====================================================
+        
+            visited = (df.groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Total_visited"))
+        
+            # =====================================================
+            # GRADE 1 VISITS
+            # =====================================================
+        
+            Grade1 = (df[df["Grade"] == 1].groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Visit Grade_1"))
+        
+            # =====================================================
+            # GRADE 2 VISITS
+            # =====================================================
+        
+            Grade2 = (df[df["Grade"] == 2].groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Visit Grade_2"))
+        
+            # =====================================================
+            # COMBINE GRADE VISITS
+            # =====================================================
+        
+            visit_grade = Grade1.merge(Grade2,on="RtR Staff Name",how="outer")
+        
+            # =====================================================
+            # TARGET VS ACTUAL
+            # =====================================================
+        
+            diff = Target_Visit.merge(visited,on="RtR Staff Name",how="left")
+            diff["Total_visited"] = diff["Total_visited"].fillna(0)
+            diff["Gap of Visit"] = (diff["Target_Visit"]- diff["Total_visited"])
+        
+            # =====================================================
+            # FINAL TABLE
+            # =====================================================
+        
+            Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
+            Final_Total_Visited = Final_Total_Visited.fillna(0)
+            st.dataframe(Final_Total_Visited,use_container_width=True)
 
     elif page == "Schools":
         st.subheader("Schools")
