@@ -181,29 +181,13 @@ def data_clean(df):
     df = df.dropna(subset=["School Name"])
     df = df.drop(columns=["S/N"])
 
-    minimum_standard_cols = [
-        col for col in df.columns
-        if col.startswith("Meeting Minimum Standards By Grade?")
-    ]
-
-    priority_cols = [
-        col for col in df.columns
-        if col.startswith("Teacher's Priority Area (0, 1, 2, or 3)")
-    ]
-
+    minimum_standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
+    priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area (0, 1, 2, or 3)")]
     for col in minimum_standard_cols:
-        df[col] = df[col].map({
-            "No": 0,
-            "Yes": 1
-        })
+        df[col] = df[col].map({"No": 0,"Yes": 1})
 
     for col in priority_cols:
-        df[col] = df[col].map({
-            "0: No Priority Areas Achieved": 0,
-            "1: Mastered Instructional Routine": 1,
-            "2: Mastered Basic Skills": 2,
-            "3: Mastered Advanced Skills": 3
-        })
+        df[col] = df[col].map({"0: No Priority Areas Achieved": 0,"1: Mastered Instructional Routine": 1,"2: Mastered Basic Skills": 2,"3: Mastered Advanced Skills": 3})
 
     return df
 
