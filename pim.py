@@ -218,7 +218,7 @@ def dashboard_page():
 
     st.markdown("""
     <style>
-    .stApp {background: linear-gradient(135deg,#E0F2FE 0%,#DBEAFE 50%,#EFF6FF 100%) !important;}
+    .stApp {background: linear-gradient(135deg, pink, white, lavender) !important;}
     .main .block-container { max-width: none !important;width: 100% !important;padding-top: 2rem !important;padding-left: 2rem !important;padding-right: 2rem !important;padding-bottom: 2rem !important;}
     .dashboard-title {color: #0F172A;font-size: 32px;font-weight: 700;margin-bottom: 5px;}
     .dashboard-subtitle {color: #64748B;font-size: 16px;margin-bottom: 25px;}
