@@ -215,10 +215,11 @@ def dashboard_page():
     if page == "Home":
 
         st.subheader("Home")
-
-        st.info("Your existing Home dashboard calculations and charts ""will go here.")
-        st.dataframe(df.head(),use_container_width=True)
-
+        
+        df1 = df.copy()
+        table_1 = pd.pivot_table(df1,index="RtR Staff Name",values=["School Name","Teacher Name"],aggfunc={"School Name":"nunique", "Teacher Name": "count"},margins=True,margins_name="Total")
+        Schl_Distn = table_1.reset_index()
+        st.dataframe(Schl_Distn,use_container_width=True)
 
     elif page == "Schools":
         st.subheader("Schools")
