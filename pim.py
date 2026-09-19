@@ -281,8 +281,6 @@ def dashboard_page():
         with col1:
             total_schools = df["School Name"].nunique()
             st.metric("Total Schools", total_schools)
-            
-
 
         with col2:
             visit_cols = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
@@ -301,14 +299,30 @@ def dashboard_page():
             if priority_cols:
                 avg_priority = df[priority_cols].mean().mean()
                 st.metric("Avg Priority Score", f"{avg_priority:.2f}")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            months = [col for col in df.columnsif col.startswith("Total Number of Visits Per Month")]
+            monthly_visit = df[months].sum().reset_index()
+            monthly_visit.columns = ["Month", "Total_Visit"]
+            monthly_visit["Month"] = monthly_visit["Month"].replace({
+                "Total Number of Visits Per Month_Jan":"Jan",
+                "Total Number of Visits Per Month_Feb":"Feb",
+                "Total Number of Visits Per Month_Mar":"Mar",
+                "Total Number of Visits Per Month_Apr":"Apr",
+                "Total Number of Visits Per Month_May":"May",
+                "Total Number of Visits Per Month_Jun":"Jun",
+                "Total Number of Visits Per Month_Jul":"Jul"
+            })
+            st.metric(monthly_visit)
+
+        with col2:
+            min_std_G1 = (df[df['Grade'] == 1].groupby('RtR Staff Name')[minimum_standard_cols].sum().sum(axis=1).reset_index(name='Total Standard Meet_Grade-1'))
+            st.metric(min_std_G1)
+        
 ############################################################################################################################################################################
     elif page == "Schools":
-        st.subheader("Schools")
         st.title("School Visit Dashboard")
-        col1 = st.columns(1)
-    
-        with col1:
-            selected_school = st.selectbox("School",["All"] + sorted(df["School Name"].dropna().unique().tolist()))
 
     elif page == "Teachers":
 
