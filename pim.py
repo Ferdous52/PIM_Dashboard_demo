@@ -278,27 +278,13 @@ def dashboard_page():
     # ========================================================
 
     if page == "Home":
-        col1, col2= st.columns(2)
+        col1, col2, col3 = st.columns(3)
         with col1:
-            df1 = df.copy()
-            table_1 = pd.pivot_table(df1,index="RtR Staff Name",values=["School Name","Teacher Name"],aggfunc={"School Name":"nunique", "Teacher Name": "count"},margins=True,margins_name="Total")
-            Schl_Distn = table_1
-            st.dataframe(Schl_Distn,width="content")
+            st.metric("Total Schools", len(df))
         with col2:
-            df2 = table_1.copy()
-            Target_Visit = (df2["School Name"]*2*2*len(total_visit))
-            Target_Visit = (Target_Visit.reset_index().rename(columns={"School Name": "Target_Visit"}))
-            visited = (df.groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Total_visited"))
-            Grade1 = (df[df["Grade"] == 1].groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Visit Grade_1"))
-            Grade2 = (df[df["Grade"] == 2].groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Visit Grade_2"))
-            visit_grade = Grade1.merge(Grade2,on="RtR Staff Name",how="outer")
-            diff = Target_Visit.merge(visited,on="RtR Staff Name",how="left")
-            diff["Total_visited"] = diff["Total_visited"].fillna(0)
-            diff["Gap of Visit"] = (diff["Target_Visit"]- diff["Total_visited"])
-            Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
-            Final_Total_Visited = Final_Total_Visited.fillna(0)
-            st.dataframe(Final_Total_Visited,use_container_width=True)
-
+            st.metric("Total Visits", df["Total Number of Visits Per Month"].sum())
+        with col3:
+            st.metric("Missing Values", df.isna().sum().sum())
 
     elif page == "Schools":
         st.subheader("Schools")
@@ -330,13 +316,10 @@ def dashboard_page():
 # ============================================================
 
 if st.session_state.page == "login":
-
     login_page()
 
 elif st.session_state.page == "upload":
-
     upload_page()
 
 elif st.session_state.page == "dashboard":
-
     dashboard_page()
