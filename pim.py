@@ -218,7 +218,7 @@ def dashboard_page():
 
     st.markdown("""
     <style>
-    .stApp {background: Red !important;}
+    .stApp {background: #F0F7FF !important;}
     .main .block-container { max-width: none !important;width: 100% !important;padding-top: 2rem !important;padding-left: 2rem !important;padding-right: 2rem !important;padding-bottom: 2rem !important;}
     .dashboard-title {color: #0F172A;font-size: 32px;font-weight: 700;margin-bottom: 5px;}
     .dashboard-subtitle {color: #64748B;font-size: 16px;margin-bottom: 25px;}
@@ -276,7 +276,7 @@ def dashboard_page():
         
         col1, col2, col3, col4 = st.columns(4)
         
-        st.markdown("""<style>div[data-testid="stMetric"] {background-color: #DCFCE7;border: 1px solid #E2E8F0;padding: 20px;border-radius: 12px;box-shadow: 0 2px 8px rgba(0,0,0,0.08);}</style>""", unsafe_allow_html=True)
+        st.markdown("""<style>div[data-testid="stMetric"] {background-color: #FFFFFF ;border: 1px solid #E2E8F0;padding: 20px;border-radius: 12px;box-shadow: 0 2px 8px rgba(0,0,0,0.08);}</style>""", unsafe_allow_html=True)
         
         with col1:
             total_schools = df["School Name"].nunique()
