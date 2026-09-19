@@ -275,8 +275,6 @@ def dashboard_page():
     # ========================================================
 
     if page == "Home":
-
-        st.subheader("Home")
         
         df1 = df.copy()
         table_1 = pd.pivot_table(df1,index="RtR Staff Name",values=["School Name","Teacher Name"],aggfunc={"School Name":"nunique", "Teacher Name": "count"},margins=True,margins_name="Total")
