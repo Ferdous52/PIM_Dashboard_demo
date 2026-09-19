@@ -218,7 +218,7 @@ def dashboard_page():
 
     st.markdown("""
     <style>
-    .stApp {background:linear-gradient(135deg,#F8FAFC 0%,#EEF2FF 50%,#F8FAFC 100%) !important;}
+    .stApp {background: linear-gradient(135deg,#E0F2FE 0%,#DBEAFE 50%,#EFF6FF 100%) !important;}
     .main .block-container { max-width: none !important;width: 100% !important;padding-top: 2rem !important;padding-left: 2rem !important;padding-right: 2rem !important;padding-bottom: 2rem !important;}
     .dashboard-title {color: #0F172A;font-size: 32px;font-weight: 700;margin-bottom: 5px;}
     .dashboard-subtitle {color: #64748B;font-size: 16px;margin-bottom: 25px;}
@@ -276,43 +276,32 @@ def dashboard_page():
     # ========================================================
     # YOUR EXISTING ANALYSIS CODE GOES HERE
     # ========================================================
-
+#####################################################################################################################################################
     if page == "Home":
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
             total_schools = df["School Name"].nunique()
             st.metric("Total Schools", total_schools)
-        
+    
         with col2:
-            visit_cols = [
-                col for col in df.columns
-                if col.startswith("Total Number of Visits Per Month")
-            ]
-        
+            visit_cols = [col for col in df.columnsif col.startswith("Total Number of Visits Per Month")]
             total_visits = df[visit_cols].sum().sum()
             st.metric("Total Visits", int(total_visits))
         
         with col3:
-            standard_cols = [
-                col for col in df.columns
-                if col.startswith("Meeting Minimum Standards By Grade?")
-            ]
-        
+            standard_cols = [col for col in df.columnsif col.startswith("Meeting Minimum Standards By Grade?")]
             if standard_cols:
                 standard_rate = df[standard_cols].mean().mean() * 100
                 st.metric("Minimum Standard", f"{standard_rate:.1f}%")
         
         with col4:
-            priority_cols = [
-                col for col in df.columns
-                if col.startswith("Teacher's Priority Area")
-            ]
+            priority_cols = [col for col in df.columnsif col.startswith("Teacher's Priority Area")]
         
             if priority_cols:
                 avg_priority = df[priority_cols].mean().mean()
                 st.metric("Avg Priority Score", f"{avg_priority:.2f}")
-
+############################################################################################################################################################################
     elif page == "Schools":
         st.subheader("Schools")
         st.info("Your existing Schools analysis goes here.")
