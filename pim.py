@@ -282,9 +282,19 @@ def dashboard_page():
             Schl_Distn = table_1.reset_index()
             st.dataframe(Schl_Distn,width="content")
         with col2:
-        
             df2 = table_1.copy()
-            st.dataframe(df2,use_container_width=True)
+            Target_Visit = (df2["School Name"]*2*2*len(total_visit))
+            Target_Visit = (Target_Visit.reset_index().rename(columns={"School Name": "Target_Visit"}))
+            visited = (df.groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Total_visited"))
+            Grade1 = (df[df["Grade"] == 1].groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Visit Grade_1"))
+            Grade2 = (df[df["Grade"] == 2].groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).reset_index(name="Visit Grade_2"))
+            visit_grade = Grade1.merge(Grade2,on="RtR Staff Name",how="outer")
+            diff = Target_Visit.merge(visited,on="RtR Staff Name",how="left")
+            diff["Total_visited"] = diff["Total_visited"].fillna(0)
+            diff["Gap of Visit"] = (diff["Target_Visit"]- diff["Total_visited"])
+            Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
+            Final_Total_Visited = Final_Total_Visited.fillna(0)
+            st.dataframe(Final_Total_Visited,use_container_width=True)
 
 
     elif page == "Schools":
