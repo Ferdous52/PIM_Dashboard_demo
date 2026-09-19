@@ -190,7 +190,8 @@ def data_clean(df):
 
     for col in priority_cols:
         df[col] = df[col].map({"0: No Priority Areas Achieved": 0,"1: Mastered Instructional Routine": 1,"2: Mastered Basic Skills": 2,"3: Mastered Advanced Skills": 3})
-
+    for col in total_visit: 
+        df[col] = pd.to_numeric(df[col],errors="coerce")
     return df
 
 
