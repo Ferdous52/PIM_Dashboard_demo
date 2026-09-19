@@ -304,7 +304,11 @@ def dashboard_page():
 ############################################################################################################################################################################
     elif page == "Schools":
         st.subheader("Schools")
-        st.info("Your existing Schools analysis goes here.")
+        st.title("School Visit Dashboard")
+        col1 = st.columns(1)
+    
+        with col1:
+            selected_school = st.selectbox("School",["All"] + sorted(df["School Name"].dropna().unique().tolist()))
 
     elif page == "Teachers":
 
