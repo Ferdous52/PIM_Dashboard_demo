@@ -314,11 +314,11 @@ def dashboard_page():
                 "Total Number of Visits Per Month_Jun":"Jun",
                 "Total Number of Visits Per Month_Jul":"Jul"
             })
-            st.metric(monthly_visit)
+            st.dataframe(monthly_visit)
 
         with col2:
             min_std_G1 = (df[df['Grade'] == 1].groupby('RtR Staff Name')[minimum_standard_cols].sum().sum(axis=1).reset_index(name='Total Standard Meet_Grade-1'))
-            st.metric(min_std_G1)
+            st.dataframe(min_std_G1)
         
 ############################################################################################################################################################################
     elif page == "Schools":
