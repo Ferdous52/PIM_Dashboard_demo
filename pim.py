@@ -302,7 +302,7 @@ def dashboard_page():
 
         col1, col2 = st.columns(2)
         with col1:
-            months = [col for col in df.columnsif col.startswith("Total Number of Visits Per Month")]
+            months = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
             monthly_visit = df[months].sum().reset_index()
             monthly_visit.columns = ["Month", "Total_Visit"]
             monthly_visit["Month"] = monthly_visit["Month"].replace({
