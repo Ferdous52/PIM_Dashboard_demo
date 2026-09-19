@@ -282,7 +282,7 @@ def dashboard_page():
         with col1:
             df1 = df.copy()
             table_1 = pd.pivot_table(df1,index="RtR Staff Name",values=["School Name","Teacher Name"],aggfunc={"School Name":"nunique", "Teacher Name": "count"},margins=True,margins_name="Total")
-            Schl_Distn = table_1.reset_index()
+            #Schl_Distn = table_1.reset_index()
             st.dataframe(Schl_Distn,width="content")
         with col2:
             df2 = table_1.copy()
