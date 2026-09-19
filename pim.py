@@ -333,7 +333,19 @@ def dashboard_page():
 ############################################################################################################################################################################
     elif page == "Schools":
         st.title("School Visit Dashboard")
+        tab1, tab2, tab3 = st.tabs(["Overview","Schools","Standards"])
 
+        with tab1:
+            st.dataframe(df)
+        
+        with tab2:
+            st.dataframe(df)
+        
+        with tab3:
+            st.dataframe(df)
+
+
+    
     elif page == "Teachers":
 
         st.subheader("Teachers")
