@@ -274,7 +274,7 @@ def dashboard_page():
 
     if page == "Home":
         
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4 col5 = st.columns(5)
         
         st.markdown("""<style>div[data-testid="stMetric"] {background-color: #FFFFFF ;border: 1px solid #E2E8F0;padding: 20px;border-radius: 12px;box-shadow: 0 2px 8px rgba(0,0,0,0.08);}</style>""", unsafe_allow_html=True)
         
@@ -283,17 +283,22 @@ def dashboard_page():
             st.metric("Total Schools", total_schools)
 
         with col2:
+            total_LF = df["RtR Staff Name"].nunique()
+            st.metric("Total Staff", total_LF)
+
+        
+        with col3:
             visit_cols = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
             total_visits = df[visit_cols].sum().sum()
             st.metric("Total Visits", int(total_visits))
         
-        with col3:
+        with col4:
             standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
             if standard_cols:
                 standard_rate = df[standard_cols].mean().mean() * 100
                 st.metric("Minimum Standard", f"{standard_rate:.1f}%")
         
-        with col4:
+        with col5:
             priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area")]
         
             if priority_cols:
