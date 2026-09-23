@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 # ============================================================
 # PAGE CONFIG
@@ -310,10 +311,17 @@ def dashboard_page():
 
         col1, col2 = st.columns(2)
         
+
+
         with col1:
-            months = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
+            months = [
+                col for col in df.columns
+                if col.startswith("Total Number of Visits Per Month")
+            ]
+        
             monthly_visit = df[months].sum().reset_index()
             monthly_visit.columns = ["Month", "Total_Visit"]
+        
             monthly_visit["Month"] = monthly_visit["Month"].replace({
                 "Total Number of Visits Per Month_Jan": "Jan",
                 "Total Number of Visits Per Month_Feb": "Feb",
@@ -324,7 +332,31 @@ def dashboard_page():
                 "Total Number of Visits Per Month_Jul": "Jul"
             })
         
-            st.line_chart(monthly_visit.set_index("Month")["Total_Visit"], use_container_width=True)
+            # Interactive graph
+            fig = px.line(
+                monthly_visit,
+                x="Month",
+                y="Total_Visit",
+                markers=True,
+                title="Monthly Total Visits"
+            )
+        
+            fig.update_traces(
+                line=dict(width=3),
+                marker=dict(size=8)
+            )
+        
+            fig.update_layout(
+                xaxis_title="Month",
+                yaxis_title="Total Visits",
+                hovermode="x unified",
+                height=450
+            )
+        
+            st.plotly_chart(
+                fig,
+                use_container_width=True
+            )
             
         with col2:
             df1 = df.copy()
