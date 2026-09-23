@@ -363,18 +363,35 @@ def dashboard_page():
             )
             
         with col2:
-            df1 = df.copy()
-            table_1 = pd.pivot_table(
-                df1,
-                index="RtR Staff Name",
-                values=["School Name","Teacher Name"],
-                aggfunc={"School Name":"nunique", "Teacher Name": "count"},
-                margins=True,
-                margins_name="Total"
+            priority_count = (
+                df["Priority Area"]
+                .value_counts()
+                .reset_index()
             )
-            
-            Schl_Distn = table_1.reset_index()
-            st.dataframe(Schl_Distn)
+        
+            priority_count.columns = ["Priority Area", "Count"]
+        
+            fig = px.pie(
+                priority_count,
+                names="Priority Area",
+                values="Count",
+                title="Priority Area Distribution",
+                hole=0.35  # 0 = normal pie, >0 = donut
+            )
+        
+            fig.update_traces(
+                textinfo="percent+label",
+                hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>"
+            )
+        
+            fig.update_layout(
+                height=450
+            )
+        
+            st.plotly_chart(
+                fig,
+                use_container_width=True
+            )
         
 ############################################################################################################################################################################
     elif page == "Schools":
