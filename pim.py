@@ -274,7 +274,7 @@ def dashboard_page():
 
     if page == "Home":
         
-        col1, col2, col3, col4 col5 = st.columns(5)
+        col1, col2, col3, col4, col5 = st.columns(5)
         
         st.markdown("""<style>div[data-testid="stMetric"] {background-color: #FFFFFF ;border: 1px solid #E2E8F0;padding: 20px;border-radius: 12px;box-shadow: 0 2px 8px rgba(0,0,0,0.08);}</style>""", unsafe_allow_html=True)
         
