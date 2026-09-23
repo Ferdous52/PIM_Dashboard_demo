@@ -364,7 +364,7 @@ def dashboard_page():
             
         with col2:
             priority_count = (
-                df["Priority Area"]
+                df[priority_cols]
                 .value_counts()
                 .reset_index()
             )
