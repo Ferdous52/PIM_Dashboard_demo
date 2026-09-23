@@ -363,35 +363,7 @@ def dashboard_page():
             )
             
         with col2:
-            priority_count = (
-                df[priority_cols]
-                .value_counts()
-                .reset_index()
-            )
-        
-            priority_count.columns = ["Priority Area", "Count"]
-        
-            fig = px.pie(
-                priority_count,
-                names="Priority Area",
-                values="Count",
-                title="Priority Area Distribution",
-                hole=0.35  # 0 = normal pie, >0 = donut
-            )
-        
-            fig.update_traces(
-                textinfo="percent+label",
-                hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>"
-            )
-        
-            fig.update_layout(
-                height=450
-            )
-        
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
+           pass
         
 ############################################################################################################################################################################
     elif page == "Schools":
