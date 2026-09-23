@@ -352,6 +352,10 @@ def dashboard_page():
                 hovermode="x unified",
                 height=450
             )
+            fig.update_yaxes(
+                range=[0, 1000],  # minimum and maximum
+                dtick=100          # scale interval
+            )
         
             st.plotly_chart(
                 fig,
