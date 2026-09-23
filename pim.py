@@ -309,21 +309,23 @@ def dashboard_page():
                 st.metric("Avg Priority Score", f"{avg_priority:.2f}")
 
         col1, col2 = st.columns(2)
+        
         with col1:
             months = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
             monthly_visit = df[months].sum().reset_index()
             monthly_visit.columns = ["Month", "Total_Visit"]
             monthly_visit["Month"] = monthly_visit["Month"].replace({
-                "Total Number of Visits Per Month_Jan":"Jan",
-                "Total Number of Visits Per Month_Feb":"Feb",
-                "Total Number of Visits Per Month_Mar":"Mar",
-                "Total Number of Visits Per Month_Apr":"Apr",
-                "Total Number of Visits Per Month_May":"May",
-                "Total Number of Visits Per Month_Jun":"Jun",
-                "Total Number of Visits Per Month_Jul":"Jul"
+                "Total Number of Visits Per Month_Jan": "Jan",
+                "Total Number of Visits Per Month_Feb": "Feb",
+                "Total Number of Visits Per Month_Mar": "Mar",
+                "Total Number of Visits Per Month_Apr": "Apr",
+                "Total Number of Visits Per Month_May": "May",
+                "Total Number of Visits Per Month_Jun": "Jun",
+                "Total Number of Visits Per Month_Jul": "Jul"
             })
-            st.dataframe(monthly_visit)
-
+        
+            st.line_chart(monthly_visit.set_index("Month")["Total_Visit"], use_container_width=True)
+            
         with col2:
             df1 = df.copy()
             table_1 = pd.pivot_table(
