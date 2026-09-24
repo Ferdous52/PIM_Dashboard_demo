@@ -312,16 +312,10 @@ def dashboard_page():
         col1, col2 = st.columns(2)
         
 
-
         with col1:
-            months = [
-                col for col in df.columns
-                if col.startswith("Total Number of Visits Per Month")
-            ]
-        
+            months = [col for col in df.columnsif col.startswith("Total Number of Visits Per Month")]
             monthly_visit = df[months].sum().reset_index()
             monthly_visit.columns = ["Month", "Total_Visit"]
-        
             monthly_visit["Month"] = monthly_visit["Month"].replace({
                 "Total Number of Visits Per Month_Jan": "Jan",
                 "Total Number of Visits Per Month_Feb": "Feb",
@@ -329,38 +323,20 @@ def dashboard_page():
                 "Total Number of Visits Per Month_Apr": "Apr",
                 "Total Number of Visits Per Month_May": "May",
                 "Total Number of Visits Per Month_Jun": "Jun",
-                "Total Number of Visits Per Month_Jul": "Jul"
+                "Total Number of Visits Per Month_Jul": "Jul",
+                "Total Number of Visits Per Month_Aug": "Aug",
+                "Total Number of Visits Per Month_Sep": "Sep",
+                "Total Number of Visits Per Month_Oct": "Oct",
+                "Total Number of Visits Per Month_Nov": "Nov",
+                "Total Number of Visits Per Month_Dec": "Dec"
             })
         
-            # Interactive graph
-            fig = px.line(
-                monthly_visit,
-                x="Month",
-                y="Total_Visit",
-                markers=True,
-                title="Monthly Total Visits"
-            )
-        
-            fig.update_traces(
-                line=dict(width=3),
-                marker=dict(size=8)
-            )
-        
-            fig.update_layout(
-                xaxis_title="Month",
-                yaxis_title="Total Visits",
-                hovermode="x unified",
-                height=450
-            )
-            fig.update_yaxes(
-                range=[0, 1000],  # minimum and maximum
-                dtick=100          # scale interval
-            )
-        
-            st.plotly_chart(
-                fig,
-                use_container_width=True
-            )
+            # Graph : Bar (Monthly Visits Vs Month)
+            fig = px.line(monthly_visit,x="Month",y="Total_Visit",markers=True,title="Monthly Total Visits")
+            fig.update_traces(line=dict(width=3),marker=dict(size=8))
+            fig.update_layout(xaxis_title="Month",yaxis_title="Total Visits",hovermode="x unified",height=450)
+            fig.update_yaxes(range=[0, 1000],dtick=100)
+            st.plotly_chart(fig,use_container_width=True)
             
         with col2:
            pass
