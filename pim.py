@@ -281,7 +281,8 @@ def dashboard_page():
         
         with col1:
             total_LF = df["RtR Staff Name"].nunique()
-            st.metric("Total Staff", total_LF, "#2563EB")
+            st.markdown("""<style>[data-testid="stMetricValue"] {color: green;}</style>""")
+            st.metric("Total Staff", total_LF)
 
         with col2:
             total_schools = df["School Name"].nunique()
