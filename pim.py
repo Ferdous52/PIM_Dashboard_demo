@@ -225,8 +225,8 @@ def dashboard_page():
     .dashboard-subtitle {color: #64748B;font-size: 16px;margin-bottom: 25px;}
 
     [data-testid="stMetric"] {background: white;padding: 20px;border-radius: 14px;border: 1px solid #E2E8F0;box-shadow: 0px 4px 15px rgba(15,23,42,0.08);}
-    [data-testid="stMetricLabel"] {color: #64748B !important;}
-    [data-testid="stMetricValue"] {color: #0F172A !important;}
+    [data-testid="stMetricLabel"] {color: #CBD5E1 !important;}
+    [data-testid="stMetricValue"] {color: #FFFFFF !important;}
     [data-testid="stSidebar"] {background-color: #0F172A;}
     [data-testid="stSidebar"] * {color: white !important;}
     [data-testid="stSidebar"] label {color: white !important;}
