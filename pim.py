@@ -417,7 +417,7 @@ def dashboard_page():
               return min_std
             
         st.subheader("Standards")
-        st.dataframe(standard_grade())
+        st.dataframe(standard_grade(), width = "content", height = "contyent")
 
 
     elif page == "Priroty":
