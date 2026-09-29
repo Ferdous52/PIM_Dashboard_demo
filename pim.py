@@ -422,7 +422,7 @@ def dashboard_page():
         with col1:
             tab1, tab2, tab3 = st.tabs(["Grade Wise Standard", "LF wise Standard", "Teachers Wise Standard"])
             with tab1:
-                st.dataframe(standard_df, width = "content", height = "content")
+                st.dataframe(standard_df, width = "content", height = "content", hide_index=True)
             with tab2:
                 pass
             with tab3:
