@@ -222,7 +222,7 @@ def dashboard_page():
     .stApp {background: #F4F9F5 !important;}
     .main .block-container { max-width: none !important;width: 100% !important;padding-top: 2rem !important;padding-left: 2rem !important;padding-right: 2rem !important;padding-bottom: 2rem !important;}
     .dashboard-title {color: #0F172A;font-size: 32px;font-weight: 700;margin-bottom: 5px;}
-    .dashboard-subtitle {color: #64748B;font-size: 16px;margin-bottom: 25px;}
+    .dashboard-subtitle {color: black;font-size: 16px;margin-bottom: 25px;}
 
     [data-testid="stMetric"] {background: white;padding: 20px;border-radius: 14px;border: 1px solid #E2E8F0;box-shadow: 0px 4px 15px rgba(15,23,42,0.08);}
     [data-testid="stMetricLabel"] {color: #CBD5E1 !important;}
