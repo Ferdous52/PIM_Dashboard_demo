@@ -344,11 +344,24 @@ def dashboard_page():
         
 ############################################################################################################################################################################
     elif page == "Schools":
+
+        def table_1(x):
+            table_1 = pd.pivot_table(x,
+                                    index="RtR Staff Name",
+                                    values=["School Name","Teacher Name"],
+                                    aggfunc={"School Name":"nunique", "Teacher Name": "count"},
+                                    margins=True,
+                                    margins_name="Total")
+
+            Schl_Distn = table_1.reset_index()
+            return Schl_Distn
+
+        
         st.title("School Visit Dashboard")
         tab1, tab2, tab3 = st.tabs(["Overview","Schools","Standards"])
 
         with tab1:
-            st.dataframe(df)
+            st.dataframe(table_1(df))
         
         with tab2:
             st.dataframe(df)
