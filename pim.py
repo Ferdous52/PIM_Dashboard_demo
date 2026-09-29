@@ -415,13 +415,14 @@ def dashboard_page():
             
               min_std = pd.concat([min_std, total_row], ignore_index=True)
               return min_std
-            
+        standard_df = standard_grade().reset_index(drop=True)   
+        
         st.subheader("Standards")
         col1, col2 = st.columns(2)
         with col1:
             tab1, tab2, tab3 = st.tabs(["Grade Wise Standard", "LF wise Standard", "Teachers Wise Standard"])
             with tab1:
-                st.dataframe(standard_grade().style.hide(axis="index"), width = "content", height = "content")
+                st.dataframe(standard_df, width = "content", height = "content")
             with tab2:
                 pass
             with tab3:
