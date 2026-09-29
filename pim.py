@@ -414,8 +414,7 @@ def dashboard_page():
               }])
             
               min_std = pd.concat([min_std, total_row], ignore_index=True)
-            
-            return min_std
+              return min_std
             
         st.subheader("Standards")
         st.dataframe(standard_grade())
