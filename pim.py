@@ -417,7 +417,14 @@ def dashboard_page():
               return min_std
             
         st.subheader("Standards")
-        st.dataframe(standard_grade(), width = "content", height = "content")
+
+        tab1, tab2, tab3 = st.tabs(["Grade Wise Standard", "LF wise Standard", "Teas=chers Wise Standard"])
+        with tab1:
+            st.dataframe(standard_grade(), width = "content", height = "content")
+        with tab2:
+            pass
+        with tab3:
+            pass
 
 
     elif page == "Priroty":
