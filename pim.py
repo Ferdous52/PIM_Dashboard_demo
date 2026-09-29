@@ -354,6 +354,7 @@ def dashboard_page():
                                     margins_name="Total")
 
             Schl_Distn = table_1.reset_index()
+            Schl_Distn.rename(coulnms = {"RtR Staff Name": "Staff Name", "School Name": "Total Number of Schools" , "Teacher Name": "Total Number of Teachers"}
             return Schl_Distn
 
         
