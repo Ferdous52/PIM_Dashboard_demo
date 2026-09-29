@@ -249,7 +249,7 @@ def dashboard_page():
 
         st.markdown("""<div style="font-size:24px;font-weight:700;margin-bottom:20px;">📊 PIM Dashboard</div>""",unsafe_allow_html=True)
         st.markdown("---")
-        page = st.radio("Navigation",["Home","Schools","Teachers","Visits","Standards","Reports"])
+        page = st.radio("Navigation",["Home","Visits","Standards","Priroty","Reports"])
         st.markdown("---")
         st.caption(f"Worksheet: {st.session_state.selected_sheet}")
         st.markdown("---")
@@ -343,7 +343,7 @@ def dashboard_page():
            st.line_chart(monthly_visit,x="Month",y="Total_Visit")
         
 ############################################################################################################################################################################
-    elif page == "Schools":
+    elif page == "Visits":
 
         def table_1():
             table_1 = pd.pivot_table(df,
@@ -371,20 +371,16 @@ def dashboard_page():
 
 
     
-    elif page == "Teachers":
+    elif page == "Standards":
         st.markdown("""<style>.stApp {background-color: lightblue;}  h3 {color: black;}</style>""", unsafe_allow_html = True)
-        st.subheader("Teachers")
+        st.subheader(black[Teachers])
         st.info("Your existing Teachers analysis goes here.")
 
 
-    elif page == "Visits":
+    elif page == "Priroty":
 
         st.subheader("Visits")
         st.info("Your existing Visits analysis goes here.")
-
-    elif page == "Standards":
-        st.subheader("Standards")
-        st.info("Your existing Standards analysis goes here.")
 
 
     elif page == "Reports":
