@@ -345,8 +345,8 @@ def dashboard_page():
 ############################################################################################################################################################################
     elif page == "Schools":
 
-        def table_1(x):
-            table_1 = pd.pivot_table(x,
+        def table_1():
+            table_1 = pd.pivot_table(df,
                                     index="RtR Staff Name",
                                     values=["School Name","Teacher Name"],
                                     aggfunc={"School Name":"nunique", "Teacher Name": "count"},
@@ -361,7 +361,7 @@ def dashboard_page():
         tab1, tab2, tab3 = st.tabs(["Overview","Schools","Standards"])
 
         with tab1:
-            st.dataframe(table_1(df))
+            st.dataframe(table_1())
         
         with tab2:
             st.dataframe(df)
