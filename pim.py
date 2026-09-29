@@ -359,7 +359,7 @@ def dashboard_page():
 
     
     elif page == "Teachers":
-
+        st.markdown("""<style>.stApp {background-color: lightblue;} </style>""", unsafe_allow_html = True)
         st.subheader("Teachers")
         st.info("Your existing Teachers analysis goes here.")
 
