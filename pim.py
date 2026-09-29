@@ -247,7 +247,7 @@ def dashboard_page():
 
     with st.sidebar:
 
-        st.markdown("""<div style="font-size:24px;font-weight:700;margin-bottom:20px;">📊 PIM Dashboard</div>""",unsafe_allow_html=True)
+        st.markdown("""<div style="font-size:24px;font-weight:700;margin-bottom:20px;">PIM Dashboard</div>""",unsafe_allow_html=True)
         st.markdown("---")
         page = st.radio("Navigation",["Home","Visits","Standards","Priroty","Reports"])
         st.markdown("---")
@@ -372,14 +372,14 @@ def dashboard_page():
 
     
     elif page == "Standards":
-        st.markdown("""<style>.stApp {background-color: lightblue;}  h3 {color: black;}</style>""", unsafe_allow_html = True)
-        st.subheader(black[Teachers])
+        
+        st.subheader("Standards")
         st.info("Your existing Teachers analysis goes here.")
 
 
     elif page == "Priroty":
 
-        st.subheader("Visits")
+        st.subheader("Priroty")
         st.info("Your existing Visits analysis goes here.")
 
 
