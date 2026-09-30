@@ -361,7 +361,7 @@ def dashboard_page():
         def table_2():
             # ---------- Target Visit ----------
             table_1 = pd.pivot_table(df,index="RtR Staff Name",values=["School Name", "Teacher Name"],aggfunc={"School Name": "nunique", "Teacher Name": "count"},margins=True,margins_name="Total").reset_index()
-            total_visit = [col for col in df.columnsif col.startswith("Total Number of Visits Per Month")]
+            total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
             Target_Visit = table_1[["RtR Staff Name", "School Name"]].copy()
             Target_Visit["Target_Visit"] = (Target_Visit["School Name"] * 2 * 2 * len(total_visit))
             Target_Visit = Target_Visit[["RtR Staff Name", "Target_Visit"]]
