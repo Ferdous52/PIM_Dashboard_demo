@@ -373,6 +373,7 @@ def dashboard_page():
             
                 # JmFO
                 ("Jamalpur", 1, 1): 1,
+                ("Jamalpur", 1, 2): 1,
                 ("Jamalpur", 2, 1): 1,
                 ("Jamalpur", 2, 2): 1,
                 ("Jamalpur", 3, 1): 1,
