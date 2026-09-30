@@ -402,7 +402,7 @@ def dashboard_page():
             
             # Automatically find the visits/month for every row
             df["target"] = [rules.get((office, year, grade),0) for office, year, grade in zip(df["District"],df["Year of Support"],df["Grade"])]
-            
+            total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
             df["Target_Visit"] = (df["target"] * len(total_visit))
             
             Target_Visit = pd.pivot_table(df,
