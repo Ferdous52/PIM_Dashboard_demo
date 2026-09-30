@@ -360,12 +360,58 @@ def dashboard_page():
         
         def table_2():
             # ---------- Target Visit ----------
-            table_1 = pd.pivot_table(df,index="RtR Staff Name",values=["School Name", "Teacher Name"],aggfunc={"School Name": "nunique", "Teacher Name": "count"},margins=True,margins_name="Total").reset_index()
-            total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
-            Target_Visit = table_1[["RtR Staff Name", "School Name"]].copy()
-            Target_Visit["Target_Visit"] = (Target_Visit["School Name"] * 2 * 2 * len(total_visit))
-            Target_Visit = Target_Visit[["RtR Staff Name", "Target_Visit"]]
+            # Rules: Field Office + Year of Support + Grade -> Visits per month
+            rules = {
+                # JFO
+                ("Jhalakathi", 1, 1): 2,
+                ("Jhalakathi", 2, 1): 2,
+                ("Jhalakathi", 2, 2): 2,
+                ("Jhalakathi", 3, 1): 2,
+                ("Jhalakathi", 3, 2): 2,
+                ("Jhalakathi", 4, 1): 2,
+                ("Jhalakathi", 4, 2): 2,
             
+                # JmFO
+                ("Jamalpur", 1, 1): 1,
+                ("Jamalpur", 2, 1): 1,
+                ("Jamalpur", 2, 2): 1,
+                ("Jamalpur", 3, 1): 1,
+                ("Jamalpur", 3, 2): 1,
+                ("Jamalpur", 4, 1): 1,
+                ("Jamalpur", 4, 2): 1,
+            
+                # MFO
+                ("Moulvibazar", 1, 1): 2,
+                ("Moulvibazar", 2, 1): 2,
+                ("Moulvibazar", 2, 2): 2,
+                ("Moulvibazar", 3, 1): 1,
+                ("Moulvibazar", 3, 2): 2,
+                ("Moulvibazar", 4, 1): 1,
+                ("Moulvibazar", 4, 2): 1,
+            
+                # NrFO
+                ("Narail", 1, 1): 1,
+                ("Narail", 1, 2): 1,
+                ("Narail", 2, 1): 1,
+                ("Narail", 2, 2): 1,
+                ("Narail", 2, 3): 1,
+                ("Narail", 3, 1): 1,
+                ("Narail", 3, 2): 1,
+                ("Narail", 3, 3): 1
+            }
+            
+            # Automatically find the visits/month for every row
+            df["target"] = [rules.get((office, year, grade),0) for office, year, grade in zip(df["District"],df["Year of Support"],df["Grade"])]
+            
+            df["Target_Visit"] = (df["target"] * len(total_visit))
+            
+            Target_Visit = pd.pivot_table(df,
+                               index='RtR Staff Name',
+                               values='Target_Visit',
+                               aggfunc='sum',
+                               margins=True,
+                               margins_name='Total').reset_index()
+
               # ---------- Total Visited ----------
             visited = pd.pivot_table(df,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index()
             visited = visited.rename(columns={0: "Total_visited"})
@@ -392,7 +438,7 @@ def dashboard_page():
 
         
         st.title("School Visit Dashboard")
-        tab1, tab2, tab3 = st.tabs(["Overview","Schools","Standards"])
+        tab1, tab2, tab3 = st.tabs(["Overview","Total School Visits by LF","Standards"])
 
         with tab1:
             st.dataframe(table_1(), width ="content", height = "content", hide_index = True)
