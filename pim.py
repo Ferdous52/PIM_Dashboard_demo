@@ -549,10 +549,56 @@ def dashboard_page():
             df_new = df_new.sort_values(['Month', 'Minimum Standard'])
             monthly_percent = (pd.crosstab(index=[df_new['Month'], df_new['Minimum Standard']],columns=df_new['PriorityArea'],normalize='index') * 100).round(1)
             return monthly_percent
+
+
+        def priroty_teacher():
             
+            df_n = pd.wide_to_long(
+                  df,
+                  stubnames="Teacher's Priority Area (0, 1, 2, or 3)",
+                  i = ["Field Office",	"District",	"RtR Staff Name",	"School Name","Teacher Name","Year of Support","Grade"],
+                  j = "Month",
+                  sep ="_",
+                  suffix= r'\w+'
+              ).reset_index()   
+            
+            
+            
+            month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            
+            df_n["Month"] = pd.Categorical(df_n["Month"],categories=month_order,ordered=True)
+            df_n = df_n.sort_values("Month")
+            
+            table_3 = pd.pivot_table(df_n,
+                                      index="Month",
+                                      values="Teacher Name",
+                                      columns="Teacher's Priority Area (0, 1, 2, or 3)",
+                                      aggfunc="count",
+                                      margins=True,
+                                      margins_name="Total",
+                                      observed=False)
+            
+            table_3 = table_3.rename(columns={0.0: 0,1.0: 1,2.0: 2,3.0: 3})
+            table_3.columns = pd.MultiIndex.from_tuples([("Teacher's Priority Area (0, 1, 2, or 3)", 0),
+                                                          ("Teacher's Priority Area (0, 1, 2, or 3)", 1),
+                                                          ("Teacher's Priority Area (0, 1, 2, or 3)", 2),
+                                                          ("Teacher's Priority Area (0, 1, 2, or 3)", 3),
+                                                          ("", "Total")
+                                                          ])
+            
+            table_3.columns.names = [None, None]
+            return table_3
+
+        
         st.title("Priroty")
-        with st.container():
+        tab1,tab2, tab3= st.tabs(["Priroty by Standard","Priroty by Teacher wise Mothly","Priroty"])
+        
+        with tab1:
             st.dataframe(stndwisepriority(), width = "content", height = "content")
+        with tab2:
+            st.dataframe(priroty_teacher(),width = "content", height = "content")
+        with tab3:
+            pass
 
 
     elif page == "Reports":
