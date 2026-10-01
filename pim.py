@@ -551,13 +551,7 @@ def dashboard_page():
             return monthly_percent
             
         st.title("Priroty")
-        st.dataframe(stndwisepriority(),use_container_width=True,hide_index=True,
-                     column_config={'Month': st.column_config.TextColumn('Month',width='small'),
-                                    'Minimum Standard': st.column_config.TextColumn('Minimum Standard',width='medium'),
-                                    'Priority 0': st.column_config.NumberColumn('Priority 0 (%)',format='%.1f%%'),
-                                    'Priority 1': st.column_config.NumberColumn('Priority 1 (%)',format='%.1f%%'),
-                                    'Priority 2': st.column_config.NumberColumn('Priority 2 (%)',format='%.1f%%'),
-                                    'Priority 3': st.column_config.NumberColumn('Priority 3 (%)',format='%.1f%%'),})
+        st.dataframe(stndwisepriority(),width = "content",height="content",hide_index=True,)
 
 
     elif page == "Reports":
