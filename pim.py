@@ -579,14 +579,7 @@ def dashboard_page():
                                       observed=False)
             
             table_3 = table_3.rename(columns={0.0: 0,1.0: 1,2.0: 2,3.0: 3})
-            table_3.columns = pd.MultiIndex.from_tuples([("Teacher's Priority Area (0, 1, 2, or 3)", 0),
-                                                          ("Teacher's Priority Area (0, 1, 2, or 3)", 1),
-                                                          ("Teacher's Priority Area (0, 1, 2, or 3)", 2),
-                                                          ("Teacher's Priority Area (0, 1, 2, or 3)", 3),
-                                                          ("", "Total")
-                                                          ])
-            
-            table_3.columns.names = [None, None]
+
             return table_3
 
         
