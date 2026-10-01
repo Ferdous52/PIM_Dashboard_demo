@@ -551,7 +551,7 @@ def dashboard_page():
             return monthly_percent
             
         st.title("Priroty")
-        st.dataframe(stndwisepriority(),width = "content",height="content",hide_index=True,)
+        st.dataframe(stndwisepriority())
 
 
     elif page == "Reports":
