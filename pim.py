@@ -513,8 +513,45 @@ def dashboard_page():
 
     elif page == "Priroty":
 
-        st.subheader("Priroty")
-        st.info("Your existing Visits analysis goes here.")
+        def stndwisepriority():
+            # 1. Rename the three column groups to simple, consistent stubs
+            rename_map = {}
+            
+            for col in df.columns:
+                if col.startswith("Total Number of Visits Per Month"):
+                  rename_map[col] = col.replace("Total Number of Visits Per Month", "Visits")
+                elif col.startswith("Meeting Minimum Standards By Grade?"):
+                  rename_map[col] = col.replace("Meeting Minimum Standards By Grade?", "Minimum Standard")
+                elif col.startswith("Teacher's Priority Area"):
+                  rename_map[col] = col.replace("Teacher's Priority Area (0, 1, 2, or 3)", "PriorityArea")
+            
+            df_temp = df.rename(columns=rename_map)
+            
+              # 2. Convert from wide → long
+            df_new = pd.wide_to_long(df_temp,
+                                      stubnames=["Visits", "Minimum Standard", "PriorityArea"],
+                                      i=['RtR Staff Name', 'School Name', 'Teacher Name', 'Grade'],
+                                      j='Month',
+                                      sep='_',
+                                      suffix='[A-Za-z]+'
+                                      ).reset_index()
+            
+              # 3. Reorder columns
+            df_new['PriorityArea'] = df_new['PriorityArea'].astype('Int64')
+            df_new = df_new[['RtR Staff Name','School Name','Teacher Name','Grade','Month','Visits','Minimum Standard','PriorityArea']]
+            
+            month_order = ['Jan', 'Feb', 'Mar', 'Apr','May', 'Jun', 'Jul', 'Aug','Sep', 'Oct', 'Nov', 'Dec']
+            df_new['Month'] = pd.Categorical(df_new['Month'],categories=month_order,ordered=True)
+            df_new['Minimum Standard'] = df_new['Minimum Standard'].map({0: 'No',1: 'Yes'})
+            df_new['Minimum Standard'] = pd.Categorical(df_new['Minimum Standard'],categories=['Yes', 'No'],ordered=True)
+            df_new = df_new.sort_values(['Month', 'Minimum Standard'])
+            monthly_percent = (pd.crosstab(index=[df_new['Month'], df_new['Minimum Standard']],columns=df_new['PriorityArea'],normalize='index') * 100).round(1)
+            return monthly_percent
+            
+        st.title("Priroty")
+        st.dataframe(stndwisepriority(),width="content", height = "content")
+
+        
 
 
     elif page == "Reports":
