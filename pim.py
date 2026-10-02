@@ -546,7 +546,7 @@ def dashboard_page():
             
               # 3. Reorder columns
             df_new['PriorityArea'] = df_new['PriorityArea'].astype('Int64')
-            df_new = df_new.rename(columns={0:"Priority_0", 1:"Priority_1", 2:"Priority_2", 3: "Priority_0"})
+            
             df_new = df_new[['RtR Staff Name','School Name','Teacher Name','Grade','Month','Visits','Minimum Standard','PriorityArea']]
             
             month_order = ['Jan', 'Feb', 'Mar', 'Apr','May', 'Jun', 'Jul', 'Aug','Sep', 'Oct', 'Nov', 'Dec']
@@ -555,6 +555,11 @@ def dashboard_page():
             df_new['Minimum Standard'] = pd.Categorical(df_new['Minimum Standard'],categories=['Yes', 'No'],ordered=True)
             df_new = df_new.sort_values(['Month', 'Minimum Standard'])
             monthly_percent = (pd.crosstab(index=[df_new['Month'], df_new['Minimum Standard']],columns=df_new['PriorityArea'],normalize='index') * 100).round(1)
+            monthly_percent = monthly_percent.reindex(columns=[0, 1, 2, 3],fill_value=0)
+            monthly_percent = monthly_percent.rename(columns={0: 'Priority_0',
+                                                              1: 'Priority_1',
+                                                              2: 'Priority_2',
+                                                              3: 'Priority_3'})
             return monthly_percent
 
 
