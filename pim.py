@@ -605,22 +605,22 @@ def dashboard_page():
                 c[col] = (c[col].astype(str).str.replace('%', '', regex=False).str.strip())
                 c[col] = pd.to_numeric(c[col], errors='coerce')
         
-          # Plot all priorities together
-          ax = c[priority_cols].plot(kind='line',marker='o',figsize=(10, 5))
-          ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
-        
-          plt.xlabel('Month')
-          plt.ylabel('Priority (%)')
-          plt.title('Priority 0, 1, 2 and 3 by Month')
-        
-          plt.xticks(range(len(c.index)), c.index)
-          plt.ylim(0, 100)
-        
-          plt.grid(True, alpha=0.3)
-          plt.legend(title='Priority Area')
-        
-          plt.tight_layout()
-          return plt.show()
+            # Plot all priorities together
+            ax = c[priority_cols].plot(kind='line',marker='o',figsize=(10, 5))
+            ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
+            
+            plt.xlabel('Month')
+            plt.ylabel('Priority (%)')
+            plt.title('Priority 0, 1, 2 and 3 by Month')
+            
+            plt.xticks(range(len(c.index)), c.index)
+            plt.ylim(0, 100)
+            
+            plt.grid(True, alpha=0.3)
+            plt.legend(title='Priority Area')
+            
+            plt.tight_layout()
+            return plt.show()
         
         st.title("Priroty")
         tab1,tab2, tab3= st.tabs(["Priroty by Standard","Priroty by Teacher wise Mothly","Priroty"])
