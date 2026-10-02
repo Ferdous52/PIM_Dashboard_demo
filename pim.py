@@ -700,7 +700,7 @@ def dashboard_page():
                 priority_graph()
                 
         with tab3:
-            col1, col2, col3 = st.columns([1,1,1])
+            col1, col2, col3 = st.columns([3,3,3])
             with col1:
                 st.dataframe(priority_n_teacher(), width = "content" , height = "content")
             with col2:
