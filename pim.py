@@ -613,7 +613,7 @@ def dashboard_page():
             c[priority_cols].plot(kind='line',marker='o',ax=ax)
             ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
             ax.set_xlabel('Month')
-            ax.set_ylabel('Number of Teacher's (%)')
+            ax.set_ylabel('Number of Teachers (%)')
             ax.set_title('Priority 0, 1, 2 and 3 by Month')
             ax.set_xticks(range(len(c.index)))
             ax.set_xticklabels(c.index)
