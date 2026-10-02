@@ -623,6 +623,8 @@ def dashboard_page():
             plt.legend(title='Priority Area')
             
             plt.tight_layout()
+            st.pyplot(fig, use_container_width=True)
+            plt.close(fig)
             return plt.show()
         
         st.title("Priroty")
@@ -637,7 +639,7 @@ def dashboard_page():
                 st.dataframe(priroty_teacher(),width = "content", height = "content")
                 
             with col2:
-                st.pyplot(priority_graph()) 
+                priority_graph()
         with tab3:
             pass
 
