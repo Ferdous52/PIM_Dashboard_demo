@@ -591,7 +591,10 @@ def dashboard_page():
                                       observed=False)
             
             table_3 = table_3.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
-
+            table_3 = table_3.loc[table_3.sum(axis=1) > 0]
+            table_3 = ((table_3/df['Teacher Name'].count())*100).round(0)
+            table_3 = table_3.map(lambda x: f"{x:.1f}%")
+            
             return table_3
 
         
