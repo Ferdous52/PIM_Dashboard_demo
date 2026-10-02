@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 from io import BytesIO
+import matplotlib.ticker as mtick
 # ============================================================
 # PAGE CONFIG
 # ============================================================
