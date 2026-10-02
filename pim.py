@@ -565,7 +565,6 @@ def dashboard_page():
 
         
         def priroty_teacher():
-            
             df_n = pd.wide_to_long(
                   df,
                   stubnames="Teacher's Priority Area (0, 1, 2, or 3)",
@@ -574,7 +573,6 @@ def dashboard_page():
                   sep ="_",
                   suffix= r'\w+'
               ).reset_index()   
-            
             
             
             month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -593,13 +591,14 @@ def dashboard_page():
             table_3 = table_3.loc[table_3.sum(axis=1) > 0]
             table_3 = ((table_3/df['Teacher Name'].count())*100).round(0)
             table_3 = table_3.map(lambda x: f"{x:.1f}%")
-            table_3 = table_3.drop('Total', axis=0)
+            table_3.columns.name = None
+            table_3 = table_3.reset_index()
+            table_3 = table_3.set_index("Month")
             return table_3
 
         
         def priority_graph():
             c = priroty_teacher()
-            
             priority_cols = ['Priority_0','Priority_1','Priority_2','Priority_3']
                 # Remove % and convert to numeric
             for col in priority_cols:
@@ -621,6 +620,8 @@ def dashboard_page():
             fig.tight_layout()
             st.pyplot(fig, use_container_width=True)
             plt.close(fig)
+
+        
         ######Priorty Vs (Teacher + Staff + School) =======================
         df_m = df.copy()
         df_f = pd.wide_to_long(df_m,
