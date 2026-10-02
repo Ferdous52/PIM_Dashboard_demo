@@ -686,8 +686,6 @@ def dashboard_page():
 
 
 
-
-
         
         st.subheader("Teacher's Priorty Area")
         tab1,tab2, tab3= st.tabs(["Priorty by Standard","Priorty by Teacher wise Mothly","Priorty"])
@@ -703,7 +701,7 @@ def dashboard_page():
                 priority_graph()
                 
         with tab3:
-            col1, col2, col3 = st.columns([2,2,2])
+            col1, col2, col3 = st.columns([2,2,1])
             with col1:
                 st.dataframe(priority_n_teacher(), width = "content" , height = "content")
             with col2:
