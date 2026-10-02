@@ -402,11 +402,12 @@ def dashboard_page():
             }
             
             # Automatically find the visits/month for every row
-            df["target"] = [rules.get((office, year, grade),0) for office, year, grade in zip(df["District"],df["Year of Support"],df["Grade"])]
-            total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
-            df["Target_Visit"] = (df["target"] * len(total_visit))
+            df_tar = df.copy()
+            df_tar["target"] = [rules.get((office, year, grade),0) for office, year, grade in zip(df_tar["District"],df["Year of Support"],df["Grade"])]
+            total_visit = [col for col in df_tar.columns if col.startswith("Total Number of Visits Per Month")]
+            df_tar["Target_Visit"] = (df_tar["target"] * len(total_visit))
             
-            Target_Visit = pd.pivot_table(df,
+            Target_Visit = pd.pivot_table(df_tar,
                                index='RtR Staff Name',
                                values='Target_Visit',
                                aggfunc='sum',
@@ -414,15 +415,15 @@ def dashboard_page():
                                margins_name='Total').reset_index()
 
               # ---------- Total Visited ----------
-            visited = pd.pivot_table(df,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index()
+            visited = pd.pivot_table(df_tar,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index()
             visited = visited.rename(columns={0: "Total_visited"})
             
               # ---------- Grade 1 ----------
-            g1 = df[df["Grade"] == 1]
+            g1 = df_tar[df_tar["Grade"] == 1]
             Grade1 = (pd.pivot_table(g1,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index().rename(columns={0: "Visit Grade_1"}))
     
               # ---------- Grade 2 ----------
-            g2 = df[df["Grade"] == 2]
+            g2 = df_tar[df_tar["Grade"] == 2]
             Grade2 = (pd.pivot_table(g2,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index().rename(columns={0: "Visit Grade_2"}))
             
               # ---------- Combine Grade Visits ----------
