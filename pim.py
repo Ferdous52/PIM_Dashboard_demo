@@ -623,7 +623,7 @@ def dashboard_page():
             fig.tight_layout()
             st.pyplot(fig, use_container_width=True)
             plt.close(fig)
-
+        ######Priorty Vs (Teacher + Staff + School) =======================
         df_m = df.copy()
         df_f = pd.wide_to_long(df_m,
                                stubnames=["Meeting Minimum Standards By Grade?","Total Number of Visits Per Month","Teacher's Priority Area (0, 1, 2, or 3)"],
@@ -647,38 +647,42 @@ def dashboard_page():
           df_n_teacher = df_n_teacher.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
           df_n_teacher.columns.name = None
           df_n_teacher = df_n_teacher.reset_index()
+          df_n_teacher = df_n_teacher.set_index("Month")
           return df_n_teacher
         
         def priorty_staff():
-            df_rtr = pd.pivot_table(df_f,
+          df_rtr = pd.pivot_table(df_f,
                                     index="RtR Staff Name",
                                     values="School Name",
                                     columns="Teacher's Priority Area (0, 1, 2, or 3)",
                                     aggfunc="nunique",
                                     fill_value=0)
-            df_rtr = df_rtr.div(df_rtr.sum(axis=1),axis=0) * 100
-            df_rtr = df_rtr.map(lambda x: f"{x:.0f}%")
-            df_rtr = df_rtr.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
-            df_rtr.columns.name = None
-            df_rtr = df_rtr.reset_index()
-            return df_rtr
+          df_rtr = df_rtr.div(df_rtr.sum(axis=1),axis=0) * 100
+          df_rtr = df_rtr.map(lambda x: f"{x:.0f}%")
+          df_rtr = df_rtr.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
+          df_rtr.columns.name = None
+          df_rtr = df_rtr.reset_index()
+          df_rtr = df_rtr.set_index("RtR Staff Name")
+          return df_rtr
         
         def priorty_school():
-            df_school = pd.pivot_table(df_f,
+          df_school = pd.pivot_table(df_f,
                                        index="Month",
                                        values="School Name",
                                        columns="Teacher's Priority Area (0, 1, 2, or 3)",
                                        aggfunc="nunique",
                                        fill_value=0,)
-            df_school = (df_school / df["School Name"].nunique()) * 100
-            df_school = df_school.map(lambda x: f"{x:.0f}%")
-            month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            df_school = df_school.reindex(month_order)
-            df_school = df_school.dropna()
-            df_school = df_school.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
-            df_school.columns.name =None
-            df_school = df_school.reset_index()
-            return df_school
+          df_school = (df_school / df["School Name"].nunique()) * 100
+          df_school = df_school.map(lambda x: f"{x:.0f}%")
+          month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+          df_school = df_school.reindex(month_order)
+          df_school = df_school.dropna()
+          df_school = df_school.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
+          df_school.columns.name = None  
+          df_school = df_school.reset_index()
+          df_school = df_school.set_index("Month")
+          df_school
+          return df_school
 
 
 
