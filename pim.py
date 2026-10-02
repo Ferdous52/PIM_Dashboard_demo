@@ -681,7 +681,6 @@ def dashboard_page():
             df_school.columns.name = None  
             df_school = df_school.reset_index()
             df_school = df_school.set_index("Month")
-            df_school
             return df_school
 
 
@@ -701,7 +700,7 @@ def dashboard_page():
                 priority_graph()
                 
         with tab3:
-            col1, col2, col3 = st.columns([2,2,1])
+            col1, col2, col3 = st.columns([1,1,1])
             with col1:
                 st.dataframe(priority_n_teacher(), width = "content" , height = "content")
             with col2:
