@@ -599,57 +599,30 @@ def dashboard_page():
             return table_3
 
         
-            def priority_graph():
-                c = priroty_teacher()
+        def priority_graph():
+            c = priroty_teacher()
             
-                priority_cols = [
-                    'Priority_0',
-                    'Priority_1',
-                    'Priority_2',
-                    'Priority_3'
-                ]
-            
+            priority_cols = ['Priority_0','Priority_1','Priority_2','Priority_3']
                 # Remove % and convert to numeric
-                for col in priority_cols:
-                    c[col] = (
-                        c[col]
-                        .astype(str)
-                        .str.replace('%', '', regex=False)
-                        .str.strip()
-                    )
-                    c[col] = pd.to_numeric(c[col], errors='coerce')
+            for col in priority_cols:
+                c[col] = (c[col].astype(str).str.replace('%', '', regex=False).str.strip())
+                c[col] = pd.to_numeric(c[col], errors='coerce')
             
-                # Create figure and axes
-                fig, ax = plt.subplots(figsize=(10, 5))
+            fig, ax = plt.subplots(figsize=(10, 5))
             
-                # Plot
-                c[priority_cols].plot(
-                    kind='line',
-                    marker='o',
-                    ax=ax
-                )
-            
-                ax.yaxis.set_major_formatter(
-                    mtick.PercentFormatter(xmax=100)
-                )
-            
-                ax.set_xlabel('Month')
-                ax.set_ylabel('Priority (%)')
-                ax.set_title('Priority 0, 1, 2 and 3 by Month')
-            
-                ax.set_xticks(range(len(c.index)))
-                ax.set_xticklabels(c.index)
-            
-                ax.set_ylim(0, 100)
-            
-                ax.grid(True, alpha=0.3)
-                ax.legend(title='Priority Area')
-            
-                fig.tight_layout()
-            
-                st.pyplot(fig, use_container_width=True)
-            
-                plt.close(fig)
+            c[priority_cols].plot(kind='line',marker='o',ax=ax)
+            ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
+            ax.set_xlabel('Month')
+            ax.set_ylabel('Priority (%)')
+            ax.set_title('Priority 0, 1, 2 and 3 by Month')
+            ax.set_xticks(range(len(c.index)))
+            ax.set_xticklabels(c.index)
+            ax.set_ylim(0, 100)
+            ax.grid(True, alpha=0.3)
+            ax.legend(title='Priority Area')
+            fig.tight_layout()
+            st.pyplot(fig, use_container_width=True)
+            plt.close(fig)
                     
         st.title("Priroty")
         tab1,tab2, tab3= st.tabs(["Priroty by Standard","Priroty by Teacher wise Mothly","Priroty"])
