@@ -635,11 +635,13 @@ def dashboard_page():
             with col1:
                 st.dataframe(priroty_teacher(),width = "content", height = "content")
                 
+            with col3:
+                st.dataframe(df)
+                
             with col2:
                 priority_graph()
                 
-            with col3:
-                st.dataframe(df)
+
                 
         with tab3:
             pass
