@@ -562,7 +562,7 @@ def dashboard_page():
                                                               3: 'Priority_3'})
             return monthly_percent
 
-
+        
         def priroty_teacher():
             
             df_n = pd.wide_to_long(
@@ -596,7 +596,31 @@ def dashboard_page():
             table_3 = table_3.map(lambda x: f"{x:.1f}%")
             table_3 = table_3.drop('Total', axis=0)
             return table_3
-
+        def priority_graph():
+            c = priroty_teacher()
+            priority_cols = ['Priority_0', 'Priority_1', 'Priority_2', 'Priority_3']
+        
+          # Remove % and convert to numeric
+            for col in priority_cols:
+                c[col] = (c[col].astype(str).str.replace('%', '', regex=False).str.strip())
+                c[col] = pd.to_numeric(c[col], errors='coerce')
+        
+          # Plot all priorities together
+          ax = c[priority_cols].plot(kind='line',marker='o',figsize=(10, 5))
+          ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
+        
+          plt.xlabel('Month')
+          plt.ylabel('Priority (%)')
+          plt.title('Priority 0, 1, 2 and 3 by Month')
+        
+          plt.xticks(range(len(c.index)), c.index)
+          plt.ylim(0, 100)
+        
+          plt.grid(True, alpha=0.3)
+          plt.legend(title='Priority Area')
+        
+          plt.tight_layout()
+          return plt.show()
         
         st.title("Priroty")
         tab1,tab2, tab3= st.tabs(["Priroty by Standard","Priroty by Teacher wise Mothly","Priroty"])
@@ -604,7 +628,13 @@ def dashboard_page():
         with tab1:
             st.dataframe(stndwisepriority(), width = "content", height = "content")
         with tab2:
-            st.dataframe(priroty_teacher(),width = "content", height = "content")
+            col1, col2 = st.columns(2):
+            with col1:
+                st.dataframe(priroty_teacher(),width = "content", height = "content")
+            with col2:
+                g1 = st.container()
+                with g1:
+                    priority_graph()     
         with tab3:
             pass
 
