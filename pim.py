@@ -504,7 +504,7 @@ def dashboard_page():
               min_std = pd.concat([min_std, total_row], ignore_index=True)
               return min_std
         standard_df = standard_grade().reset_index(drop=True)   
-    
+
         st.subheader("Standards")
         col1, col2 = st.columns(2)
         with col1:
@@ -623,7 +623,68 @@ def dashboard_page():
             fig.tight_layout()
             st.pyplot(fig, use_container_width=True)
             plt.close(fig)
-                    
+
+        df_m = df.copy()
+        df_f = pd.wide_to_long(df_m,
+                               stubnames=["Meeting Minimum Standards By Grade?","Total Number of Visits Per Month","Teacher's Priority Area (0, 1, 2, or 3)"],
+                               i = ["Field Office"	, "District" ,"RtR Staff Name" ,"Project ID" , "School Name" , "Teacher Name" , "Year of Support" , "Grade","Class"],
+                               j = "Month",
+                               sep="_",
+                               suffix="[A-Za-z]+").reset_index()
+        
+        def priority_n_teacher():
+          df_n_teacher = pd.pivot_table(df_f,
+                                        index = "Month",
+                                        values = "Teacher Name",
+                                        columns = "Teacher's Priority Area (0, 1, 2, or 3)",
+                                        aggfunc="count",
+                                        fill_value=0,)
+          df_n_teacher = (df_n_teacher / df["School Name"].nunique()) * 100
+          df_n_teacher = df_n_teacher.map(lambda x: f"{x:.0f}%")
+          month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+          df_n_teacher = df_n_teacher.reindex(month_order)
+          df_n_teacher = df_n_teacher.dropna()
+          df_n_teacher = df_n_teacher.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
+          df_n_teacher.columns.name = None
+          df_n_teacher = df_n_teacher.reset_index()
+          return df_n_teacher
+        
+        def priorty_staff():
+            df_rtr = pd.pivot_table(df_f,
+                                    index="RtR Staff Name",
+                                    values="School Name",
+                                    columns="Teacher's Priority Area (0, 1, 2, or 3)",
+                                    aggfunc="nunique",
+                                    fill_value=0)
+            df_rtr = df_rtr.div(df_rtr.sum(axis=1),axis=0) * 100
+            df_rtr = df_rtr.map(lambda x: f"{x:.0f}%")
+            df_rtr = df_rtr.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
+            df_rtr.columns.name = None
+            df_rtr = df_rtr.reset_index()
+            return df_rtr
+        
+        def priorty_school():
+            df_school = pd.pivot_table(df_f,
+                                       index="Month",
+                                       values="School Name",
+                                       columns="Teacher's Priority Area (0, 1, 2, or 3)",
+                                       aggfunc="nunique",
+                                       fill_value=0,)
+            df_school = (df_school / df["School Name"].nunique()) * 100
+            df_school = df_school.map(lambda x: f"{x:.0f}%")
+            month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            df_school = df_school.reindex(month_order)
+            df_school = df_school.dropna()
+            df_school = df_school.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
+            df_school.columns.name =None
+            df_school = df_school.reset_index()
+            return df_school
+
+
+
+
+
+        
         st.subheader("Teacher's Priorty Area")
         tab1,tab2, tab3= st.tabs(["Priorty by Standard","Priorty by Teacher wise Mothly","Priorty"])
         
@@ -637,10 +698,14 @@ def dashboard_page():
             with col2:
                 priority_graph()
                 
-
-                
         with tab3:
-            pass
+            col1, col2, col3 = st.columns([1,2,1])
+            with col1:
+                st.dataframe(priority_n_teacher(), width = "content" , height = "content")
+            with col2:
+                 st.dataframe(priorty_staff(), width = "content" , height = "content")
+            with col3:
+                st.dataframe(priorty_school(), width = "content" , height = "content")
 
 
     elif page == "Reports":
