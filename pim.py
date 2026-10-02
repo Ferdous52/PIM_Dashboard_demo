@@ -631,7 +631,7 @@ def dashboard_page():
             st.dataframe(stndwisepriority(), width = "content", height = "content")
             
         with tab2:
-            col1, col2 = st.columns(2)
+            col1, col2 = st.columns([1,2])
             with col1:
                 st.dataframe(priroty_teacher(),width = "content", height = "content")
                 
