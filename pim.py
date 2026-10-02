@@ -624,8 +624,8 @@ def dashboard_page():
             st.pyplot(fig, use_container_width=True)
             plt.close(fig)
                     
-        st.subheader("Teacher's Priroty Area")
-        tab1,tab2, tab3= st.tabs(["Priroty by Standard","Priroty by Teacher wise Mothly","Priroty"])
+        st.subheader("Teacher's Priorty Area")
+        tab1,tab2, tab3= st.tabs(["Priorty by Standard","Priorty by Teacher wise Mothly","Priorty"])
         
         with tab1:
             st.dataframe(stndwisepriority(), width = "content", height = "content")
