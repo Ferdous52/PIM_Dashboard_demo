@@ -635,9 +635,7 @@ def dashboard_page():
                 st.dataframe(priroty_teacher(),width = "content", height = "content")
                 
             with col2:
-                g1 = st.container()
-                with g1:
-                    priority_graph()     
+                st.pyplot(priority_graph())    
         with tab3:
             pass
 
