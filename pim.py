@@ -594,7 +594,7 @@ def dashboard_page():
             table_3 = table_3.loc[table_3.sum(axis=1) > 0]
             table_3 = ((table_3/df['Teacher Name'].count())*100).round(0)
             table_3 = table_3.map(lambda x: f"{x:.1f}%")
-            
+            table_3 = table_3.drop('Total', axis=0)
             return table_3
 
         
