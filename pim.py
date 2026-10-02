@@ -546,6 +546,7 @@ def dashboard_page():
             
               # 3. Reorder columns
             df_new['PriorityArea'] = df_new['PriorityArea'].astype('Int64')
+            df_new = df_new.rename(columns={0:"Priority_0", 1:"Priority_1", 2:"Priority_2", 3: "Priority_0"})
             df_new = df_new[['RtR Staff Name','School Name','Teacher Name','Grade','Month','Visits','Minimum Standard','PriorityArea']]
             
             month_order = ['Jan', 'Feb', 'Mar', 'Apr','May', 'Jun', 'Jul', 'Aug','Sep', 'Oct', 'Nov', 'Dec']
