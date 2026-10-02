@@ -685,6 +685,7 @@ def dashboard_page():
             with col1:
                 st.markdown("The percentage of schools fall into each teacher priority area (0, 1, 2, or 3) each month")
                 st.dataframe(priorty_school(), width = "content" , height = "content")
+                
             with col2:
                 st.markdown("For each RtR staff member, The percentage of the schools they work with fall into each teacher priority area")
                 st.dataframe(priorty_staff(), width = "content" , height = "content")
