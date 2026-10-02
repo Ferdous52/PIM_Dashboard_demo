@@ -597,6 +597,8 @@ def dashboard_page():
             table_3 = table_3.map(lambda x: f"{x:.1f}%")
             table_3 = table_3.drop('Total', axis=0)
             return table_3
+
+        
         def priority_graph():
             c = priroty_teacher()
             priority_cols = ['Priority_0', 'Priority_1', 'Priority_2', 'Priority_3']
@@ -635,7 +637,7 @@ def dashboard_page():
                 st.dataframe(priroty_teacher(),width = "content", height = "content")
                 
             with col2:
-                priority_graph()  
+                st.dataframe(priority_graph()) 
         with tab3:
             pass
 
