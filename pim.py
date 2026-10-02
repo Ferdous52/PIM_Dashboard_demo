@@ -587,8 +587,6 @@ def dashboard_page():
                                       values="Teacher Name",
                                       columns="Teacher's Priority Area (0, 1, 2, or 3)",
                                       aggfunc="count",
-                                      margins=True,
-                                      margins_name="Total",
                                       observed=False)
             
             table_3 = table_3.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
@@ -632,23 +630,6 @@ def dashboard_page():
                                sep="_",
                                suffix="[A-Za-z]+").reset_index()
         
-        def priority_n_teacher():
-            df_n_teacher = pd.pivot_table(df_f,
-                                        index = "Month",
-                                        values = "Teacher Name",
-                                        columns = "Teacher's Priority Area (0, 1, 2, or 3)",
-                                        aggfunc="count",
-                                        fill_value=0,)
-            df_n_teacher = (df_n_teacher / df["School Name"].nunique()) * 100
-            df_n_teacher = df_n_teacher.map(lambda x: f"{x:.0f}%")
-            month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            df_n_teacher = df_n_teacher.reindex(month_order)
-            df_n_teacher = df_n_teacher.dropna()
-            df_n_teacher = df_n_teacher.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
-            df_n_teacher.columns.name = None
-            df_n_teacher = df_n_teacher.reset_index()
-            df_n_teacher = df_n_teacher.set_index("Month")
-            return df_n_teacher
         
         def priorty_staff():
             df_rtr = pd.pivot_table(df_f,
@@ -700,16 +681,14 @@ def dashboard_page():
                 priority_graph()
                 
         with tab3:
-            col1, col2, col3 = st.columns([1,2,1])
+            col1, col2, col3 = st.columns([1,2])
             with col1:
-                st.markdown("The percentage of teachers fall into each priority area (0, 1, 2, or 3) each month, relative to the total number of schools")
-                st.dataframe(priority_n_teacher(), width = "content" , height = "content")
+                st.markdown("The percentage of schools fall into each teacher priority area (0, 1, 2, or 3) each month")
+                st.dataframe(priorty_school(), width = "content" , height = "content")
             with col2:
                 st.markdown("For each RtR staff member, The percentage of the schools they work with fall into each teacher priority area")
                 st.dataframe(priorty_staff(), width = "content" , height = "content")
-            with col3:
-                st.markdown("The percentage of schools fall into each teacher priority area (0, 1, 2, or 3) each month")
-                st.dataframe(priorty_school(), width = "content" , height = "content")
+
 
 
     elif page == "Reports":
