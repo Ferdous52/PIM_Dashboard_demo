@@ -277,11 +277,17 @@ def dashboard_page():
         
         col1, col2, col3, col4, col5, col6 = st.columns(6)
         
-        st.markdown("""<style>div[data-testid="stMetric"] {background-color: #0F172A ;border: 1px solid #E2E8F0;padding: 20px;border-radius: 12px;box-shadow: 0 2px 8px rgba(0,0,0,0.08);}</style>""", unsafe_allow_html=True)
+        st.markdown("""
+                    <style>
+                    div[data-testid="stMetric"] 
+                    {background-color: #0F172A;
+                    border: 1px solid #E2E8F0;
+                    padding: 20px;border-radius: 12px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);}
+                    </style>""", unsafe_allow_html=True)
         
         with col1:
             total_LF = df["RtR Staff Name"].nunique()
-            
             st.metric("Total Staff", total_LF)
 
         with col2:
@@ -312,7 +318,6 @@ def dashboard_page():
 
         col1, col2 = st.columns(2)
         
-
         with col1:
             months = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
             monthly_visit = df[months].sum().reset_index()
@@ -579,7 +584,7 @@ def dashboard_page():
                                       margins_name="Total",
                                       observed=False)
             
-            table_3 = table_3.rename(columns={0.0: 0,1.0: 1,2.0: 2,3.0: 3})
+            table_3 = table_3.rename(columns={0.0: "Priority_0",1.0: "Priority_1", 2.0: "Priority_2",3.0: "Priority_3"})
 
             return table_3
 
@@ -602,13 +607,7 @@ def dashboard_page():
         with pd.ExcelWriter(output, engine="openpyxl") as writer:
             df.to_excel(writer, index=False, sheet_name="PIM")
         
-        st.download_button(
-            label="Download xlsx",
-            data=output.getvalue(),
-            file_name="PIM.xlsx",
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            icon=":material/download:",
-        )
+        st.download_button(label="Download xlsx",data=output.getvalue(),file_name="PIM.xlsx",mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",icon=":material/download:",)
 
 
 # ============================================================
