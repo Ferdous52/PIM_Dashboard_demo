@@ -377,6 +377,7 @@ def dashboard_page():
             ax.legend()
             plt.tight_layout()
             st.pyplot(fig)
+            plt.close(fig)
             
         def table_visit():
             table_1 = pd.pivot_table(df,
@@ -479,8 +480,7 @@ def dashboard_page():
         st.header("School Visits Summary")
         st.subheader("Staff-wise School Visit Summary")
         st.metric("The Total Number of School Visits Complted:", total_number_visit)
-        
-        st.pyplot(fig)
+        visit_graph()
         st.dataframe(table_visit(),width="stretch", height ="content")
 
             
