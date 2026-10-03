@@ -195,7 +195,15 @@ def data_clean(df):
         df[col] = pd.to_numeric(df[col],errors="coerce")
         
     return df
-
+    
+def df_long(df):    
+    df_long = pd.wide_to_long(df,
+                          stubnames=["Meeting Minimum Standards By Grade?","Total Number of Visits Per Month","Teacher's Priority Area (0, 1, 2, or 3)"],
+                          i = ["Field Office"	, "District" ,"RtR Staff Name" ,"Project ID" , "School Name" , "Teacher Name" , "Year of Support" , "Grade","Class"],
+                          j = "Month",
+                          sep="_",
+                          suffix="[A-Za-z]+").reset_index()
+    return df_long
 
 
 # ========================================================
@@ -206,6 +214,7 @@ df = st.session_state.df
 
 if df is not None:
     df = data_clean(df)
+    df1 = df_long(df)
 
 
 # ============================================================
@@ -455,7 +464,7 @@ def dashboard_page():
             st.dataframe(table_2(),width ="content", height = "content", hide_index = True)
         
         with tab3:
-            st.dataframe(df)
+            st.dataframe(df1)
 
 
     
