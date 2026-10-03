@@ -494,12 +494,11 @@ def dashboard_page():
         
         with col3:
             with st.container():
-                st.metric("Total Visits", total_number_visit)
-                st.bar_chart(visits)
+                st.dataframe(table_visit(), width = "content", height = "content")
         
         with col4:
             with st.container():
-                st.metric("Target Visits", target_visits)
+                visit_graph()
             
 
     ############################################################################
