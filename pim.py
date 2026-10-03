@@ -503,12 +503,12 @@ def dashboard_page():
         
         with col3:
             with st.container():
-                st.dataframe(table_visit(), width = "content", height = "content")
-        
+                pass
         with col4:
             with st.container():
                 visit_graph()
-            
+        with st.expander():
+            st.dataframe(table_visit(), width = "stretch", height = "content") 
 
     ############################################################################
     #                       Standards                                          #
