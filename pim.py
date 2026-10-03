@@ -486,15 +486,17 @@ def dashboard_page():
         with col1:
             st.metric("Total School Visits",total_number_visit)
         with col2:
-            st.metric("Target Visits",table_visit()["Target_Visit"].sum(), chart_type = "bar")
+            st.metric("Target Visits",table_visit()["Target_Visit"].sum())
         with col3:
             st.metric("Visit Gap",table_visit()["Gap of Visit"].sum())
             
-        col3, col4 = st.columns(2, border=True)
+        col3, col4 = st.columns(2)
         with col3:
             st.dataframe(table_visit(), width = "content", height = "content")
         with col4:
-            visit_graph()
+            s = st.container()
+            with s:
+                visit_graph()
             
 
     ############################################################################
