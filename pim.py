@@ -372,7 +372,6 @@ def dashboard_page():
 
             Schl_Distn = table_1.reset_index()
             Schl_Distn = Schl_Distn.rename(columns = {"RtR Staff Name": "Staff Name", "School Name": "Total Number of Schools" , "Teacher Name": "Total Number of Teachers"})
-            Schl_Distn = Schl_Distn.set_index("Staff Name")
             return Schl_Distn
 
         
@@ -456,8 +455,15 @@ def dashboard_page():
             return Final_Total_Visited
 
         
-        st.title("School Visit Summary")
-
+        st.subheader("School Visit Summary")
+        st.markdown("""
+                    <style>
+                    div[data-testid="dataframe"] 
+                    {background-color: #2d6b6b;
+                    border: 1px solid #132236;
+                    padding: 200px;border-radius: 12px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);}
+                    </style>""", unsafe_allow_html=True)
         col1, col2 = st.columns([1,1])
         with col1:
             st.dataframe(table_1(), width ="content", height = "content", hide_index = True)
