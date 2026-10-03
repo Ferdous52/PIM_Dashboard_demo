@@ -357,7 +357,9 @@ def dashboard_page():
         with col2:
            st.line_chart(monthly_visit,x="Month",y="Total_Visit")
         
-############################################################################################################################################################################
+    ############################################################################
+    #                        Visists                                           #
+    ############################################################################
     elif page == "Visits":
 
         def table_1():
@@ -370,6 +372,7 @@ def dashboard_page():
 
             Schl_Distn = table_1.reset_index()
             Schl_Distn = Schl_Distn.rename(columns = {"RtR Staff Name": "Staff Name", "School Name": "Total Number of Schools" , "Teacher Name": "Total Number of Teachers"})
+            Schl_Distn = Schl_Distn.set_index("Staff Name")
             return Schl_Distn
 
         
@@ -451,22 +454,23 @@ def dashboard_page():
               # ---------- Final ----------
             Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
             return Final_Total_Visited
-        #-------------Streamlit codes--------------------
 
         
-        st.title("School Visit Dashboard")
-        tab1, tab2, tab3 = st.tabs(["Overview","Total School Visits by LF","Standards"])
+        #st.title("School Visit Dashboard")
+        #tab1, tab2, tab3 = st.tabs(["Overview","Total School Visits by LF","Standards"])
 
-        with tab1:
+        #with tab1:
             st.dataframe(table_1(), width ="content", height = "content", hide_index = True)
         
-        with tab2:
+        #with tab2:
             st.dataframe(table_2(),width ="content", height = "content", hide_index = True)
         
-        with tab3:
+        #with tab3:
             st.dataframe(df1)
 
-
+    ############################################################################
+    #                       Standards                                          #
+    ############################################################################
     
     elif page == "Standards":
         def standard_grade():
