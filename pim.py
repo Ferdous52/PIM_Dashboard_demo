@@ -560,7 +560,9 @@ def dashboard_page():
               return min_std
         standard_df = standard_grade().reset_index(drop=True)   
 
-        st.subheader("Standards")
+        st.markdown("""<style>h1 {color: black !important;}h2, h3 {color: #333333 !important;}</style>""", unsafe_allow_html=True)
+        st.subheader("Standards Meet")
+        
         col1, col2 = st.columns(2)
         with col1:
             tab1, tab2, tab3 = st.tabs(["Grade Wise Standard", "LF wise Standard", "Teachers Wise Standard"])
