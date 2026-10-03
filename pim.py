@@ -488,9 +488,9 @@ def dashboard_page():
         with col1:
             st.metric("Total School Visits",total_number_visit)
         with col2:
-            st.metric("Target Visits",table_visit()["Target_Visit"]..iloc[:-1].sum())
+            st.metric("Target Visits",table_visit()["Target_Visit"].iloc[:-1].sum())
         with col3:
-            st.metric("Visit Gap",table_visit()["Gap of Visit"]..iloc[:-1].sum())
+            st.metric("Visit Gap",table_visit()["Gap of Visit"].iloc[:-1].sum())
             
         col3, col4 = st.columns([1, 1])
         
