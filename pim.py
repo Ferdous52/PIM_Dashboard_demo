@@ -424,7 +424,7 @@ def dashboard_page():
             ]
         
             # Find all monthly visit columns
-            total_visit = [colfor col in df_tar.columns if col.startswith("Total Number of Visits Per Month")]
+            total_visit = [col for col in df_tar.columns if col.startswith("Total Number of Visits Per Month")]
             df_tar["Target_Visit"] = (df_tar["target"] * len(total_visit))
             Target_Visit = (df_tar.groupby("RtR Staff Name")["Target_Visit"].sum().rename("Target_Visit").reset_index())
             target_total = Target_Visit["Target_Visit"].sum()
