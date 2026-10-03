@@ -477,6 +477,10 @@ def dashboard_page():
             staff_visited = staff_visited[["Total Number of Schools", "Total Number of Teachers", "Target_Visit","Total_visited","Gap of Visit","Visit Grade_1","Visit Grade_2",]]
             return staff_visited
 
+        st.markdown("""<style>
+                           h1 {color: black !important;}
+                           h2, h3 {color: #333333 !important;}</style>""", unsafe_allow_html=True)
+        
         st.header("School Visits Summary")
         
         st.subheader("Staff-wise School Visit Summary")
