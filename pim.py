@@ -361,7 +361,22 @@ def dashboard_page():
     #                        Visists                                           #
     ############################################################################
     elif page == "Visits":
-
+        
+        total_number_visit = df1['Total Number of Visits Per Month'].sum()
+        
+        def visit_graph():
+            visits = df1["Total Number of Visits Per Month"].value_counts().reset_index()
+            y = visits["count"]
+            x = visits["Total Number of Visits Per Month"]
+            fig, ax = plt.subplots(figsize=(8, 5))
+            bars = ax.bar(x, y, label="Total Visits")
+            ax.bar_label(bars, padding=3, fontsize=10)
+            ax.set_xlabel("Visits")
+            ax.set_ylabel("Number of Observations")
+            ax.set_title("Total Visits at School")
+            ax.legend()
+            plt.tight_layout()
+            plt.show()
         def table_visit():
             table_1 = pd.pivot_table(df,
                                      index="RtR Staff Name",
@@ -461,8 +476,14 @@ def dashboard_page():
             return staff_visited
 
         st.header("School Visits Summary")
-        st.subheader("Staff-wise School visit Summary")
-        
+        st.subheader("Staff-wise School Visit Summary")
+
+        col1 = st.columns(1)
+
+        with col1:
+            st.markdown("The Total Number of School Visits Complted:", total_number_visit)
+            visit_graph()
+            
         st.dataframe(table_visit(),width="stretch", height ="content")
 
             
