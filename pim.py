@@ -499,7 +499,7 @@ def dashboard_page():
                            h2, h3 {color: #333333 !important;}</style>""", unsafe_allow_html=True)
         
         st.header("School Visits Summary")
-                
+        st.marksown("--------")      
         col1, col2, col3 = st.columns(3)
         
         st.markdown("""<style>[data-testid="stMetricValue"] {color: black !important;}
@@ -520,8 +520,8 @@ def dashboard_page():
         with col4:
             with st.container():
                 visit_graph()
-        with st.expander("Click to see the data"):
-            st.dataframe(table_visit(), width = "stretch", height = "content") 
+        st.markdown("-------------")
+        st.dataframe(table_visit(), width = "stretch", height = "content") 
 
     ############################################################################
     #                       Standards                                          #
