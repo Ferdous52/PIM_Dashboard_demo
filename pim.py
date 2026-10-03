@@ -478,15 +478,15 @@ def dashboard_page():
             return staff_visited
 
         st.header("School Visits Summary")
-        st.subheader("Staff-wise School Visit Summary")
-        st.markdown("""<style>[data-testid="stMetricLabel"] {color: #555555;}
-                              [data-testid="stMetricValue"] {color: #008000;}
-                              </style>""", unsafe_allow_html=True)
         
+        st.subheader("Staff-wise School Visit Summary")
+    
         st.metric("The Total Number of School Visits Complted:", total_number_visit)
+        
         col1, col2, col3 = st.columns(3)
         
         with col1:
+            st.markdown(f"""<div><div style="color:#666; font-size:14px;">Total School Visits</div><div style="color:green; font-size:32px; font-weight:600;">{total_number_visit}</div></div>""", unsafe_allow_html=True)
             st.metric("Total School Visits",total_number_visit)
         with col2:
             st.metric("Target Visits",table_visit()["Target_Visit"].sum())
