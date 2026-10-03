@@ -477,13 +477,8 @@ def dashboard_page():
 
         st.header("School Visits Summary")
         st.subheader("Staff-wise School Visit Summary")
-
-        col1 = st.columns(1)
-
-        with col1:
-            st.markdown("The Total Number of School Visits Complted:", total_number_visit)
-            visit_graph()
-            
+        st.markdown("The Total Number of School Visits Complted:", total_number_visit)
+        visit_graph()
         st.dataframe(table_visit(),width="stretch", height ="content")
 
             
