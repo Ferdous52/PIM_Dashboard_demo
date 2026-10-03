@@ -492,7 +492,7 @@ def dashboard_page():
             
         col3, col4 = st.columns(2)
         with col3:
-            st.dataframe(table_visit(), width = "content", height = "content")
+            st.dataframe(table_visit(), width = "content", height = "content", chart_type = "bar")
         with col4:
             visit_graph()
             
