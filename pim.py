@@ -762,7 +762,7 @@ def dashboard_page():
         output = BytesIO()
         
         with pd.ExcelWriter(output, engine="openpyxl") as writer:
-            df.to_excel(writer, index=False, sheet_name="PIM")
+            df1.to_excel(writer, index=False, sheet_name="PIM")
         
         st.download_button(label="Download xlsx",data=output.getvalue(),file_name="PIM.xlsx",mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",icon=":material/download:",)
 
