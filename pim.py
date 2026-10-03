@@ -485,8 +485,8 @@ def dashboard_page():
         
         col1, col2, col3 = st.columns(3)
         
+        st.markdown("""<style>[data-testid="stMetricValue"] {color: green;}</style>""", unsafe_allow_html=True)
         with col1:
-            st.markdown(f"""<div><div style="color:#666; font-size:14px;">Total School Visits</div><div style="color:green; font-size:32px; font-weight:600;">{total_number_visit}</div></div>""", unsafe_allow_html=True)
             st.metric("Total School Visits",total_number_visit)
         with col2:
             st.metric("Target Visits",table_visit()["Target_Visit"].sum())
