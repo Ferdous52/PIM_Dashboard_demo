@@ -379,6 +379,22 @@ def dashboard_page():
             plt.tight_layout()
             st.pyplot(fig)
             plt.close(fig)
+        def gap_visit():
+            c = table_visit()
+            c = c.reset_index()
+            x = c['RtR Staff Name'].iloc[:-1]
+            y = c['Gap of Visit'].iloc[:-1]
+            fig, ax = plt.subplots(figsize=(10, 6))
+            bars = ax.bar(x, y, label="Total Visits")
+            ax.bar_label(bars, padding=3, fontsize=10)
+            ax.set_xlabel("Staff Name")
+            ax.set_ylabel("Total Gap of Visits")
+            ax.set_title("Number of Gap of School Visit")
+            ax.legend()
+            plt.xticks(rotation=45, ha="right")
+            plt.tight_layout()
+            st.pyplot(fig)
+            plt.close(fig)
             
         def table_visit():
             table_1 = pd.pivot_table(df,
@@ -503,7 +519,7 @@ def dashboard_page():
         
         with col3:
             with st.container():
-                pass
+                gap_visit()
         with col4:
             with st.container():
                 visit_graph()
@@ -565,13 +581,7 @@ def dashboard_page():
         
         col1, col2 = st.columns(2)
         with col1:
-            tab1, tab2, tab3 = st.tabs(["Grade Wise Standard", "LF wise Standard", "Teachers Wise Standard"])
-            with tab1:
-                st.dataframe(standard_df, width = "content", height = "content", hide_index=True)
-            with tab2:
-                pass
-            with tab3:
-                pass
+            st.dataframe(standard_df, width = "content", height = "content", hide_index=True)
         with col2:
             pass
     ############################################################################
