@@ -490,7 +490,7 @@ def dashboard_page():
         with col3:
             st.metric("Visit Gap",table_visit()["Gap of Visit"].sum())
             
-        col3, col4 = st.columns(2)
+        col3, col4 = st.columns(2, border=True)
         with col3:
             st.dataframe(table_visit(), width = "content", height = "content")
         with col4:
