@@ -479,6 +479,9 @@ def dashboard_page():
 
         st.header("School Visits Summary")
         st.subheader("Staff-wise School Visit Summary")
+        st.markdown("""<style>[data-testid="stMetricLabel"] {color: #555555;}
+                              [data-testid="stMetricValue"] {color: #008000;}
+                              </style>""", unsafe_allow_html=True)
         
         st.metric("The Total Number of School Visits Complted:", total_number_visit)
         col1, col2, col3 = st.columns(3)
