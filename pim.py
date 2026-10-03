@@ -507,8 +507,8 @@ def dashboard_page():
         with col4:
             with st.container():
                 visit_graph()
-        with st.expander("Click to Show the Data of School visits"):
-            st.dataframe(table_visit(), width = "stretch", height = "content") 
+ 
+        st.dataframe(table_visit(), width = "stretch", height = "content") 
 
     ############################################################################
     #                       Standards                                          #
