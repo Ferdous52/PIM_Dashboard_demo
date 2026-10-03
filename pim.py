@@ -372,6 +372,7 @@ def dashboard_page():
 
             Schl_Distn = table_1.reset_index()
             Schl_Distn = Schl_Distn.rename(columns = {"RtR Staff Name": "Staff Name", "School Name": "Total Number of Schools" , "Teacher Name": "Total Number of Teachers"})
+            Schl_Distn = Schl_Distn.set_index("Staff Name")
             return Schl_Distn
 
         
@@ -452,26 +453,17 @@ def dashboard_page():
             
               # ---------- Final ----------
             Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
+            Final_Total_Visited = Final_Total_Visited.set_index("RtR Staff Name")
             return Final_Total_Visited
 
         
-        st.markdown("""<style>
-             div[data-testid="dataframe"] {
-             background-color: #2d6b6b;
-             border: 1px solid #132236;
-             padding: 10px;
-             border-radius: 12px;
-             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        </style>
-        """, unsafe_allow_html=True)
         
         col1, col2 = st.columns(2)
         
         with col1:
-            st.dataframe(table_1(),width="stretch",hide_index=True)
+            st.dataframe(table_1(),width="stretch", height ="content")
         with col2:
-            st.dataframe(table_2(),width="stretch",hide_index=True)
+            st.dataframe(table_2(),width="stretch",height ="content")
             
 
     ############################################################################
