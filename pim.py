@@ -369,7 +369,7 @@ def dashboard_page():
             visits = df1["Total Number of Visits Per Month"].value_counts().reset_index()
             y = visits["count"]
             x = visits["Total Number of Visits Per Month"]
-            fig, ax = plt.subplots(figsize=(8, 5))
+            fig, ax = plt.subplots(figsize=(10, 5))
             bars = ax.bar(x, y, label="Total Visits")
             ax.bar_label(bars, padding=3, fontsize=10)
             ax.set_xlabel("Visits")
@@ -384,7 +384,7 @@ def dashboard_page():
             c = c.reset_index()
             x = c['RtR Staff Name'].iloc[:-1]
             y = c['Gap of Visit'].iloc[:-1]
-            fig, ax = plt.subplots(figsize=(8, 5))
+            fig, ax = plt.subplots(figsize=(10, 5))
             bars = ax.bar(x, y, label="Total Visits")
             ax.bar_label(bars, padding=3, fontsize=10)
             ax.set_xlabel("Staff Name")
