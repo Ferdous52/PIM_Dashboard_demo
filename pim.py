@@ -364,18 +364,17 @@ def dashboard_page():
 
         def table_visit():
             table_1 = pd.pivot_table(df,
-                                    index="RtR Staff Name",
-                                    values=["School Name","Teacher Name"],
-                                    aggfunc={"School Name":"nunique", "Teacher Name": "count"},
-                                    margins=True,
-                                    margins_name="Total")
-
+                                     index="RtR Staff Name",
+                                     values=["School Name", "Teacher Name"],
+                                     aggfunc={"School Name": "nunique","Teacher Name": "count"},
+                                     margins=True,
+                                     margins_name="Total")
             Schl_Distn = table_1.reset_index()
-            Schl_Distn = Schl_Distn.rename(columns = {"RtR Staff Name": "Staff Name", "School Name": "Total Number of Schools" , "Teacher Name": "Total Number of Teachers"})
-            Schl_Distn = Schl_Distn.set_index("Staff Name")
-    
+            Schl_Distn = Schl_Distn.rename(columns={"RtR Staff Name": "Staff Name","School Name": "Total Number of Schools","Teacher Name": "Total Number of Teachers"})
+
             rules = {
-                # JFO
+        
+                # Jhalakathi
                 ("Jhalakathi", 1, 1): 2,
                 ("Jhalakathi", 2, 1): 2,
                 ("Jhalakathi", 2, 2): 2,
@@ -383,8 +382,8 @@ def dashboard_page():
                 ("Jhalakathi", 3, 2): 2,
                 ("Jhalakathi", 4, 1): 2,
                 ("Jhalakathi", 4, 2): 2,
-            
-                # JmFO
+        
+                # Jamalpur
                 ("Jamalpur", 1, 1): 1,
                 ("Jamalpur", 1, 2): 1,
                 ("Jamalpur", 2, 1): 1,
@@ -393,8 +392,8 @@ def dashboard_page():
                 ("Jamalpur", 3, 2): 1,
                 ("Jamalpur", 4, 1): 1,
                 ("Jamalpur", 4, 2): 1,
-            
-                # MFO
+        
+                # Moulvibazar
                 ("Moulvibazar", 1, 1): 2,
                 ("Moulvibazar", 2, 1): 2,
                 ("Moulvibazar", 2, 2): 2,
@@ -402,8 +401,8 @@ def dashboard_page():
                 ("Moulvibazar", 3, 2): 2,
                 ("Moulvibazar", 4, 1): 1,
                 ("Moulvibazar", 4, 2): 1,
-            
-                # NrFO
+        
+                # Narail
                 ("Narail", 1, 1): 1,
                 ("Narail", 1, 2): 1,
                 ("Narail", 2, 1): 1,
@@ -413,44 +412,52 @@ def dashboard_page():
                 ("Narail", 3, 2): 1,
                 ("Narail", 3, 3): 1
             }
-            
-            # Automatically find the visits/month for every row
-            df_tar = df.copy()
-            df_tar["target"] = [rules.get((office, year, grade),0) for office, year, grade in zip(df_tar["District"],df["Year of Support"],df["Grade"])]
-            total_visit = [col for col in df_tar.columns if col.startswith("Total Number of Visits Per Month")]
-            df_tar["Target_Visit"] = (df_tar["target"] * len(total_visit))
-            
-            Target_Visit = pd.pivot_table(df_tar,
-                               index='RtR Staff Name',
-                               values='Target_Visit',
-                               aggfunc='sum',
-                               margins=True,
-                               margins_name='Total').reset_index()
 
-              # ---------- Total Visited ----------
-            visited = pd.pivot_table(df_tar,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index()
-            visited = visited.rename(columns={0: "Total_visited"})
-            
-              # ---------- Grade 1 ----------
+        
+            df_tar = df.copy()
+            df_tar["target"] = [rules.get((office, year, grade),0)
+                for office, year, grade in zip(
+                    df_tar["District"],
+                    df_tar["Year of Support"],
+                    df_tar["Grade"]
+                )
+            ]
+        
+            # Find all monthly visit columns
+            total_visit = [colfor col in df_tar.columns if col.startswith("Total Number of Visits Per Month")]
+            df_tar["Target_Visit"] = (df_tar["target"] * len(total_visit))
+            Target_Visit = (df_tar.groupby("RtR Staff Name")["Target_Visit"].sum().rename("Target_Visit").reset_index())
+            target_total = Target_Visit["Target_Visit"].sum()
+            Target_Visit = pd.concat([Target_Visit,pd.DataFrame({"RtR Staff Name": ["Total"],"Target_Visit": [target_total]})], ignore_index=True)
+        
+            visited = (df_tar.groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).rename("Total_visited").reset_index())
+            visited_total = visited["Total_visited"].sum()
+            visited = pd.concat([visited,pd.DataFrame({"RtR Staff Name": ["Total"],"Total_visited": [visited_total]})], ignore_index=True)
+        
+        
             g1 = df_tar[df_tar["Grade"] == 1]
-            Grade1 = (pd.pivot_table(g1,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index().rename(columns={0: "Visit Grade_1"}))
-    
-              # ---------- Grade 2 ----------
+            Grade1 = (g1.groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).rename("Visit Grade_1").reset_index())
+            grade1_total = Grade1["Visit Grade_1"].sum()
+            Grade1 = pd.concat([Grade1,pd.DataFrame({"RtR Staff Name": ["Total"],"Visit Grade_1": [grade1_total]})], ignore_index=True)
+
             g2 = df_tar[df_tar["Grade"] == 2]
-            Grade2 = (pd.pivot_table(g2,index="RtR Staff Name",values=total_visit,aggfunc="sum",margins=True,margins_name="Total").sum(axis=1).reset_index().rename(columns={0: "Visit Grade_2"}))
-            
-              # ---------- Combine Grade Visits ----------
+            Grade2 = (g2.groupby("RtR Staff Name")[total_visit].sum().sum(axis=1).rename("Visit Grade_2").reset_index())
+            grade2_total = Grade2["Visit Grade_2"].sum()
+            Grade2 = pd.concat([Grade2,pd.DataFrame({"RtR Staff Name": ["Total"],"Visit Grade_2": [grade2_total]})], ignore_index=True)
+
             visit_grade = Grade1.merge(Grade2,on="RtR Staff Name",how="outer")
-            
-              # ---------- Gap of Visit ----------
+
             diff = Target_Visit.merge(visited,on="RtR Staff Name",how="left")
-            diff["Gap of Visit"] = (diff["Target_Visit"] - diff["Total_visited"])
-            
-              # ---------- Final ----------
+            diff["Total_visited"] = diff["Total_visited"].fillna(0)
+            diff["Gap of Visit"] = (diff["Target_Visit"] -diff["Total_visited"])
+        
             Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
-            staff_visited = Final_Total_Visited.merge(Schl_Distn, on="RtR Staff Name",how="left")
+            staff_visited = Final_Total_Visited.merge(Schl_Distn,left_on="RtR Staff Name",right_on="Staff Name",how="left")
+            staff_visited = staff_visited.drop(columns=["Staff Name"],errors="ignore")
             staff_visited = staff_visited.set_index("RtR Staff Name")
-            
+            numeric_columns = staff_visited.select_dtypes(include="number").columns
+            staff_visited[numeric_columns] = (staff_visited[numeric_columns].fillna(0))
+        
             return staff_visited
 
         
