@@ -460,8 +460,9 @@ def dashboard_page():
             staff_visited = staff_visited[["Total Number of Schools", "Total Number of Teachers", "Target_Visit","Total_visited","Gap of Visit","Visit Grade_1","Visit Grade_2",]]
             return staff_visited
 
+        st.header("School Visits Summary")
+        st.subheader("Staff-wise School visit Summary")
         
-        st.subheader("School Visits Summary")
         st.dataframe(table_visit(),width="stretch", height ="content")
 
             
