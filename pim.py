@@ -460,13 +460,13 @@ def dashboard_page():
         #tab1, tab2, tab3 = st.tabs(["Overview","Total School Visits by LF","Standards"])
 
         #with tab1:
-            st.dataframe(table_1(), width ="content", height = "content", hide_index = True)
+        st.dataframe(table_1(), width ="content", height = "content", hide_index = True)
         
         #with tab2:
-            st.dataframe(table_2(),width ="content", height = "content", hide_index = True)
+        st.dataframe(table_2(),width ="content", height = "content", hide_index = True)
         
         #with tab3:
-            st.dataframe(df1)
+        st.dataframe(df1)
 
     ############################################################################
     #                       Standards                                          #
