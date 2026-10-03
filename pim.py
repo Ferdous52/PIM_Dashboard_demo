@@ -488,7 +488,7 @@ def dashboard_page():
             st.metric("Target Visits",table_visit()["Target_Visit"].sum())
         with col3:
             st.metric("Visit Gap",table_visit()["Gap of Visit"].sum())
-     visit_graph()
+        visit_graph()
             
 
     ############################################################################
