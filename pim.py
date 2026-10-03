@@ -480,16 +480,47 @@ def dashboard_page():
         st.header("School Visits Summary")
         st.subheader("Staff-wise School Visit Summary")
         st.metric("The Total Number of School Visits Complted:", total_number_visit)
+    def visit_metric():
+        visits = df1["Total Number of Visits Per Month"].value_counts().sort_index()
+        fig, ax = plt.subplots(figsize=(6, 2))
+        ax.bar(visits.index.astype(str), visits.values)
+        ax.axis("off")
+        plt.tight_layout()
+        st.markdown("""
+                <div style="
+                    padding: 20px;
+                    border-radius: 10px;
+                    border: 1px solid #ddd;
+                    background-color: white;
+                ">
+                    <div style="font-size: 14px; color: #666;">
+                        School Visit Distribution
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
         
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            pass
-        with col2:
-            st.metric(visit_graph())
-            
-        st.dataframe(table_visit(),width="stretch", height ="content")
+        st.pyplot(fig)
 
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "Total School Visits",
+            total_number_visit
+        )
+    
+    with col2:
+        st.metric(
+            "Target Visits",
+            table_visit()["Target_Visit"].sum()
+        )
+    
+    with col3:
+        st.metric(
+            "Visit Gap",
+            table_visit()["Gap of Visit"].sum()
+        )
+    visit_graph()
             
 
     ############################################################################
