@@ -457,7 +457,7 @@ def dashboard_page():
             staff_visited = staff_visited.set_index("RtR Staff Name")
             numeric_columns = staff_visited.select_dtypes(include="number").columns
             staff_visited[numeric_columns] = (staff_visited[numeric_columns].fillna(0))
-        
+            staff_visited = staff_visited[["Total Number of Schools", "Total Number of Teachers", "Target_Visit","Total_visited","Gap of Visit","Visit Grade_1","Visit Grade_2",]]
             return staff_visited
 
         
