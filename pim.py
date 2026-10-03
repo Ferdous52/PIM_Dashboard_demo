@@ -456,17 +456,15 @@ def dashboard_page():
             return Final_Total_Visited
 
         
-        #st.title("School Visit Dashboard")
-        #tab1, tab2, tab3 = st.tabs(["Overview","Total School Visits by LF","Standards"])
+        st.title("School Visit Summary")
 
-        #with tab1:
-        st.dataframe(table_1(), width ="content", height = "content", hide_index = True)
+        col1, col2 = st.columns([1,1])
+        with col1:
+            st.dataframe(table_1(), width ="content", height = "content", hide_index = True)
         
-        #with tab2:
-        st.dataframe(table_2(),width ="content", height = "content", hide_index = True)
-        
-        #with tab3:
-        st.dataframe(df1)
+        with col2:
+            st.dataframe(table_2(),width ="content", height = "content", hide_index = True)
+
 
     ############################################################################
     #                       Standards                                          #
