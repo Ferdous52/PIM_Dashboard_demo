@@ -682,7 +682,7 @@ def dashboard_page():
                 priority_graph()
                 
         with tab3:
-            col1, col2, = st.columns([1,2])
+            col1, col2, = st.columns([0.5, 0.5])
             with col1:
                 st.markdown("The percentage of schools fall into each teacher priority area (0, 1, 2, or 3) each month")
                 st.dataframe(priorty_school(), width = "content" , height = "content")
