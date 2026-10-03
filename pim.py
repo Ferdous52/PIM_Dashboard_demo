@@ -234,7 +234,7 @@ def dashboard_page():
     .dashboard-title {color: #0F172A;font-size: 32px;font-weight: 700;margin-bottom: 5px;}
     .dashboard-subtitle {color: #64748B;font-size: 16px;margin-bottom: 25px;}
 
-    [data-testid="stMetric"] {background: white;padding: 20px;border-radius: 14px;border: 1px solid #E2E8F0;box-shadow: 0px 4px 15px rgba(15,23,42,0.08);}
+    [data-testid="stMetric"] {background: white; padding: 20px; border-radius: 14px; border: 1px solid #E2E8F0; box-shadow: 0px 4px 15px rgba(15,23,42,0.08);}
     [data-testid="stMetricLabel"] {color: #CBD5E1 !important;}
     [data-testid="stMetricValue"] {color: #FFFFFF !important;}
     [data-testid="stSidebar"] {background-color: #0F172A;}
@@ -292,7 +292,8 @@ def dashboard_page():
                     div[data-testid="stMetric"] 
                     {background-color: #0F172A;
                     border: 1px solid #E2E8F0;
-                    padding: 20px;border-radius: 12px;
+                    padding: 20px;
+                    border-radius: 12px;
                     box-shadow: 0 2px 8px rgba(0,0,0,0.08);}
                     </style>""", unsafe_allow_html=True)
         
@@ -488,7 +489,9 @@ def dashboard_page():
         
         col1, col2, col3 = st.columns(3)
         
-        st.markdown("""<style>[data-testid="stMetricValue"] {color: black !important;}</style>""", unsafe_allow_html=True)
+        st.markdown("""<style>[data-testid="stMetricValue"] {color: black; padding: 20px; !important;}
+                              [data-testid="stMetricLabel"] {color: black; padding: 20px;!important;}
+                        </style>""", unsafe_allow_html=True)
         with col1:
             st.metric("Total School Visits",total_number_visit)
         with col2:
