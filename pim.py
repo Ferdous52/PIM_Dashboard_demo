@@ -481,17 +481,16 @@ def dashboard_page():
         
         st.subheader("Staff-wise School Visit Summary")
     
-        st.metric("The Total Number of School Visits Complted:", total_number_visit)
         
         col1, col2, col3 = st.columns(3)
         
-        st.markdown("""<style>[data-testid="stMetricValue"] {color: green !important;}</style>""", unsafe_allow_html=True)
+        st.markdown("""<style>[data-testid="stMetricValue"] {color: black !important;}</style>""", unsafe_allow_html=True)
         with col1:
             st.metric("Total School Visits",total_number_visit)
         with col2:
-            st.metric("Target Visits",table_visit()["Target_Visit"].sum())
+            st.metric("Target Visits",table_visit()["Target_Visit"]..iloc[:-1].sum())
         with col3:
-            st.metric("Visit Gap",table_visit()["Gap of Visit"].sum())
+            st.metric("Visit Gap",table_visit()["Gap of Visit"]..iloc[:-1].sum())
             
         col3, col4 = st.columns([1, 1])
         
