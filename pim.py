@@ -376,6 +376,7 @@ def dashboard_page():
             ax.set_title("Total Visits at School")
             ax.legend()
             plt.tight_layout()
+            st.pyplot(fig)
             
         def table_visit():
             table_1 = pd.pivot_table(df,
