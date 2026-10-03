@@ -448,8 +448,8 @@ def dashboard_page():
             
               # ---------- Final ----------
             Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
-            Final_Total_Visited = Final_Total_Visited.set_index("RtR Staff Name")
             staff_visited = Final_Total_Visited.merge(Schl_Distn, on="RtR Staff Name",how="left")
+            staff_visited = staff_visited.set_index("RtR Staff Name")
             
             return staff_visited
 
