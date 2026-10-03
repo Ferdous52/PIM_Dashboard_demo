@@ -362,7 +362,7 @@ def dashboard_page():
     ############################################################################
     elif page == "Visits":
 
-        def table_1():
+        def table_visit():
             table_1 = pd.pivot_table(df,
                                     index="RtR Staff Name",
                                     values=["School Name","Teacher Name"],
@@ -373,12 +373,7 @@ def dashboard_page():
             Schl_Distn = table_1.reset_index()
             Schl_Distn = Schl_Distn.rename(columns = {"RtR Staff Name": "Staff Name", "School Name": "Total Number of Schools" , "Teacher Name": "Total Number of Teachers"})
             Schl_Distn = Schl_Distn.set_index("Staff Name")
-            return Schl_Distn
-
-        
-        def table_2():
-            # ---------- Target Visit ----------
-            # Rules: Field Office + Year of Support + Grade -> Visits per month
+    
             rules = {
                 # JFO
                 ("Jhalakathi", 1, 1): 2,
@@ -454,16 +449,14 @@ def dashboard_page():
               # ---------- Final ----------
             Final_Total_Visited = diff.merge(visit_grade,on="RtR Staff Name",how="left")
             Final_Total_Visited = Final_Total_Visited.set_index("RtR Staff Name")
-            return Final_Total_Visited
+            staff_visited = Final_Total_Visited.merge(Schl_Distn, on="RtR Staff Name",how="left")
+            
+            return staff_visited
 
         
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.dataframe(table_1(),width="stretch", height ="content")
-        with col2:
-            st.dataframe(table_2(),width="stretch",height ="content")
+        st.subheader("School Visits Summary")
+        st.dataframe(table_visit(),width="stretch", height ="content")
+
             
 
     ############################################################################
