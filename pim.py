@@ -370,7 +370,7 @@ def dashboard_page():
             y = visits["count"]
             x = visits["Total Number of Visits Per Month"]
             fig, ax = plt.subplots(figsize=(9, 6))
-            bars = ax.bar(x, y, label="Total Visits")
+            bars = ax.bar(x, y, label="Total Visits", width=0.5)
             ax.bar_label(bars, padding=3, fontsize=10)
             ax.set_xlabel("Visits")
             ax.set_ylabel("Number of Observations")
@@ -385,7 +385,7 @@ def dashboard_page():
             x = c['RtR Staff Name'].iloc[:-1]
             y = c['Gap of Visit'].iloc[:-1]
             fig, ax = plt.subplots(figsize=(9, 6))
-            bars = ax.bar(x, y, label="Total Visits")
+            bars = ax.bar(x, y, label="Total Visits", width=0.5)
             ax.bar_label(bars, padding=3, fontsize=10)
             ax.set_xlabel("Staff Name")
             ax.set_ylabel("Total Gap of Visits")
