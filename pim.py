@@ -479,6 +479,7 @@ def dashboard_page():
 
         st.header("School Visits Summary")
         st.subheader("Staff-wise School Visit Summary")
+        
         st.metric("The Total Number of School Visits Complted:", total_number_visit)
         col1, col2, col3 = st.columns(3)
         
@@ -488,7 +489,12 @@ def dashboard_page():
             st.metric("Target Visits",table_visit()["Target_Visit"].sum())
         with col3:
             st.metric("Visit Gap",table_visit()["Gap of Visit"].sum())
-        visit_graph()
+            
+        col1 col2 = st.columns(2)
+        with col1:
+            st.dataframe(table_visit(), weidth = "content", height = "content")
+        with col2:
+            visit_graph()
             
 
     ############################################################################
