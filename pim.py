@@ -207,7 +207,7 @@ def table_visit(df: pd.DataFrame) -> pd.DataFrame:
 def create_visit_distribution_chart(long_df: pd.DataFrame):
     col = VISIT_PREFIX
     if col not in long_df.columns:
-        fig, ax = plt.subplots(figsize=(9, 5))
+        fig, ax = plt.subplots(figsize=(9, 6))
         ax.text(0.5, 0.5, "No visit data available", ha="center", va="center")
         ax.axis("off")
         return fig
@@ -226,7 +226,7 @@ def create_visit_distribution_chart(long_df: pd.DataFrame):
  
 def create_visit_gap_chart(visit_table: pd.DataFrame):
     chart_df = visit_table.drop(index="Total", errors="ignore")
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(9, 6))
     bars = ax.bar(chart_df.index.astype(str), chart_df["Gap of Visit"], label="Visit Gap", width=0.55)
     ax.bar_label(bars, padding=3, fontsize=8)
     ax.set_xlabel("Staff Name")
