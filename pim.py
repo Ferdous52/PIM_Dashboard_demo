@@ -517,18 +517,18 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         col1, col2 = st.columns(2)
         
         with col1:
-            fig_month = create_monthly_visit_chart(df)
-            st.pyplot(fig_month, use_container_width=True)
-            plt.close(fig_month)
+            fig= create_monthly_visit_chart(df)
+            st.pyplot(fig, use_container_width=True)
+            plt.close(fig)
         
         with col2:
-            fig_stgph = standard_graph(df)
-            st.pyplot(fig_stgph, use_container_width=True)
-            plt.close(fig_stgph)
+            fig = standard_graph(df)
+            st.pyplot(fig, use_container_width=True)
+            plt.close(fig)
         
-        fig_priorty = priority_teacher_table(df)
-        st.pyplot(fig_priorty, use_container_width=True)
-        plt.close(fig_priorty)
+        fig = priority_teacher_table(df)
+        st.pyplot(fig, use_container_width=True)
+        plt.close(fig)
 
 
  
