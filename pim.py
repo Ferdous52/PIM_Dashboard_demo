@@ -248,7 +248,7 @@ def standard_grade(df: pd.DataFrame) -> pd.DataFrame:
     return result.reset_index()
 
 def standard_graph(df: pd.DataFrame) -> pd.DataFrame:
-    stnd_gph = def_long(df)
+    stnd_gph = df_long(df)
     stnd_gph = stnd_gph.value_counts()
     return stnd_gph
  
