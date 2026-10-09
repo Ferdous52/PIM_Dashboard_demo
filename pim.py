@@ -144,19 +144,67 @@ def monthly_visit_summary(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_monthly_visit_chart(df: pd.DataFrame):
     monthly = monthly_visit_summary(df)
+
     fig, ax = plt.subplots(figsize=(8, 6))
-    ax.plot(monthly["Month"],
-            monthly["Total_Visit"],
-            marker="o",
-            linewidth=3,
-            markersize=8
+
+    # Modern dark theme
+    fig.patch.set_facecolor("#111827")
+    ax.set_facecolor("#1F2937")
+
+    # Line chart
+    ax.plot(
+        monthly["Month"],
+        monthly["Total_Visit"],
+        color="#38BDF8",
+        marker="o",
+        linewidth=3,
+        markersize=8,
+        markerfacecolor="#FFFFFF",
+        markeredgecolor="#38BDF8",
+        markeredgewidth=2,
+        zorder=3
     )
 
-    ax.set_title("Monthly Total Visits")
-    ax.set_xlabel("Month")
-    ax.set_ylabel("Total Visits")
+    # Add value labels
+    for x, y in zip(monthly["Month"], monthly["Total_Visit"]):
+        ax.annotate(
+            f"{y:,.0f}",
+            (x, y),
+            textcoords="offset points",
+            xytext=(0, 10),
+            ha="center",
+            color="white",
+            fontsize=10,
+            fontweight="bold"
+        )
+
+    # Titles and axis labels
+    ax.set_title(
+        "Monthly Total Visits",
+        color="white",
+        fontsize=16,
+        fontweight="bold",
+        pad=20
+    )
+    ax.set_xlabel("Month", color="#D1D5DB", labelpad=10)
+    ax.set_ylabel("Total Visits", color="#D1D5DB", labelpad=10)
+
+    # Grid and axis styling
     ax.set_ylim(bottom=0)
-    ax.grid(True, linestyle="--", alpha=0.4)
+    ax.grid(
+        axis="y",
+        linestyle="--",
+        color="#374151",
+        alpha=0.8
+    )
+    ax.set_axisbelow(True)
+    ax.tick_params(axis="x", colors="#D1D5DB")
+    ax.tick_params(axis="y", colors="#D1D5DB")
+
+    # Remove borders
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
     fig.tight_layout()
     return fig
  
