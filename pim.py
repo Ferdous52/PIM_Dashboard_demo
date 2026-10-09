@@ -213,7 +213,7 @@ def create_visit_distribution_chart(long_df: pd.DataFrame):
         return fig
     values = pd.to_numeric(long_df[col], errors="coerce").dropna()
     counts = values.value_counts().sort_index()
-    fig, ax = plt.subplots(figsize=(9, 5))
+    fig, ax = plt.subplots(figsize=(9, 6))
     bars = ax.bar(counts.index.astype(str), counts.values, label="Observations", width=0.5)
     ax.bar_label(bars, padding=3, fontsize=9)
     ax.set_xlabel("Visits recorded per month")
