@@ -144,9 +144,20 @@ def monthly_visit_summary(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_monthly_visit_chart(df: pd.DataFrame):
     monthly = monthly_visit_summary(df)
-    fig = px.line(monthly, x="Month", y="Total_Visit", markers=True, title="Monthly Total Visits")
+    fig = px.line(
+        monthly,
+        x="Month",
+        y="Total_Visit",
+        markers=True,
+        title="Monthly Total Visits"
+    )
     fig.update_traces(line=dict(width=3), marker=dict(size=8))
-    fig.update_layout(xaxis_title="Month", yaxis_title="Total Visits", hovermode="x unified", height=450)
+    fig.update_layout(
+        xaxis_title="Month",
+        yaxis_title="Total Visits",
+        hovermode="x unified",
+        height=450
+    )
     fig.update_yaxes(rangemode="tozero")
     return fig
  
@@ -525,8 +536,9 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
          fig = standard_graph(df)
          st.pyplot(fig, use_container_width=True)
          plt.close(fig)
-        
-        fig = priority_teacher_table(df)
+
+        teacher_table = priority_teacher_table(df)
+        fig = create_priority_chart(teacher_table)
         st.pyplot(fig, use_container_width=True)
         plt.close(fig)
 
