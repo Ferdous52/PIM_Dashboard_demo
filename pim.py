@@ -489,7 +489,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         ]
         for col, (label, value) in zip(cols, labels):
             col.metric(label, value)
-        col1, col2 = st,columns(2)
+        col1, col2 = st.columns(2)
      
         with col1:
          st.plotly_chart(create_monthly_visit_chart(df), use_container_width=True)
