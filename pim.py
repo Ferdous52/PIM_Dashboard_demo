@@ -349,27 +349,27 @@ def dashboard_page():
                     </style>""", unsafe_allow_html=True)
         
         with col1:
-            st.metric("Total Staff", total_LF)
+            st.metric("Total Staff", calculate_dashboard_metrics(total_staff))
 
         with col2:
-            st.metric("Total Schools", total_schools)
+            pass
 
         with col3:
-            st.metric("Total Teacher's", total_teacher) 
+            pass
         
         with col4:
-            st.metric("Total School Visits", int(total_visits))
+            pass
         
         with col5:
-                st.metric("Standard Meet", f"{standard_rate:.1f}%")
+            pass
         
         with col6:
-                st.metric("Avg Priority Score", f"{avg_priority:.2f}")
+            pass
 
         col1, col2 = st.columns(2)
         
         with col1:
-            st.plotly_chart(fig,use_container_width=True)
+            pass
 
             
         with col2:
