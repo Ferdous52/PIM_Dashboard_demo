@@ -349,7 +349,7 @@ def dashboard_page():
                     </style>""", unsafe_allow_html=True)
         
         with col1:
-            st.metric("Total Staff", calculate_dashboard_metrics(total_staff))
+            st.metric("Total Staff", total_staff)
 
         with col2:
             pass
