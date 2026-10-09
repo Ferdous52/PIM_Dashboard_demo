@@ -546,7 +546,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
          st.plotly_chart(create_monthly_visit_chart(df), use_container_width=True)
         with col2:
          pass
-         
+        teacher_table = priority_teacher_table(df) 
         priority_fig = create_priority_chart(teacher_table)
         st.plotly_chart(priority_fig,use_container_width=True,key="priority_chart")
  
