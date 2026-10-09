@@ -144,9 +144,7 @@ def monthly_visit_summary(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_monthly_visit_chart(df: pd.DataFrame):
     monthly = monthly_visit_summary(df)
-
     fig, ax = plt.subplots(figsize=(8, 6))
-
     # Modern dark theme
     fig.patch.set_facecolor("#111827")
     ax.set_facecolor("#1F2937")
@@ -307,22 +305,79 @@ def standard_grade(df: pd.DataFrame) -> pd.DataFrame:
 
 def standard_graph(df: pd.DataFrame):
     stnd_gph = df_long(df)
-    counts_by_standard = (stnd_gph["Meeting Minimum Standards By Grade?"].value_counts())
+
+    counts_by_standard = (
+        stnd_gph["Meeting Minimum Standards By Grade?"].value_counts()
+    )
+
     meets = counts_by_standard.get(1, 0)
     does_not_meet = counts_by_standard.get(0, 0)
+
     categories = ["Meets Standards", "Does Not Meet"]
     counts = [meets, does_not_meet]
     total = sum(counts)
+
     if total == 0:
         return None
+
     percentages = [count / total * 100 for count in counts]
+
+    # Modern dark theme
     fig, ax = plt.subplots(figsize=(8, 6))
-    bars = ax.bar(categories, percentages, width = 0.55)
-    ax.set_title("Percentage Meeting Minimum Standards")
-    ax.set_xlabel("Performance Category")
-    ax.set_ylabel("Percentage (%)")
-    ax.bar_label(bars, fmt="%.1f%%")
-    ax.set_ylim(0, 100)
+    fig.patch.set_facecolor("#111827")
+    ax.set_facecolor("#1F2937")
+
+    # Bars with contrasting colors
+    colors = ["#34D399", "#F87171"]
+
+    bars = ax.bar(
+        categories,
+        percentages,
+        width=0.55,
+        color=colors,
+        edgecolor="#FFFFFF",
+        linewidth=0.8,
+        zorder=3
+    )
+
+    # Percentage labels
+    ax.bar_label(
+        bars,
+        labels=[f"{p:.1f}%" for p in percentages],
+        padding=6,
+        color="white",
+        fontsize=12,
+        fontweight="bold"
+    )
+
+    # Titles and axis labels
+    ax.set_title(
+        "Percentage Meeting Minimum Standards",
+        color="white",
+        fontsize=15,
+        fontweight="bold",
+        pad=20
+    )
+
+    ax.set_xlabel("Performance Category", color="#D1D5DB", labelpad=10)
+    ax.set_ylabel("Percentage (%)", color="#D1D5DB", labelpad=10)
+
+    # Axis and grid styling
+    ax.set_ylim(0, 110)
+    ax.set_axisbelow(True)
+    ax.grid(
+        axis="y",
+        linestyle="--",
+        color="#374151",
+        alpha=0.8
+    )
+
+    ax.tick_params(axis="x", colors="#D1D5DB")
+    ax.tick_params(axis="y", colors="#D1D5DB")
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
     fig.tight_layout()
     return fig
 
@@ -396,22 +451,81 @@ def priority_teacher_table(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_priority_chart(priority_table: pd.DataFrame):
     chart_df = priority_table.copy()
-    for col in [f"Priority_{i}" for i in range(4)]:
+
+    priority_cols = [f"Priority_{i}" for i in range(4)]
+
+    for col in priority_cols:
         if col not in chart_df:
             chart_df[col] = 0
-        chart_df[col] = pd.to_numeric(chart_df[col].astype(str).str.replace("%", "", regex=False), errors="coerce")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    chart_df[[f"Priority_{i}" for i in range(4)]].plot(kind="line", marker="o", ax=ax)
+
+        chart_df[col] = pd.to_numeric(
+            chart_df[col].astype(str).str.replace("%", "", regex=False),
+            errors="coerce"
+        )
+
+    # Modern dark theme
+    fig, ax = plt.subplots(figsize=(9, 6))
+    fig.patch.set_facecolor("#111827")
+    ax.set_facecolor("#1F2937")
+
+    # Distinct colors for priority areas
+    colors = ["#38BDF8", "#A78BFA", "#34D399", "#FBBF24"]
+
+    for col, color in zip(priority_cols, colors):
+        ax.plot(
+            chart_df["Month"] if "Month" in chart_df.columns
+            else chart_df.index,
+            chart_df[col],
+            label=col.replace("_", " "),
+            color=color,
+            marker="o",
+            linewidth=2.8,
+            markersize=7,
+            markerfacecolor="#FFFFFF",
+            markeredgecolor=color,
+            markeredgewidth=1.5
+        )
+
+    # Percentage formatting
     ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
-    ax.set_xlabel("Month")
-    ax.set_ylabel("Teachers (%)")
-    ax.set_title("Priority Areas by Month")
+    ax.set_xlabel("Month", color="#D1D5DB", labelpad=10)
+    ax.set_ylabel("Teachers (%)", color="#D1D5DB", labelpad=10)
+
+    ax.set_title(
+        "Priority Areas by Month",
+        color="white",
+        fontsize=16,
+        fontweight="bold",
+        pad=20
+    )
+
     ax.set_ylim(0, 100)
-    ax.grid(True, alpha=0.3)
-    ax.legend(title="Priority Area")
+
+    # Grid and axes
+    ax.grid(
+        axis="y",
+        linestyle="--",
+        color="#374151",
+        alpha=0.8
+    )
+    ax.set_axisbelow(True)
+    ax.tick_params(axis="x", colors="#D1D5DB")
+    ax.tick_params(axis="y", colors="#D1D5DB")
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+    # Legend styling
+    legend = ax.legend(
+        title="Priority Area",
+        facecolor="#1F2937",
+        edgecolor="#374151",
+        labelcolor="white"
+    )
+    legend.get_title().set_color("white")
+
     fig.tight_layout()
     return fig
- 
  
 def priority_staff_table(long_df: pd.DataFrame) -> pd.DataFrame:
     col = PRIORITY_STUB
