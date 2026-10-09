@@ -246,6 +246,13 @@ def standard_grade(df: pd.DataFrame) -> pd.DataFrame:
     result = pd.concat([result, total])
     result.index.name = "RtR Staff Name"
     return result.reset_index()
+
+def standard_graph(df: pd.DataFrame) -> pd.DataFrame:
+    stnd_gph = def_long(df)
+    stnd_gph = stnd_gph.value_counts()
+    return stnd_gph
+ 
+
  
 # ============================================================
 # 5. PRIORITY ANALYSIS FUNCTIONS
@@ -476,6 +483,8 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             st.session_state.df = None
             st.session_state.selected_sheet = None
             st.rerun()
+
+
  
     if page == "Home":
         cols = st.columns(6)
@@ -495,10 +504,12 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         with col1:
          st.plotly_chart(create_monthly_visit_chart(df), use_container_width=True)
         with col2:
-         pass
+         st.dataframe(standard_graph())
         teacher_table = priority_teacher_table(df) 
         priority_fig = create_priority_chart(teacher_table)
         st.plotly_chart(priority_fig,use_container_width=True,key="priority_chart")
+
+
  
     elif page == "Visits":
         st.header("School Visits Summary")
@@ -520,11 +531,16 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             st.pyplot(fig, use_container_width=True)
             plt.close(fig)
         st.dataframe(visit_table, use_container_width=True)
+
+
  
     elif page == "Standards":
         st.subheader("Standards Meet")
         standards = standard_grade(df)
         st.dataframe(standards, use_container_width=True, hide_index=True)
+
+
+
  
     elif page == "Priority":
         st.subheader("Teacher's Priority Area")
