@@ -107,21 +107,15 @@ def data_clean(raw_df: pd.DataFrame) -> pd.DataFrame:
  
  
 def df_long(df: pd.DataFrame) -> pd.DataFrame:
-    """Convert monthly visit/standard/priority columns from wide to long format."""
     stubs = [STANDARD_PREFIX, VISIT_PREFIX, PRIORITY_STUB]
-    id_columns = [
-        "Field Office", "District", "RtR Staff Name", "Project ID", "School Name",
-        "Teacher Name", "Year of Support", "Grade", "Class",
-    ]
+    id_columns = ["Field Office", "District", "RtR Staff Name", "Project ID", "School Name","Teacher Name", "Year of Support", "Grade", "Class",]
     missing = [c for c in id_columns if c not in df.columns]
     if missing:
         raise ValueError("Missing required columns for monthly analysis: " + ", ".join(missing))
     available_stubs = [stub for stub in stubs if any(c.startswith(stub + "_") for c in df.columns)]
     if not available_stubs:
         raise ValueError("No monthly visit, standards, or priority columns were found.")
-    return pd.wide_to_long(
-        df.copy(), stubnames=available_stubs, i=id_columns, j="Month", sep="_", suffix="[A-Za-z]+"
-    ).reset_index()
+    return pd.wide_to_long(df.copy(), stubnames=available_stubs, i=id_columns, j="Month", sep="_", suffix="[A-Za-z]+").reset_index()
  
  
 def calculate_dashboard_metrics(df: pd.DataFrame) -> dict:
@@ -496,6 +490,9 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         for col, (label, value) in zip(cols, labels):
             col.metric(label, value)
         st.plotly_chart(create_monthly_visit_chart(df), use_container_width=True)
+        fig = create_priority_chart(teacher_table)
+        st.pyplot(fig, use_container_width=True)
+        plt.close(fig)
  
     elif page == "Visits":
         st.header("School Visits Summary")
