@@ -316,72 +316,22 @@ def priority_teacher_table(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_priority_chart(priority_table: pd.DataFrame):
     chart_df = priority_table.copy()
-
-    priority_cols = [f"Priority_{i}" for i in range(4)]
-
-    # Convert priority values to numeric percentages
-    for col in priority_cols:
-        if col not in chart_df.columns:
+    for col in [f"Priority_{i}" for i in range(4)]:
+        if col not in chart_df:
             chart_df[col] = 0
-
-        chart_df[col] = pd.to_numeric(
-            chart_df[col]
-            .astype(str)
-            .str.replace("%", "", regex=False),
-            errors="coerce"
-        )
-
-    # Use month labels on the x-axis if available
-    if "Month" in chart_df.columns:
-        months = chart_df["Month"].astype(str)
-    else:
-        months = chart_df.index.astype(str)
-
-    fig = go.Figure()
-
-    for col in priority_cols:
-        fig.add_trace(
-            go.Scatter(
-                x=months,
-                y=chart_df[col],
-                mode="lines+markers",
-                name=col.replace("_", " "),
-                connectgaps=False,
-                line=dict(width=3),
-                marker=dict(size=8),
-                hovertemplate=(
-                    "<b>%{x}</b><br>"
-                    + col.replace("_", " ")
-                    + ": %{y:.1f}%"
-                    + "<extra></extra>"
-                )
-            )
-        )
-
-    fig.update_layout(
-        title="Monthly Trend of Teacher Priority Areas",
-        xaxis_title="Month",
-        yaxis_title="Teachers (%)",
-        yaxis=dict(
-            range=[0, 100],
-            ticksuffix="%",
-            dtick=20
-        ),
-        hovermode="x unified",
-        template="plotly_white",
-        height=500,
-        legend_title="Priority Area",
-        margin=dict(l=50, r=30, t=80, b=70)
-    )
-
-    fig.update_xaxes(
-        showgrid=True,
-        tickangle=-45
-    )
-
-    fig.update_yaxes(showgrid=True)
-
+        chart_df[col] = pd.to_numeric(chart_df[col].astype(str).str.replace("%", "", regex=False), errors="coerce")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    chart_df[[f"Priority_{i}" for i in range(4)]].plot(kind="line", marker="o", ax=ax)
+    ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
+    ax.set_xlabel("Month")
+    ax.set_ylabel("Teachers (%)")
+    ax.set_title("Priority Areas by Month")
+    ax.set_ylim(0, 100)
+    ax.grid(True, alpha=0.3)
+    ax.legend(title="Priority Area")
+    fig.tight_layout()
     return fig
+ 
  
 def priority_staff_table(long_df: pd.DataFrame) -> pd.DataFrame:
     col = PRIORITY_STUB
