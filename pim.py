@@ -686,7 +686,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         for col, (label, value) in zip(cols, labels):
             col.metric(label, value)
          
-        col1, col2= st.columns(2)
+        col1, col2, col3= st.columns(3)
         
         with col1:
          fig = create_monthly_visit_chart(df)
@@ -698,15 +698,12 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
          st.pyplot(fig, use_container_width=True)
          plt.close(fig)
          
-        col3, col4 = st.columns(2)
         with col3:
          teacher_table = priority_teacher_table(df)
          fig = create_priority_chart(teacher_table)
          st.pyplot(fig, use_container_width=True)
          plt.close(fig)
          
-        with col4:
-         pass
 
 
  
