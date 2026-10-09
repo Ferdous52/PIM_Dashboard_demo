@@ -547,7 +547,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         with col2:
          pass
          
-        priority_fig = create_priority_chart(priority_table)
+        priority_fig = create_priority_chart(teacher_table)
         st.plotly_chart(priority_fig,use_container_width=True,key="priority_chart")
  
     elif page == "Visits":
