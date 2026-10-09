@@ -144,26 +144,20 @@ def monthly_visit_summary(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_monthly_visit_chart(df: pd.DataFrame):
     monthly = monthly_visit_summary(df)
-
     fig, ax = plt.subplots(figsize=(10, 5))
-
-    ax.plot(
-        monthly["Month"],
-        monthly["Total_Visit"],
-        marker="o",
-        linewidth=3,
-        markersize=8
+    ax.plot(monthly["Month"],
+            monthly["Total_Visit"],
+            marker="o",
+            linewidth=3,
+            markersize=8
     )
 
     ax.set_title("Monthly Total Visits")
     ax.set_xlabel("Month")
     ax.set_ylabel("Total Visits")
-
     ax.set_ylim(bottom=0)
     ax.grid(True, linestyle="--", alpha=0.4)
-
     fig.tight_layout()
-
     return fig
  
 # ============================================================
@@ -275,7 +269,7 @@ def standard_graph(df: pd.DataFrame):
         return None
     percentages = [count / total * 100 for count in counts]
     fig, ax = plt.subplots(figsize=(8, 5))
-    bars = ax.bar(categories, percentages)
+    bars = ax.bar(categories, percentages, width = 0.55)
     ax.set_title("Percentage Meeting Minimum Standards")
     ax.set_xlabel("Performance Category")
     ax.set_ylabel("Percentage (%)")
