@@ -144,7 +144,7 @@ def monthly_visit_summary(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_monthly_visit_chart(df: pd.DataFrame):
     monthly = monthly_visit_summary(df)
-    fig, ax = plt.subplots(figsize=(8, 7))
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.plot(monthly["Month"],
             monthly["Total_Visit"],
             marker="o",
@@ -268,7 +268,7 @@ def standard_graph(df: pd.DataFrame):
     if total == 0:
         return None
     percentages = [count / total * 100 for count in counts]
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(8, 6))
     bars = ax.bar(categories, percentages, width = 0.55)
     ax.set_title("Percentage Meeting Minimum Standards")
     ax.set_xlabel("Performance Category")
@@ -352,7 +352,7 @@ def create_priority_chart(priority_table: pd.DataFrame):
         if col not in chart_df:
             chart_df[col] = 0
         chart_df[col] = pd.to_numeric(chart_df[col].astype(str).str.replace("%", "", regex=False), errors="coerce")
-    fig, ax = plt.subplots(figsize=(10, 5))
+    fig, ax = plt.subplots(figsize=(8, 6))
     chart_df[[f"Priority_{i}" for i in range(4)]].plot(kind="line", marker="o", ax=ax)
     ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
     ax.set_xlabel("Month")
