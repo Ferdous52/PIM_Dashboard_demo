@@ -490,8 +490,8 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
     [data-testid="stMetricValue"] {color:#FFFFFF!important;}
     </style>
     """, unsafe_allow_html=True)
-    st.markdown('<div style="color:#0F172A;font-size:32px;font-weight:700;">PIM Dashboard</div>', unsafe_allow_html=True)
-    st.caption(f"Worksheet: {st.session_state.selected_sheet}")
+    #st.markdown('<div style="color:#0F172A;font-size:32px;font-weight:700;">PIM Dashboard</div>', unsafe_allow_html=True)
+    #st.caption(f"Worksheet: {st.session_state.selected_sheet}")
     with st.sidebar:
         st.markdown('<div style="font-size:24px;font-weight:700;margin-bottom:20px;">PIM Dashboard</div>', unsafe_allow_html=True)
         st.markdown("---")
@@ -524,7 +524,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         for col, (label, value) in zip(cols, labels):
             col.metric(label, value)
          
-        col1, col2 = st.columns(2)
+        col1, col2, col3 = st.columns(3)
         
         with col1:
          fig = create_monthly_visit_chart(df)
@@ -535,11 +535,12 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
          fig = standard_graph(df)
          st.pyplot(fig, use_container_width=True)
          plt.close(fig)
-
-        teacher_table = priority_teacher_table(df)
-        fig = create_priority_chart(teacher_table)
-        st.pyplot(fig, use_container_width=True)
-        plt.close(fig)
+         
+        with col3:
+         teacher_table = priority_teacher_table(df)
+         fig = create_priority_chart(teacher_table)
+         st.pyplot(fig, use_container_width=True)
+         plt.close(fig)
 
 
  
