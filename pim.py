@@ -314,8 +314,8 @@ def priority_teacher_table(df: pd.DataFrame) -> pd.DataFrame:
     return table
  
  
-def create_priority_chart(priority_teacher_table: pd.DataFrame):
-    chart_df = priority_teacher_table.copy()
+def create_priority_chart(priority_table: pd.DataFrame):
+    chart_df = priority_table.copy()
 
     priority_cols = [f"Priority_{i}" for i in range(4)]
 
@@ -547,7 +547,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         with col2:
          pass
          
-        priority_fig = create_priority_chart(priority_teacher_table)
+        priority_fig = create_priority_chart(priority_table)
         st.plotly_chart(priority_fig,use_container_width=True,key="priority_chart")
  
     elif page == "Visits":
