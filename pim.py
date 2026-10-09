@@ -249,23 +249,23 @@ def standard_grade(df: pd.DataFrame) -> pd.DataFrame:
 
 def standard_graph(df: pd.DataFrame):
     stnd_gph = df_long(df)
-    counts = (stnd_gph["Meeting Minimum Standards By Grade?"].value_counts())
-    meets = counts.get(1, 0)
-    does_not_meet = counts.get(0, 0)
+    counts_by_standard = (stnd_gph["Meeting Minimum Standards By Grade?"].value_counts())
+    meets = counts_by_standard.get(1, 0)
+    does_not_meet = counts_by_standard.get(0, 0)
     categories = ["Meets Standards", "Does Not Meet"]
-    values = [meets, does_not_meet]
-    total = sum(values)
+    counts = [meets, does_not_meet]
+    total = sum(counts)
     if total == 0:
-        return go.Figure()
-    percentages = [v / total * 100 for v in values]
-    fig.update_layout(
-        title="Percentage Meeting Minimum Standards",
-        xaxis_title="Performance Category",
-        yaxis_title="Percentage (%)",
-        yaxis=dict(range=[0, 110]),
-        showlegend=False,
-    )
-
+        return None
+    percentages = [count / total * 100 for count in counts]
+    fig, ax = plt.subplots(figsize=(8, 5))
+    bars = ax.bar(categories, percentages)
+    ax.set_title("Percentage Meeting Minimum Standards")
+    ax.set_xlabel("Performance Category")
+    ax.set_ylabel("Percentage (%)")
+    ax.bar_label(bars, fmt="%.1f%%")
+    ax.set_ylim(0, 100)
+    fig.tight_layout()
     return fig
 
  
