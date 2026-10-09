@@ -489,10 +489,14 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         ]
         for col, (label, value) in zip(cols, labels):
             col.metric(label, value)
-        st.plotly_chart(create_monthly_visit_chart(df), use_container_width=True)
-        fig = create_priority_chart(teacher_table)
-        st.pyplot(fig, use_container_width=True)
-        plt.close(fig)
+        col1, col2 = st,columns(2)
+     
+        with col1:
+         st.plotly_chart(create_monthly_visit_chart(df), use_container_width=True)
+        with col2:
+         fig = create_priority_chart(teacher_table)
+         st.pyplot(fig, use_container_width=True)
+         plt.close(fig)
  
     elif page == "Visits":
         st.header("School Visits Summary")
