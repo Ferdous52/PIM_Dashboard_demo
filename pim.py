@@ -69,46 +69,48 @@ def df_long(df):
     return df_long
 
 
+def calculate_dashboard_metrics(df):
+    """Calculate all dashboard KPI values."""
 
-total_LF = df["RtR Staff Name"].nunique()
-total_schools = df["School Name"].nunique()
-total_teacher = df["Teacher Name"].nunique()
-visit_cols = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
-total_visits = df[visit_cols].sum().sum()
+    total_staff = df["RtR Staff Name"].nunique()
+    total_schools = df["School Name"].nunique()
+    total_teachers = df["Teacher Name"].nunique()
 
-standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
-if standard_cols:
-    standard_rate = df[standard_cols].mean().mean() * 100
+    visit_cols = [
+        col for col in df.columns
+        if col.startswith("Total Number of Visits Per Month")
+    ]
 
+    total_visits = df[visit_cols].sum().sum()
 
-priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area")]
-if priority_cols:
-    avg_priority = df[priority_cols].mean().mean()
+    standard_cols = [
+        col for col in df.columns
+        if col.startswith("Meeting Minimum Standards By Grade?")
+    ]
 
-months = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
-monthly_visit = df[months].sum().reset_index()
-monthly_visit.columns = ["Month", "Total_Visit"]
-monthly_visit["Month"] = monthly_visit["Month"].replace({
-                "Total Number of Visits Per Month_Jan": "Jan",
-                "Total Number of Visits Per Month_Feb": "Feb",
-                "Total Number of Visits Per Month_Mar": "Mar",
-                "Total Number of Visits Per Month_Apr": "Apr",
-                "Total Number of Visits Per Month_May": "May",
-                "Total Number of Visits Per Month_Jun": "Jun",
-                "Total Number of Visits Per Month_Jul": "Jul",
-                "Total Number of Visits Per Month_Aug": "Aug",
-                "Total Number of Visits Per Month_Sep": "Sep",
-                "Total Number of Visits Per Month_Oct": "Oct",
-                "Total Number of Visits Per Month_Nov": "Nov",
-                "Total Number of Visits Per Month_Dec": "Dec"
-            })
-        
-# Graph : Bar (Monthly Visits Vs Month)
-fig = px.line(monthly_visit,x="Month",y="Total_Visit",markers=True,title="Monthly Total Visits")
-fig.update_traces(line=dict(width=3),marker=dict(size=8))
-fig.update_layout(xaxis_title="Month",yaxis_title="Total Visits",hovermode="x unified",height=450)
-fig.update_yaxes(range=[0, 1000],dtick=100)
+    priority_cols = [
+        col for col in df.columns
+        if col.startswith("Teacher's Priority Area")
+    ]
 
+    standard_rate = (
+        df[standard_cols].mean().mean() * 100
+        if standard_cols else 0
+    )
+
+    avg_priority = (
+        df[priority_cols].mean().mean()
+        if priority_cols else 0
+    )
+
+    return {
+        "total_staff": total_staff,
+        "total_schools": total_schools,
+        "total_teachers": total_teachers,
+        "total_visits": total_visits,
+        "standard_rate": standard_rate,
+        "avg_priority": avg_priority,
+    }
 
 
 # ============================================================
