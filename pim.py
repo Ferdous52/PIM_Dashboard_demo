@@ -144,21 +144,26 @@ def monthly_visit_summary(df: pd.DataFrame) -> pd.DataFrame:
  
 def create_monthly_visit_chart(df: pd.DataFrame):
     monthly = monthly_visit_summary(df)
-    fig = px.line(
-        monthly,
-        x="Month",
-        y="Total_Visit",
-        markers=True,
-        title="Monthly Total Visits"
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    ax.plot(
+        monthly["Month"],
+        monthly["Total_Visit"],
+        marker="o",
+        linewidth=3,
+        markersize=8
     )
-    fig.update_traces(line=dict(width=3), marker=dict(size=8))
-    fig.update_layout(
-        xaxis_title="Month",
-        yaxis_title="Total Visits",
-        hovermode="x unified",
-        height=450
-    )
-    fig.update_yaxes(rangemode="tozero")
+
+    ax.set_title("Monthly Total Visits")
+    ax.set_xlabel("Month")
+    ax.set_ylabel("Total Visits")
+
+    ax.set_ylim(bottom=0)
+    ax.grid(True, linestyle="--", alpha=0.4)
+
+    fig.tight_layout()
+
     return fig
  
 # ============================================================
@@ -528,7 +533,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         col1, col2 = st.columns(2)
         
         with col1:
-         fig= create_monthly_visit_chart(df)
+         fig = create_monthly_visit_chart(df)
          st.pyplot(fig, use_container_width=True)
          plt.close(fig)
         
