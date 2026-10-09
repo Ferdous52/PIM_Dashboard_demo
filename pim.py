@@ -5,6 +5,112 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 from io import BytesIO
 import matplotlib.ticker as mtick
+
+# ==========================================================================
+# Codes 
+# ==========================================================================
+
+# ================================Date Cleaning=============================
+def data_clean(df):
+
+    main_header = df.iloc[0].ffill()
+    month_header = df.iloc[1]
+
+    columns = []
+
+    for main, month in zip(main_header, month_header):
+        if pd.notna(month):
+            columns.append(f"{main}_{month}")
+        else:
+            columns.append(str(main))
+
+    df.columns = columns
+
+    df = df.iloc[2:].reset_index(drop=True)
+
+    def change_date_format(col):
+        if "_" in col:
+            prefix, date = col.rsplit("_", 1)
+
+            try:
+                date = pd.to_datetime(date)
+                return f"{prefix}_{date.strftime('%b')}"
+            except:
+                return col
+
+        return col
+
+    df.columns = [change_date_format(col) for col in df.columns]
+
+    df = df.dropna(axis=1, how="all")
+    df = df.dropna(subset=["School Name"])
+    df = df.drop(columns=["S/N"])
+
+    minimum_standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
+    priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area (0, 1, 2, or 3)")]
+    total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
+
+    for col in minimum_standard_cols:
+        df[col] = df[col].map({"No": 0,"Yes": 1})
+    for col in priority_cols:
+        df[col] = df[col].map({"0: No Priority Areas Achieved": 0,"1: Mastered Instructional Routine": 1,"2: Mastered Basic Skills": 2,"3: Mastered Advanced Skills": 3})
+    for col in total_visit: 
+        df[col] = pd.to_numeric(df[col],errors="coerce")
+        
+    return df
+    
+def df_long(df):    
+    df_long = pd.wide_to_long(df,
+                          stubnames=["Meeting Minimum Standards By Grade?","Total Number of Visits Per Month","Teacher's Priority Area (0, 1, 2, or 3)"],
+                          i = ["Field Office"	, "District" ,"RtR Staff Name" ,"Project ID" , "School Name" , "Teacher Name" , "Year of Support" , "Grade","Class"],
+                          j = "Month",
+                          sep="_",
+                          suffix="[A-Za-z]+").reset_index()
+    return df_long
+
+
+
+total_LF = df["RtR Staff Name"].nunique()
+total_schools = df["School Name"].nunique()
+total_teacher = df["Teacher Name"].nunique()
+visit_cols = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
+total_visits = df[visit_cols].sum().sum()
+
+standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
+if standard_cols:
+    standard_rate = df[standard_cols].mean().mean() * 100
+
+
+priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area")]
+if priority_cols:
+    avg_priority = df[priority_cols].mean().mean()
+
+months = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
+monthly_visit = df[months].sum().reset_index()
+monthly_visit.columns = ["Month", "Total_Visit"]
+monthly_visit["Month"] = monthly_visit["Month"].replace({
+                "Total Number of Visits Per Month_Jan": "Jan",
+                "Total Number of Visits Per Month_Feb": "Feb",
+                "Total Number of Visits Per Month_Mar": "Mar",
+                "Total Number of Visits Per Month_Apr": "Apr",
+                "Total Number of Visits Per Month_May": "May",
+                "Total Number of Visits Per Month_Jun": "Jun",
+                "Total Number of Visits Per Month_Jul": "Jul",
+                "Total Number of Visits Per Month_Aug": "Aug",
+                "Total Number of Visits Per Month_Sep": "Sep",
+                "Total Number of Visits Per Month_Oct": "Oct",
+                "Total Number of Visits Per Month_Nov": "Nov",
+                "Total Number of Visits Per Month_Dec": "Dec"
+            })
+        
+# Graph : Bar (Monthly Visits Vs Month)
+fig = px.line(monthly_visit,x="Month",y="Total_Visit",markers=True,title="Monthly Total Visits")
+fig.update_traces(line=dict(width=3),marker=dict(size=8))
+fig.update_layout(xaxis_title="Month",yaxis_title="Total Visits",hovermode="x unified",height=450)
+fig.update_yaxes(range=[0, 1000],dtick=100)
+
+
+
 # ============================================================
 # PAGE CONFIG
 # ============================================================
@@ -144,66 +250,9 @@ def upload_page():
 
 
     
-# ==========================================================================
-# Data Cleaning
-# ==========================================================================
 
-def data_clean(df):
 
-    main_header = df.iloc[0].ffill()
-    month_header = df.iloc[1]
 
-    columns = []
-
-    for main, month in zip(main_header, month_header):
-        if pd.notna(month):
-            columns.append(f"{main}_{month}")
-        else:
-            columns.append(str(main))
-
-    df.columns = columns
-
-    df = df.iloc[2:].reset_index(drop=True)
-
-    def change_date_format(col):
-        if "_" in col:
-            prefix, date = col.rsplit("_", 1)
-
-            try:
-                date = pd.to_datetime(date)
-                return f"{prefix}_{date.strftime('%b')}"
-            except:
-                return col
-
-        return col
-
-    df.columns = [change_date_format(col) for col in df.columns]
-
-    df = df.dropna(axis=1, how="all")
-    df = df.dropna(subset=["School Name"])
-    df = df.drop(columns=["S/N"])
-
-    minimum_standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
-    priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area (0, 1, 2, or 3)")]
-    total_visit = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
-
-    for col in minimum_standard_cols:
-        df[col] = df[col].map({"No": 0,"Yes": 1})
-    for col in priority_cols:
-        df[col] = df[col].map({"0: No Priority Areas Achieved": 0,"1: Mastered Instructional Routine": 1,"2: Mastered Basic Skills": 2,"3: Mastered Advanced Skills": 3})
-    for col in total_visit: 
-        df[col] = pd.to_numeric(df[col],errors="coerce")
-        
-    return df
-    
-def df_long(df):    
-    df_long = pd.wide_to_long(df,
-                          stubnames=["Meeting Minimum Standards By Grade?","Total Number of Visits Per Month","Teacher's Priority Area (0, 1, 2, or 3)"],
-                          i = ["Field Office"	, "District" ,"RtR Staff Name" ,"Project ID" , "School Name" , "Teacher Name" , "Year of Support" , "Grade","Class"],
-                          j = "Month",
-                          sep="_",
-                          suffix="[A-Za-z]+").reset_index()
-    return df_long
 
 
 # ========================================================
@@ -298,65 +347,31 @@ def dashboard_page():
                     </style>""", unsafe_allow_html=True)
         
         with col1:
-            total_LF = df["RtR Staff Name"].nunique()
             st.metric("Total Staff", total_LF)
 
         with col2:
-            total_schools = df["School Name"].nunique()
             st.metric("Total Schools", total_schools)
 
         with col3:
-            total_teacher = df["Teacher Name"].nunique()
             st.metric("Total Teacher's", total_teacher) 
         
         with col4:
-            visit_cols = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
-            total_visits = df[visit_cols].sum().sum()
             st.metric("Total School Visits", int(total_visits))
         
         with col5:
-            standard_cols = [col for col in df.columns if col.startswith("Meeting Minimum Standards By Grade?")]
-            if standard_cols:
-                standard_rate = df[standard_cols].mean().mean() * 100
                 st.metric("Standard Meet", f"{standard_rate:.1f}%")
         
         with col6:
-            priority_cols = [col for col in df.columns if col.startswith("Teacher's Priority Area")]
-        
-            if priority_cols:
-                avg_priority = df[priority_cols].mean().mean()
                 st.metric("Avg Priority Score", f"{avg_priority:.2f}")
 
         col1, col2 = st.columns(2)
         
         with col1:
-            months = [col for col in df.columns if col.startswith("Total Number of Visits Per Month")]
-            monthly_visit = df[months].sum().reset_index()
-            monthly_visit.columns = ["Month", "Total_Visit"]
-            monthly_visit["Month"] = monthly_visit["Month"].replace({
-                "Total Number of Visits Per Month_Jan": "Jan",
-                "Total Number of Visits Per Month_Feb": "Feb",
-                "Total Number of Visits Per Month_Mar": "Mar",
-                "Total Number of Visits Per Month_Apr": "Apr",
-                "Total Number of Visits Per Month_May": "May",
-                "Total Number of Visits Per Month_Jun": "Jun",
-                "Total Number of Visits Per Month_Jul": "Jul",
-                "Total Number of Visits Per Month_Aug": "Aug",
-                "Total Number of Visits Per Month_Sep": "Sep",
-                "Total Number of Visits Per Month_Oct": "Oct",
-                "Total Number of Visits Per Month_Nov": "Nov",
-                "Total Number of Visits Per Month_Dec": "Dec"
-            })
-        
-            # Graph : Bar (Monthly Visits Vs Month)
-            fig = px.line(monthly_visit,x="Month",y="Total_Visit",markers=True,title="Monthly Total Visits")
-            fig.update_traces(line=dict(width=3),marker=dict(size=8))
-            fig.update_layout(xaxis_title="Month",yaxis_title="Total Visits",hovermode="x unified",height=450)
-            fig.update_yaxes(range=[0, 1000],dtick=100)
             st.plotly_chart(fig,use_container_width=True)
+
             
         with col2:
-           priority_graph()
+           pass
         
     ############################################################################
     #                        Visists                                           #
