@@ -247,11 +247,38 @@ def standard_grade(df: pd.DataFrame) -> pd.DataFrame:
     result.index.name = "RtR Staff Name"
     return result.reset_index()
 
-def standard_graph(df: pd.DataFrame) -> pd.DataFrame:
+def standard_graph(df: pd.DataFrame):
     stnd_gph = df_long(df)
-    stnd_gph = stnd_gph.value_counts()
-    return stnd_gph
- 
+
+    counts_by_standard = (
+        stnd_gph["Meeting Minimum Standards By Grade?"]
+        .value_counts()
+    )
+
+    meets = counts_by_standard.get(1, 0)
+    does_not_meet = counts_by_standard.get(0, 0)
+
+    categories = ["Meets Standards", "Does Not Meet"]
+    counts = [meets, does_not_meet]
+
+    total = sum(counts)
+    if total == 0:
+        print("No valid standards data to plot.")
+        return
+
+    percentages = [count / total * 100 for count in counts]
+
+    plt.figure(figsize=(8, 5))
+    bars = plt.bar(categories, percentages)
+
+    plt.title("Percentage Meeting Minimum Standards")
+    plt.xlabel("Performance Category")
+    plt.ylabel("Percentage (%)")
+    plt.bar_label(bars, fmt="%.1f%%")
+    plt.ylim(0, 100)
+
+    plt.tight_layout()
+    plt.show()
 
  
 # ============================================================
