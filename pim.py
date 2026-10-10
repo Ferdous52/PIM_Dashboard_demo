@@ -215,14 +215,9 @@ def table_visit(df: pd.DataFrame) -> pd.DataFrame:
     if not visit_cols:
         raise ValueError("No monthly visit columns were found.")
  
-    staff_summary = df.pivot_table(
-        index="RtR Staff Name", values=["School Name", "Teacher Name"],
-        aggfunc={"School Name": "nunique", "Teacher Name": "count"}, fill_value=0
-    ).rename(columns={
-        "School Name": "Total Number of Schools",
-        "Teacher Name": "Total Number of Teachers",
-    })
- 
+    staff_summary = df.pivot_table(index="RtR Staff Name", 
+                                   values=["School Name", "Teacher Name"],
+                                   aggfunc={"School Name": "nunique", "Teacher Name": "count"}, fill_value=0).rename(columns={"School Name": "Total Number of Schools","Teacher Name": "Total Number of Teachers",})
     target_df = df.copy()
     target_df["target"] = [
         VISIT_TARGET_RULES.get((district, year, grade), 0)
@@ -540,12 +535,15 @@ def priority_staff_table(long_df: pd.DataFrame) -> pd.DataFrame:
     return table
  
  
-def priority_school_table(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
+def priority_school_g1(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
     col = PRIORITY_STUB
-    table = pd.pivot_table(
-        long_df, index="Month", values="School Name", columns=col,
-        aggfunc="nunique", fill_value=0
-    ).reindex(index=MONTH_ORDER, columns=[0, 1, 2, 3], fill_value=0)
+    table = pd.pivot_table(long_df[long_df['Grade'] == 1]] 
+                           index="Month", 
+                           values="School Name", 
+                           columns=col,
+                           aggfunc="nunique", 
+                           fill_value=0).reindex(index=MONTH_ORDER, columns=[0, 1, 2, 3], fill_value=0)
+ 
     denominator = max(df["School Name"].nunique(), 1)
     table = table.div(denominator).mul(100).round(0)
     table.columns = [f"Priority_{int(c)}" for c in table.columns]
@@ -757,7 +755,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             left, right = st.columns(2)
             with left:
                 st.markdown("**Percentage of schools in each teacher priority area by month**")
-                st.dataframe(priority_school_table(df, p_long), use_container_width=True)
+                st.dataframe(priority_school_g1(df, p_long), use_container_width=True)
             with right:
                 st.markdown("**Percentage of schools handled by each RtR staff member in each priority area**")
                 st.dataframe(priority_staff_table(p_long), use_container_width=True)
