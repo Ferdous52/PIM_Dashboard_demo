@@ -774,11 +774,11 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             left, right = st.columns(2)
             with left:
                 st.markdown("**Percentage of schools Grade-1 in each teacher priority area by month**")
-                st.dataframe(priority_school_g1(df, p_long), use_container_width=True)
+                st.dataframe(priority_school_g1(df, p_long), width = "stretch")
              
             with right:
                 st.markdown("**Percentage of schools Grade-2 in each teacher priority area by month**")
-                st.dataframe(priority_school_g2(df, p_long), use_container_width=True)
+                st.dataframe(priority_school_g2(df, p_long), width = "stretch")
      
             st.markdown("**Percentage of schools handled by each RtR staff member in each priority area**")
             st.dataframe(priority_staff_table(p_long), use_container_width=True)
