@@ -511,9 +511,9 @@ def priority_school_g1(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
     priority_cols = table.columns.drop("Month")
     row_totals = table[priority_cols].sum(axis=1)
     table[priority_cols] = (table[priority_cols].div(row_totals.replace(0, float("nan")), axis=0).mul(100).fillna(0).round(0).astype(int))
-    table["Month"] = pd.Categorical(table["Month"],categories=MONTH_ORDER,ordered=True)
-    table = table.sort_values("Month").reset_index(drop=True)
-    table = table.rename(columns={c: f"Priority_{int(c)}"for c in priority_cols})
+    table = (table.set_index("Month").reindex(MONTH_ORDER, fill_value=0).rename_axis("Month").reset_index())
+    priority_cols = table.columns.drop("Month")
+    table = table.rename(columns={c: f"Priority_{int(c)}" for c in priority_cols})
     priority_cols = [c for c in table.columns if c.startswith("Priority_")]
     table[priority_cols] = table[priority_cols].map(lambda value: f"{value:.0f}%")
     table.columns.name = None
@@ -530,12 +530,16 @@ def priority_school_g2(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
                            aggfunc="count",
                            fill_value=0,
                            observed=True).reset_index()
-
     priority_cols = table.columns.drop("Month")
     row_totals = table[priority_cols].sum(axis=1)
     table[priority_cols] = (table[priority_cols].div(row_totals.replace(0, float("nan")), axis=0).mul(100).fillna(0).round(0).astype(int))
-    table["Month"] = pd.Categorical(table["Month"],categories=MONTH_ORDER,ordered=True)
-    return table.sort_values("Month").reset_index(drop=True)
+    table = (table.set_index("Month").reindex(MONTH_ORDER, fill_value=0).rename_axis("Month").reset_index())
+    priority_cols = table.columns.drop("Month")
+    table = table.rename(columns={c: f"Priority_{int(c)}" for c in priority_cols})
+    priority_cols = [c for c in table.columns if c.startswith("Priority_")]
+    table[priority_cols] = table[priority_cols].map(lambda value: f"{value:.0f}%")
+    table.columns.name = None
+    return table
 
  
 # ============================================================
