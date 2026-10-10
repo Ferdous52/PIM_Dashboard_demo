@@ -498,8 +498,6 @@ def priority_staff_table(long_df: pd.DataFrame) -> pd.DataFrame:
     table.columns.name = None
     return table
  
- 
-```python
 def priority_school_g1(
     df: pd.DataFrame,
     long_df: pd.DataFrame
@@ -560,7 +558,6 @@ def priority_school_g1(
     table.columns.name = None
 
     return table
-```
 
 
 def priority_school_g2(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
