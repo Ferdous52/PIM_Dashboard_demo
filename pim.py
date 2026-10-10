@@ -124,7 +124,7 @@ def calculate_dashboard_metrics(df: pd.DataFrame) -> dict:
     priority_cols = [c for c in df.columns if c.startswith(PRIORITY_PREFIX)]
     return {
         "total_staff": df["RtR Staff Name"].nunique() if "RtR Staff Name" in df else 0,
-        "total_schools": df["School Name"].nunique() if "School Name" in df else 0,
+        "total_schools": df["Project ID"].nunique() if "School Name" in df else 0,
         "total_teachers": df["Teacher Name"].nunique() if "Teacher Name" in df else 0,
         "total_visits": float(df[visit_cols].sum().sum()) if visit_cols else 0,
         "standard_rate": float(df[standard_cols].mean().mean() * 100) if standard_cols else 0,
@@ -216,8 +216,8 @@ def table_visit(df: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("No monthly visit columns were found.")
  
     staff_summary = df.pivot_table(index="RtR Staff Name", 
-                                   values=["School Name", "Teacher Name"],
-                                   aggfunc={"School Name": "nunique", "Teacher Name": "count"}, fill_value=0).rename(columns={"School Name": "Total Number of Schools","Teacher Name": "Total Number of Teachers",})
+                                   values=["Project ID", "Teacher Name"],
+                                   aggfunc={"Project ID": "nunique", "Teacher Name": "count"}, fill_value=0).rename(columns={"School Name": "Total Number of Schools","Teacher Name": "Total Number of Teachers",})
     target_df = df.copy()
     target_df["target"] = [
         VISIT_TARGET_RULES.get((district, year, grade), 0)
@@ -382,16 +382,10 @@ def standard_graph(df: pd.DataFrame):
 # ============================================================
 def priority_long(df: pd.DataFrame) -> pd.DataFrame:
     """Return the common long-format dataset used by priority views."""
-    id_columns = [
-        "Field Office", "District", "RtR Staff Name", "Project ID", "School Name",
-        "Teacher Name", "Year of Support", "Grade", "Class",
-    ]
+    id_columns = ["Field Office", "District", "RtR Staff Name", "Project ID", "School Name","Teacher Name", "Year of Support", "Grade", "Class",]
     stubs = [STANDARD_PREFIX, VISIT_PREFIX, PRIORITY_STUB]
     available_stubs = [stub for stub in stubs if any(c.startswith(stub + "_") for c in df.columns)]
-    return pd.wide_to_long(
-        df.copy(), stubnames=available_stubs, i=id_columns, j="Month", sep="_", suffix="[A-Za-z]+"
-    ).reset_index()
- 
+    return pd.wide_to_long(df.copy(), stubnames=available_stubs, i=id_columns, j="Month", sep="_", suffix="[A-Za-z]+").reset_index()
  
 def stndwisepriority(df: pd.DataFrame) -> pd.DataFrame:
     rename_map = {}
@@ -403,19 +397,13 @@ def stndwisepriority(df: pd.DataFrame) -> pd.DataFrame:
         elif col.startswith(PRIORITY_PREFIX):
             rename_map[col] = col.replace(PRIORITY_PREFIX, "PriorityArea", 1)
     df_temp = df.rename(columns=rename_map)
-    id_cols = [c for c in ["RtR Staff Name", "School Name", "Teacher Name", "Grade"] if c in df_temp.columns]
-    long_df = pd.wide_to_long(
-        df_temp, stubnames=["Visits", "Minimum Standard", "PriorityArea"],
-        i=id_cols, j="Month", sep="_", suffix="[A-Za-z]+"
-    ).reset_index()
+    id_cols = [c for c in ["RtR Staff Name", "Project ID", "Teacher Name", "Grade"] if c in df_temp.columns]
+    long_df = pd.wide_to_long(df_temp, stubnames=["Visits", "Minimum Standard", "PriorityArea"],i=id_cols, j="Month", sep="_", suffix="[A-Za-z]+").reset_index()
     long_df["PriorityArea"] = pd.to_numeric(long_df["PriorityArea"], errors="coerce").astype("Int64")
     long_df["Month"] = pd.Categorical(long_df["Month"], categories=MONTH_ORDER, ordered=True)
     long_df["Minimum Standard"] = long_df["Minimum Standard"].map({0: "No", 1: "Yes"})
     long_df["Minimum Standard"] = pd.Categorical(long_df["Minimum Standard"], categories=["Yes", "No"], ordered=True)
-    result = pd.crosstab(
-        index=[long_df["Month"], long_df["Minimum Standard"]],
-        columns=long_df["PriorityArea"], normalize="index"
-    ).mul(100).round(1)
+    result = pd.crosstab(index=[long_df["Month"], long_df["Minimum Standard"]],columns=long_df["PriorityArea"], normalize="index").mul(100).round(1)
     result = result.reindex(columns=[0, 1, 2, 3], fill_value=0)
     result.columns = [f"Priority_{c}" for c in result.columns]
     result.columns.name = None
@@ -423,18 +411,15 @@ def stndwisepriority(df: pd.DataFrame) -> pd.DataFrame:
  
  
 def priority_teacher_table(df: pd.DataFrame) -> pd.DataFrame:
-    id_cols = [
-        "Field Office", "District", "RtR Staff Name", "School Name", "Teacher Name",
-        "Year of Support", "Grade",
-    ]
-    long_df = pd.wide_to_long(
-        df.copy(), stubnames=PRIORITY_STUB, i=id_cols, j="Month", sep="_", suffix=r"\w+"
-    ).reset_index()
+    id_cols = ["Field Office", "District", "RtR Staff Name", "School Name", "Teacher Name","Year of Support", "Grade",]
+    long_df = pd.wide_to_long(df.copy(), stubnames=PRIORITY_STUB, i=id_cols, j="Month", sep="_", suffix=r"\w+").reset_index()
     long_df["Month"] = pd.Categorical(long_df["Month"], categories=MONTH_ORDER, ordered=True)
-    table = pd.pivot_table(
-        long_df, index="Month", values="Teacher Name", columns=PRIORITY_STUB,
-        aggfunc="count", observed=False
-    ).reindex(columns=[0, 1, 2, 3], fill_value=0)
+    table = pd.pivot_table(long_df, 
+                           index="Month", 
+                           values="Teacher Name", 
+                           columns=PRIORITY_STUB,
+                           aggfunc="count", 
+                           observed=False).reindex(columns=[0, 1, 2, 3], fill_value=0)
     denominator = max(df["Teacher Name"].count(), 1)
     table = (table / denominator * 100).round(0)
     table.columns = [f"Priority_{int(c)}" for c in table.columns]
@@ -443,27 +428,19 @@ def priority_teacher_table(df: pd.DataFrame) -> pd.DataFrame:
     table.columns.name = None
     return table
  
- 
 def create_priority_chart(priority_table: pd.DataFrame):
     chart_df = priority_table.copy()
-
     priority_cols = [f"Priority_{i}" for i in range(4)]
 
     for col in priority_cols:
         if col not in chart_df:
             chart_df[col] = 0
 
-        chart_df[col] = pd.to_numeric(
-            chart_df[col].astype(str).str.replace("%", "", regex=False),
-            errors="coerce"
-        )
+        chart_df[col] = pd.to_numeric(chart_df[col].astype(str).str.replace("%", "", regex=False),errors="coerce")
 
-    # Modern dark theme
     fig, ax = plt.subplots(figsize=(8, 6))
     fig.patch.set_facecolor("#111827")
     ax.set_facecolor("#1F2937")
-
-    # Distinct colors for priority areas
     colors = ["#38BDF8", "#A78BFA", "#34D399", "#FBBF24"]
 
     for col, color in zip(priority_cols, colors):
@@ -481,28 +458,19 @@ def create_priority_chart(priority_table: pd.DataFrame):
             markeredgewidth=1.5
         )
 
-    # Percentage formatting
     ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=100))
     ax.set_xlabel("Month", color="#D1D5DB", labelpad=10)
     ax.set_ylabel("Teachers (%)", color="#D1D5DB", labelpad=10)
 
-    ax.set_title(
-        "Priority Areas by Month",
-        color="white",
-        fontsize=16,
-        fontweight="bold",
-        pad=20
+    ax.set_title("Priority Areas by Month",
+                 color="white",
+                 fontsize=16,
+                 fontweight="bold",pad=20
     )
 
     ax.set_ylim(0, 100)
-
-    # Grid and axes
-    ax.grid(
-        axis="y",
-        linestyle="--",
-        color="#374151",
-        alpha=0.8
-    )
+    ax.grid(axis="y",
+            linestyle="--",color="#374151",alpha=0.8)
     ax.set_axisbelow(True)
     ax.tick_params(axis="x", colors="#D1D5DB")
     ax.tick_params(axis="y", colors="#D1D5DB")
@@ -510,15 +478,11 @@ def create_priority_chart(priority_table: pd.DataFrame):
     for spine in ax.spines.values():
         spine.set_visible(False)
 
-    # Legend styling
-    legend = ax.legend(
-        title="Priority Area",
-        facecolor="#1F2937",
-        edgecolor="#374151",
-        labelcolor="white"
-    )
+    legend = ax.legend(title="Priority Area",
+                       facecolor="#1F2937",
+                       edgecolor="#374151",
+                       labelcolor="white")
     legend.get_title().set_color("white")
-
     fig.tight_layout()
     return fig
  
@@ -540,12 +504,12 @@ def priority_school_g1(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
     grade1 = long_df[long_df['Grade'] == 1]
     table = pd.pivot_table(grade1,
                            index="Month", 
-                           values="School Name", 
+                           values="Project ID", 
                            columns=col,
                            aggfunc="nunique", 
                            fill_value=0).reindex(index=MONTH_ORDER, columns=[0, 1, 2, 3], fill_value=0)
  
-    denominator = max(df["School Name"].nunique(), 1)
+    denominator = max(df["Project ID"].nunique(), 1)
     table = table.div(denominator).mul(100).round(0)
     table.columns = [f"Priority_{int(c)}" for c in table.columns]
     table = table.loc[table.sum(axis=1) > 0]
@@ -558,12 +522,12 @@ def priority_school_g2(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
     grade2 = long_df[long_df['Grade'] == 2]
     table = pd.pivot_table(grade2,
                            index="Month",
-                           values="School Name",
+                           values="Project ID",
                            columns=col,
                            aggfunc="nunique",
                            fill_value=0).reindex(index=MONTH_ORDER,columns=[0, 1, 2, 3],fill_value=0)
-    monthly_total = table.sum(axis=1).replace(0, np.nan)
-    table = (table.div(monthly_total, axis=0).mul(100).round(0).fillna(0).astype(int))
+    denominator = max(df["Project ID"].nunique(), 1)
+    table = table.div(denominator).mul(100).round(0)
     table.columns = [f"Priority_{int(c)}" for c in table.columns]
     table = table.loc[table.sum(axis=1) > 0]
     table = table.map(lambda value: f"{value}%")
