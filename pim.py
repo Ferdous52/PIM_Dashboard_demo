@@ -653,7 +653,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             st.rerun()
 
 #==============================================================================================================================================================================================
- 
+ st.markdown("""<style>h1, h2, h3 {color: black !important;}</style>""", unsafe_allow_html=True)
     if page == "Home":
         cols = st.columns(6)
         labels = [
