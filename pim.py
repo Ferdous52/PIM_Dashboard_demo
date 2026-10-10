@@ -520,26 +520,40 @@ def priority_school_g1(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
     table.columns.name = None
     return table
 
-def priority_school_g2(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
+def priority_school_g2(
+    df: pd.DataFrame,
+    long_df: pd.DataFrame
+) -> pd.DataFrame:
     col = PRIORITY_STUB
+
     grade2 = long_df[long_df["Grade"] == 2]
-    table = pd.pivot_table(grade2,
-                           index="Month",
-                           values="Project ID",
-                           columns=col,
-                           aggfunc="count",
-                           fill_value=0,
-                           observed=True).reset_index()
-    priority_cols = table.columns.drop("Month")
-    row_totals = table[priority_cols].sum(axis=1)
-    table[priority_cols] = (table[priority_cols].div(row_totals.replace(0, float("nan")), axis=0).mul(100).fillna(0).round(0).astype(int))
-    table["Month"] = pd.Categorical(table["Month"],categories=MONTH_ORDER,ordered=True)
-    table = table.sort_values("Month").reset_index(drop=True)
-    priority_cols = table.columns.drop("Month")
-    table = table.rename(columns={c: f"Priority_{int(c)}" for c in priority_cols})
-    priority_cols = [c for c in table.columns if c.startswith("Priority_")]
-    table[priority_cols] = table[priority_cols].map(lambda value: f"{value:.0f}%")
+
+    table = pd.pivot_table(
+        grade2,
+        index="Month",
+        values="Project ID",
+        columns=col,
+        aggfunc="count",
+        fill_value=0,
+        observed=True
+    ).reindex(columns=[0, 1, 2, 3], fill_value=0)
+
+    table = (
+        table.div(table.sum(axis=1).replace(0, 1), axis=0)
+        .mul(100)
+        .round(0)
+        .astype(int)
+    )
+
+    table = table.reindex(
+        [m for m in MONTH_ORDER if m in table.index]
+    )
+
+    table.columns = [f"Priority_{int(c)}" for c in table.columns]
+    table = table.map(lambda value: f"{value:.0f}%")
     table.columns.name = None
+    table.index.name = "Month"
+
     return table
 
  
