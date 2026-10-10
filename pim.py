@@ -654,8 +654,9 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
 
 #==============================================================================================================================================================================================
     st.markdown("""<style>h1, h2, h3 {color: black !important;}</style>""", unsafe_allow_html=True)
-    st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
+    
     if page == "Home":
+        st.markdown("""<style>.block-container {padding-top: .5rem;}</style>""", unsafe_allow_html=True)
         cols = st.columns(6)
         labels = [
             ("Total Staff", metrics["total_staff"]),
@@ -689,6 +690,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
 #==========================================================================================================================================================================================
 
     elif page == "Visits":
+        st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
         st.header("School Visits Summary")
         visit_table = table_visit(df)
         actual_total = metrics["total_visits"]
@@ -712,6 +714,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
 #============================================================================================================================================================================================
  
     elif page == "Standards":
+        st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
         st.subheader("Standards Meet")
         standards = standard_grade(df)
         st.dataframe(standards, use_container_width=True, hide_index=True)
@@ -719,6 +722,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
 #==============================================================================================================================================================================================
  
     elif page == "Priority":
+        st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
         st.subheader("Teacher's Priority Area")
         tab1, tab2, tab3 = st.tabs(["Priority by Standard", "Priority by Teacher Monthly", "Priority by School and Staff"])
         with tab1:
@@ -748,6 +752,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
 #============================================================================================================================================================================================= 
  
     elif page == "Reports":
+        st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
         st.subheader("Reports")
         output = BytesIO()
         with pd.ExcelWriter(output, engine="openpyxl") as writer:
