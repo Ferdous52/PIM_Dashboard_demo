@@ -537,7 +537,8 @@ def priority_staff_table(long_df: pd.DataFrame) -> pd.DataFrame:
  
 def priority_school_g1(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
     col = PRIORITY_STUB
-    table = pd.pivot_table(long_df[long_df['Grade'] == 1]] 
+    grade1 = long_df[long_df['Grade'] == 1]
+    table = pd.pivot_table(grade1,
                            index="Month", 
                            values="School Name", 
                            columns=col,
