@@ -779,10 +779,9 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             with right:
                 st.markdown("**Percentage of schools Grade-2 in each teacher priority area by month**")
                 st.dataframe(priority_school_g2(df, p_long), use_container_width=True)
-         
-            
-             st.markdown("**Percentage of schools handled by each RtR staff member in each priority area**")
-             st.dataframe(priority_staff_table(p_long), use_container_width=True)
+     
+            st.markdown("**Percentage of schools handled by each RtR staff member in each priority area**")
+            st.dataframe(priority_staff_table(p_long), use_container_width=True)
  
     elif page == "Reports":
         st.subheader("Reports")
