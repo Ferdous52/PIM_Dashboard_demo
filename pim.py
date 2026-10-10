@@ -772,10 +772,12 @@ def initialize_session_state():
  
 def main():
     st.set_page_config(page_title="PIM Dashboard", 
-                       page_icon="📊", 
+                       page_icon="🎯", 
                        layout="wide",
                        initial_sidebar_state="collapsed",
-                       menu_items={'Get Help','Report a bug','About'})
+                       menu_items={"Get Help": "If any issues get conatct to the developer",
+                                   "Report a bug": "Please Wait a while",
+                                   "About": "PIM Dashboard")
     initialize_session_state()
  
     if not st.session_state.logged_in or st.session_state.page == "login":
