@@ -777,8 +777,7 @@ def main():
                        initial_sidebar_state="collapsed",
                        menu_items={"Get Help": "If any issues get conatct to the developer",
                                    "Report a bug": "Please Wait a while",
-                                   "About": "PIM Dashboard"}
-                      )
+                                   "About": "PIM Dashboard"})
     initialize_session_state()
  
     if not st.session_state.logged_in or st.session_state.page == "login":
