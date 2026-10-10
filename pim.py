@@ -717,7 +717,11 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
         st.subheader("Standards Meet")
         standards = standard_grade(df)
-        st.dataframe(standards, use_container_width=True, hide_index=True)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.dataframe(standards, width = "content", height = "content")
+        with col2:
+         pass
 
 #==============================================================================================================================================================================================
  
