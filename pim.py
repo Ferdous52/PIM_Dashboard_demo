@@ -499,37 +499,39 @@ def priority_staff_table(long_df: pd.DataFrame) -> pd.DataFrame:
     return table
  
  
-def priority_school_g1(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
+def priority_school_g1(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
     col = PRIORITY_STUB
-    grade1 = long_df[long_df['Grade'] == 1]
+    grade1 = long_df[long_df["Grade"] == 1]
     table = pd.pivot_table(grade1,
-                           index="Month", 
-                           values="Project ID", 
+                           index="Month",
+                           values="Project ID",
                            columns=col,
-                           aggfunc="count", 
-                           fill_value=0).reindex(index=MONTH_ORDER, columns=[0, 1, 2, 3], fill_value=0)
+                           aggfunc="count",
+                           fill_value=0,
+                           observed=True).reset_index()
     priority_cols = table.columns.drop("Month")
     row_totals = table[priority_cols].sum(axis=1)
-    table[priority_cols] = (table[priority_cols].div(row_totals.replace(0, float("nan")), axis=0).mul(100)).fillna(0).round(2)
+    table[priority_cols] = (table[priority_cols].div(row_totals.replace(0, float("nan")), axis=0).mul(100).fillna(0).round(0).astype(int))
     table["Month"] = pd.Categorical(table["Month"],categories=MONTH_ORDER,ordered=True)
-    table = table.sort_values("Month").reset_index(drop=True)
-    return table
+    return table.sort_values("Month").reset_index(drop=True)
+
 
 def priority_school_g2(df: pd.DataFrame,long_df: pd.DataFrame) -> pd.DataFrame:
     col = PRIORITY_STUB
-    grade2 = long_df[long_df['Grade'] == 2]
+    grade2 = long_df[long_df["Grade"] == 2]
     table = pd.pivot_table(grade2,
                            index="Month",
                            values="Project ID",
                            columns=col,
                            aggfunc="count",
-                           fill_value=0).reset_index()
+                           fill_value=0,
+                           observed=True).reset_index()
+
     priority_cols = table.columns.drop("Month")
     row_totals = table[priority_cols].sum(axis=1)
-    table[priority_cols] = (table[priority_cols].div(row_totals.replace(0, float("nan")), axis=0).mul(100)).fillna(0).round(2)
+    table[priority_cols] = (table[priority_cols].div(row_totals.replace(0, float("nan")), axis=0).mul(100).fillna(0).round(0).astype(int))
     table["Month"] = pd.Categorical(table["Month"],categories=MONTH_ORDER,ordered=True)
-    table = table.sort_values("Month").reset_index(drop=True)
-    return table
+    return table.sort_values("Month").reset_index(drop=True)
 
  
 # ============================================================
