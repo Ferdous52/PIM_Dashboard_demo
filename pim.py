@@ -555,19 +555,19 @@ def priority_school_g1(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
 
 def priority_school_g2(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
     col = PRIORITY_STUB
-    grade1 = long_df[long_df['Grade'] == 2]
-    table = pd.pivot_table(grade1,
+    grade2 = long_df[long_df['Grade'] == 2]
+    table = pd.pivot_table(grade2,
                            index="Month", 
                            values="School Name", 
                            columns=col,
                            aggfunc="nunique", 
                            fill_value=0).reindex(index=MONTH_ORDER, columns=[0, 1, 2, 3], fill_value=0)
  
-    denominator = max(df["School Name"].nunique(), 1)
-    table = table.div(denominator).mul(100).round(0)
+    monthly_total = table.sum(axis=1).replace(0, np.nan)
+    table = (table.div(monthly_total, axis=0).mul(100).round(0).fillna(0).astype(int))
     table.columns = [f"Priority_{int(c)}" for c in table.columns]
     table = table.loc[table.sum(axis=1) > 0]
-    table = table.map(lambda value: f"{value:.0f}%")
+    table = table.map(lambda value: f"{value}%")
     table.columns.name = None
     return table
  
