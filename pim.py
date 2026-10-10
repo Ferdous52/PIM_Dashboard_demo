@@ -654,6 +654,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
 
 #==============================================================================================================================================================================================
     st.markdown("""<style>h1, h2, h3 {color: black !important;}</style>""", unsafe_allow_html=True)
+    st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
     if page == "Home":
         cols = st.columns(6)
         labels = [
@@ -711,7 +712,6 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
 #============================================================================================================================================================================================
  
     elif page == "Standards":
-        st.markdown("""<style>.block-container {padding-top: 0rem;}</style>""", unsafe_allow_html=True)
         st.subheader("Standards Meet")
         standards = standard_grade(df)
         st.dataframe(standards, use_container_width=True, hide_index=True)
