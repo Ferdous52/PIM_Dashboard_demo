@@ -333,7 +333,7 @@ def standard_graph(df: pd.DataFrame):
     bars = ax.bar(
         categories,
         percentages,
-        width=0.55,
+        width=0.4,
         color=colors,
         edgecolor="#FFFFFF",
         linewidth=0.8,
