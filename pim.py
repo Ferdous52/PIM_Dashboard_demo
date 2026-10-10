@@ -688,7 +688,7 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             st.session_state.selected_sheet = None
             st.rerun()
 
-
+#==============================================================================================================================================================================================
  
     if page == "Home":
         cols = st.columns(6)
@@ -721,9 +721,8 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
          st.pyplot(fig, use_container_width=True)
          plt.close(fig)
          
+#==========================================================================================================================================================================================
 
-
- 
     elif page == "Visits":
         st.header("School Visits Summary")
         visit_table = table_visit(df)
@@ -745,15 +744,14 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             plt.close(fig)
         st.dataframe(visit_table, use_container_width=True)
 
-
+#============================================================================================================================================================================================
  
     elif page == "Standards":
         st.subheader("Standards Meet")
         standards = standard_grade(df)
         st.dataframe(standards, use_container_width=True, hide_index=True)
 
-
-
+#==============================================================================================================================================================================================
  
     elif page == "Priority":
         st.subheader("Teacher's Priority Area")
@@ -773,15 +771,16 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             p_long = priority_long(df)
             left, right = st.columns(2)
             with left:
-                st.markdown("**Percentage of schools Grade-1 in each teacher priority area by month**")
-                st.dataframe(priority_school_g1(df, p_long), width = "stretch")
+                st.markdown("**Percentage of schools in each teacher priority area by month : Grade-1**")
+                st.dataframe(priority_school_g1(df, p_long))
              
             with right:
-                st.markdown("**Percentage of schools Grade-2 in each teacher priority area by month**")
-                st.dataframe(priority_school_g2(df, p_long), width = "stretch")
+                st.markdown("**Percentage of schools in each teacher priority area by month : Grade-2**")
+                st.dataframe(priority_school_g2(df, p_long))
      
             st.markdown("**Percentage of schools handled by each RtR staff member in each priority area**")
             st.dataframe(priority_staff_table(p_long), use_container_width=True)
+#============================================================================================================================================================================================= 
  
     elif page == "Reports":
         st.subheader("Reports")
