@@ -552,6 +552,24 @@ def priority_school_g1(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
     table = table.map(lambda value: f"{value:.0f}%")
     table.columns.name = None
     return table
+
+def priority_school_g2(df: pd.DataFrame, long_df: pd.DataFrame) -> pd.DataFrame:
+    col = PRIORITY_STUB
+    grade1 = long_df[long_df['Grade'] == 2]
+    table = pd.pivot_table(grade1,
+                           index="Month", 
+                           values="School Name", 
+                           columns=col,
+                           aggfunc="nunique", 
+                           fill_value=0).reindex(index=MONTH_ORDER, columns=[0, 1, 2, 3], fill_value=0)
+ 
+    denominator = max(df["School Name"].nunique(), 1)
+    table = table.div(denominator).mul(100).round(0)
+    table.columns = [f"Priority_{int(c)}" for c in table.columns]
+    table = table.loc[table.sum(axis=1) > 0]
+    table = table.map(lambda value: f"{value:.0f}%")
+    table.columns.name = None
+    return table
  
 # ============================================================
 # 6. STREAMLIT UI FUNCTIONS
@@ -755,11 +773,16 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
             p_long = priority_long(df)
             left, right = st.columns(2)
             with left:
-                st.markdown("**Percentage of schools in each teacher priority area by month**")
+                st.markdown("**Percentage of schools Grade-1 in each teacher priority area by month**")
                 st.dataframe(priority_school_g1(df, p_long), use_container_width=True)
+             
             with right:
-                st.markdown("**Percentage of schools handled by each RtR staff member in each priority area**")
-                st.dataframe(priority_staff_table(p_long), use_container_width=True)
+                st.markdown("**Percentage of schools Grade-2 in each teacher priority area by month**")
+                st.dataframe(priority_school_g2(df, p_long), use_container_width=True)
+         
+            
+             st.markdown("**Percentage of schools handled by each RtR staff member in each priority area**")
+             st.dataframe(priority_staff_table(p_long), use_container_width=True)
  
     elif page == "Reports":
         st.subheader("Reports")
