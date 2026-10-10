@@ -217,7 +217,7 @@ def table_visit(df: pd.DataFrame) -> pd.DataFrame:
  
     staff_summary = df.pivot_table(index="RtR Staff Name", 
                                    values=["Project ID", "Teacher Name"],
-                                   aggfunc={"Project ID": "nunique", "Teacher Name": "count"}, fill_value=0).rename(columns={"School Name": "Total Number of Schools","Teacher Name": "Total Number of Teachers",})
+                                   aggfunc={"Project ID": "nunique", "Teacher Name": "count"}, fill_value=0).rename(columns={"Project ID": "Total Number of Schools","Teacher Name": "Total Number of Teachers",})
     target_df = df.copy()
     target_df["target"] = [
         VISIT_TARGET_RULES.get((district, year, grade), 0)
