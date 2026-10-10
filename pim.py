@@ -759,13 +759,13 @@ def dashboard_page(df: pd.DataFrame, long_df: pd.DataFrame, metrics: dict):
         with tab1:
             st.dataframe(stndwisepriority(df), use_container_width=True)
         with tab2:
-            left, right = st.columns([1, 2])
+            left, right = st.columns(2)
             teacher_table = priority_teacher_table(df)
             with left:
-                st.dataframe(teacher_table, use_container_width=True)
+                st.dataframe(teacher_table)
             with right:
                 fig = create_priority_chart(teacher_table)
-                st.pyplot(fig, use_container_width=True)
+                st.pyplot(fig)
                 plt.close(fig)
         with tab3:
             p_long = priority_long(df)
